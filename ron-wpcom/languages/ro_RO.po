@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Ron\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-07-25T03:17:52+00:00\n"
+"PO-Revision-Date: 2023-07-24 13:18:35+0000\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Font size name"
+msgid "Extra Large"
+msgstr "Foarte mare"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Font size name"
+msgid "Large"
+msgstr "Mare"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Font size name"
+msgid "Medium"
+msgstr "Mediu"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Font size name"
+msgid "Small"
+msgstr "Mic"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Font family name"
+msgid "System Font"
+msgstr "System Font"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Color name"
+msgid "Tertiary"
+msgstr "Terță"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Color name"
+msgid "Background"
+msgstr "Fundal"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Color name"
+msgid "Foreground"
+msgstr "Prim-plan"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Color name"
+msgid "Secondary"
+msgstr "Secundară"
+
+#: styles/alabaster.json
+#: styles/ash.json
+#: theme.json
+msgctxt "Color name"
+msgid "Primary"
+msgstr "Principală"
+
+#: patterns/no-results-content.php:9
+msgctxt "Message explaining that there are no results returned from a search"
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Regret, dar nu s-a potrivit nimic cu termenii tăi de căutare. Te rog încearcă din nou cu alte cuvinte cheie."
+
+#: patterns/no-results-content.php
+msgctxt "Pattern title"
+msgid "No Results Content"
+msgstr "Nu am găsit conținut"
+
+#: patterns/go-back-home.php
+msgctxt "Pattern title"
+msgid "Go back home"
+msgstr "Mergi înapoi la prima pagină"
+
+#: patterns/footer.php:24
+msgid "Designed with %1$s"
+msgstr "Proiectat cu %1$s"
+
+#. Translators: WordPress link.
+#: patterns/footer.php:22
+msgid "https://wordpress.org"
+msgstr "https://wordpress.org"
+
+#: patterns/footer.php
+msgctxt "Pattern title"
+msgid "Default footer"
+msgstr "Subsol implicit"
+
+#. Author URI of the theme
+msgid "https://automattic.com"
+msgstr "https://automattic.com"
+
+#. Author of the theme
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Description of the theme
+msgid "Ron is a minimalist blogging theme designed with a focus on delivering an exceptional reading experience. Its unique offset post layout and sticky post navigation make it stand out. By intentionally omitting a header, it includes only a footer, Ron allows readers to dive straight into the content without distractions."
+msgstr "Ron este o temă de blogging simplă proiectată ca să pună accent pe oferirea unei experiențe de citire excepționale. Aranjamentul unic al articolelor și navigarea prin articolele reprezentative o fac să iasă în evidență. Prin omisiunea intenționată a unui antet, include numai un subsol, Ron permite cititorilor să se aventureze direct în conținut fără distragerea atenției."
+
+#. Theme URI of the theme
+msgid "https://wordpress.com/theme/ron"
+msgstr "https://wordpress.com/theme/ron"
+
+#. Theme Name of the theme
+msgid "Ron"
+msgstr "Ron"
