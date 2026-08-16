@@ -311,10 +311,22 @@ function renderAboutForm() {
   document.getElementById('about-exp-text').value = about.expText || '';
   
   if (document.getElementById('about-phone')) document.getElementById('about-phone').value = about.phone || '';
+  if (document.getElementById('about-phone-visible')) document.getElementById('about-phone-visible').checked = about.phoneVisible !== false;
+
   if (document.getElementById('about-phone2')) document.getElementById('about-phone2').value = about.phoneSecondary || '';
+  if (document.getElementById('about-phone2-visible')) document.getElementById('about-phone2-visible').checked = about.phoneSecondaryVisible !== false;
+
   if (document.getElementById('about-email')) document.getElementById('about-email').value = about.email || '';
+  if (document.getElementById('about-email-visible')) document.getElementById('about-email-visible').checked = about.emailVisible !== false;
+
   if (document.getElementById('about-email2')) document.getElementById('about-email2').value = about.emailSecondary || '';
+  if (document.getElementById('about-email2-visible')) document.getElementById('about-email2-visible').checked = about.emailSecondaryVisible !== false;
+
   if (document.getElementById('about-address')) document.getElementById('about-address').value = about.address || '';
+  if (document.getElementById('about-address-visible')) document.getElementById('about-address-visible').checked = about.addressVisible !== false;
+
+  if (document.getElementById('about-hours')) document.getElementById('about-hours').value = about.hours || '';
+  if (document.getElementById('about-hours-visible')) document.getElementById('about-hours-visible').checked = about.hoursVisible !== false;
 
   const statsContainer = document.getElementById('about-stats-container');
   if (statsContainer && about.stats) {
@@ -328,7 +340,9 @@ function renderAboutForm() {
 }
 
 function saveAboutForm() {
+  const currentAbout = TutStonesStore.getAbout();
   const about = {
+    ...currentAbout,
     tag: document.getElementById('about-tag').value,
     title: document.getElementById('about-title').value,
     desc1: document.getElementById('about-desc1').value,
@@ -337,10 +351,17 @@ function saveAboutForm() {
     expNumber: document.getElementById('about-exp-num').value,
     expText: document.getElementById('about-exp-text').value,
     phone: document.getElementById('about-phone')?.value || '',
+    phoneVisible: document.getElementById('about-phone-visible')?.checked ?? true,
     phoneSecondary: document.getElementById('about-phone2')?.value || '',
+    phoneSecondaryVisible: document.getElementById('about-phone2-visible')?.checked ?? true,
     email: document.getElementById('about-email')?.value || '',
+    emailVisible: document.getElementById('about-email-visible')?.checked ?? true,
     emailSecondary: document.getElementById('about-email2')?.value || '',
+    emailSecondaryVisible: document.getElementById('about-email2-visible')?.checked ?? true,
     address: document.getElementById('about-address')?.value || '',
+    addressVisible: document.getElementById('about-address-visible')?.checked ?? true,
+    hours: document.getElementById('about-hours')?.value || '',
+    hoursVisible: document.getElementById('about-hours-visible')?.checked ?? true,
     stats: [
       { id: 'stat-1', count: document.getElementById('about-stat-count-0')?.value || '150+', label: document.getElementById('about-stat-label-0')?.value || 'Stone Varieties' },
       { id: 'stat-2', count: document.getElementById('about-stat-count-1')?.value || '1,200+', label: document.getElementById('about-stat-label-1')?.value || 'Completed Projects' },
@@ -354,29 +375,71 @@ function saveAboutForm() {
 }
 
 /* ==========================================================================
-   10. TAB 7: SOCIAL MEDIA LINKS EDITOR
+   10. TAB 7: SOCIAL MEDIA LINKS & CONTACT DETAILS EDITOR
    ========================================================================== */
 function renderSocialTable() {
   const links = TutStonesStore.getSocialLinks();
   const tableBody = document.getElementById('social-table-body');
-  if (!tableBody) return;
+  if (tableBody) {
+    tableBody.innerHTML = links.map(link => `
+      <tr>
+        <td><i class="${link.icon}" style="font-size: 1.3rem; color: var(--color-gold-primary);"></i></td>
+        <td><strong>${link.platform}</strong></td>
+        <td><a href="${link.url}" target="_blank" style="color: var(--color-gold-light); text-decoration: none;">${link.url}</a></td>
+        <td>
+          <span class="badge-tag" style="${link.active ? 'background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.4);' : 'background: rgba(239, 68, 68, 0.15); color: #EF4444; border-color: rgba(239, 68, 68, 0.4);'}">
+            ${link.active ? 'Active' : 'Disabled'}
+          </span>
+        </td>
+        <td style="text-align: right;">
+          <button class="btn btn-outline btn-sm" onclick="openSocialModal('${link.id}')"><i class="ri-edit-line"></i> Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteSocialConfirm('${link.id}')"><i class="ri-delete-bin-line"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
 
-  tableBody.innerHTML = links.map(link => `
-    <tr>
-      <td><i class="${link.icon}" style="font-size: 1.3rem; color: var(--color-gold-primary);"></i></td>
-      <td><strong>${link.platform}</strong></td>
-      <td><a href="${link.url}" target="_blank" style="color: var(--color-gold-light); text-decoration: none;">${link.url}</a></td>
-      <td>
-        <span class="badge-tag" style="${link.active ? 'background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.4);' : 'background: rgba(239, 68, 68, 0.15); color: #EF4444; border-color: rgba(239, 68, 68, 0.4);'}">
-          ${link.active ? 'Active' : 'Disabled'}
-        </span>
-      </td>
-      <td style="text-align: right;">
-        <button class="btn btn-outline btn-sm" onclick="openSocialModal('${link.id}')"><i class="ri-edit-line"></i> Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteSocialConfirm('${link.id}')"><i class="ri-delete-bin-line"></i></button>
-      </td>
-    </tr>
-  `).join('');
+  // Populate Showroom & Office Contact Details form
+  const about = TutStonesStore.getAbout();
+  if (document.getElementById('social-contact-address')) document.getElementById('social-contact-address').value = about.address || '';
+  if (document.getElementById('social-contact-address-visible')) document.getElementById('social-contact-address-visible').checked = about.addressVisible !== false;
+
+  if (document.getElementById('social-contact-email')) document.getElementById('social-contact-email').value = about.email || '';
+  if (document.getElementById('social-contact-email-visible')) document.getElementById('social-contact-email-visible').checked = about.emailVisible !== false;
+
+  if (document.getElementById('social-contact-email2')) document.getElementById('social-contact-email2').value = about.emailSecondary || '';
+  if (document.getElementById('social-contact-email2-visible')) document.getElementById('social-contact-email2-visible').checked = about.emailSecondaryVisible !== false;
+
+  if (document.getElementById('social-contact-phone')) document.getElementById('social-contact-phone').value = about.phone || '';
+  if (document.getElementById('social-contact-phone-visible')) document.getElementById('social-contact-phone-visible').checked = about.phoneVisible !== false;
+
+  if (document.getElementById('social-contact-hours')) document.getElementById('social-contact-hours').value = about.hours || '';
+  if (document.getElementById('social-contact-hours-visible')) document.getElementById('social-contact-hours-visible').checked = about.hoursVisible !== false;
+}
+
+function saveShowroomContact() {
+  const currentAbout = TutStonesStore.getAbout();
+  const updatedAbout = {
+    ...currentAbout,
+    address: document.getElementById('social-contact-address')?.value || currentAbout.address,
+    addressVisible: document.getElementById('social-contact-address-visible')?.checked ?? true,
+
+    email: document.getElementById('social-contact-email')?.value || currentAbout.email,
+    emailVisible: document.getElementById('social-contact-email-visible')?.checked ?? true,
+
+    emailSecondary: document.getElementById('social-contact-email2')?.value || currentAbout.emailSecondary,
+    emailSecondaryVisible: document.getElementById('social-contact-email2-visible')?.checked ?? true,
+
+    phone: document.getElementById('social-contact-phone')?.value || currentAbout.phone,
+    phoneVisible: document.getElementById('social-contact-phone-visible')?.checked ?? true,
+
+    hours: document.getElementById('social-contact-hours')?.value || currentAbout.hours,
+    hoursVisible: document.getElementById('social-contact-hours-visible')?.checked ?? true
+  };
+
+  TutStonesStore.saveAbout(updatedAbout);
+  showToast('Showroom & Office contact information saved successfully!');
+  refreshAllAdminViews();
 }
 
 /* ==========================================================================

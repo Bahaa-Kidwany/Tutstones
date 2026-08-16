@@ -157,11 +157,18 @@ const DEFAULT_DATA = {
     craftImage: 'assets/images/about_craft.png',
     expNumber: '25+',
     expText: 'Years Sourcing Rare Natural Stone',
-    phone: '+1 (800) 555-8887',
+    phone: '+1 (800) 555-TUT-STONE',
+    phoneVisible: true,
     phoneSecondary: '+1 (800) 555-8888',
+    phoneSecondaryVisible: true,
     email: 'info@tutstones.com',
+    emailVisible: true,
     emailSecondary: 'sales@tutstones.com',
+    emailSecondaryVisible: true,
     address: '104 Marble Avenue, Stone District',
+    addressVisible: true,
+    hours: 'Mon - Sat: 8:00 AM - 6:00 PM',
+    hoursVisible: true,
     stats: [
       { id: 'stat-1', count: '150+', label: 'Stone Varieties' },
       { id: 'stat-2', count: '1,200+', label: 'Completed Projects' },
@@ -614,7 +621,18 @@ class Store {
 
   // --- About Us ---
   getAbout() {
-    return this.data.about || DEFAULT_DATA.about;
+    const defaultAbout = DEFAULT_DATA.about;
+    const currentAbout = this.data.about || {};
+    return {
+      ...defaultAbout,
+      ...currentAbout,
+      phoneVisible: currentAbout.phoneVisible !== undefined ? currentAbout.phoneVisible : true,
+      phoneSecondaryVisible: currentAbout.phoneSecondaryVisible !== undefined ? currentAbout.phoneSecondaryVisible : true,
+      emailVisible: currentAbout.emailVisible !== undefined ? currentAbout.emailVisible : true,
+      emailSecondaryVisible: currentAbout.emailSecondaryVisible !== undefined ? currentAbout.emailSecondaryVisible : true,
+      addressVisible: currentAbout.addressVisible !== undefined ? currentAbout.addressVisible : true,
+      hoursVisible: currentAbout.hoursVisible !== undefined ? currentAbout.hoursVisible : true
+    };
   }
 
   saveAbout(aboutData) {

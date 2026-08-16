@@ -433,29 +433,65 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                   <div class="form-group">
-                    <label>Primary Phone Number</label>
-                    <input type="text" id="about-phone" class="form-control" placeholder="e.g. +1 (800) 555-8887">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                      <label style="margin: 0;">Primary Phone Number</label>
+                      <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                        <input type="checkbox" id="about-phone-visible" checked> Display
+                      </label>
+                    </div>
+                    <input type="text" id="about-phone" class="form-control" placeholder="e.g. +1 (800) 555-TUT-STONE">
                   </div>
                   <div class="form-group">
-                    <label>Secondary Phone / Sales</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                      <label style="margin: 0;">Secondary Phone / Sales</label>
+                      <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                        <input type="checkbox" id="about-phone2-visible" checked> Display
+                      </label>
+                    </div>
                     <input type="text" id="about-phone2" class="form-control" placeholder="e.g. +1 (800) 555-8888">
                   </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                   <div class="form-group">
-                    <label>Primary Email Address</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                      <label style="margin: 0;">Primary Email Address</label>
+                      <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                        <input type="checkbox" id="about-email-visible" checked> Display
+                      </label>
+                    </div>
                     <input type="email" id="about-email" class="form-control" placeholder="e.g. info@tutstones.com">
                   </div>
                   <div class="form-group">
-                    <label>Sales / Support Email</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                      <label style="margin: 0;">Sales / Support Email</label>
+                      <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                        <input type="checkbox" id="about-email2-visible" checked> Display
+                      </label>
+                    </div>
                     <input type="email" id="about-email2" class="form-control" placeholder="e.g. sales@tutstones.com">
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label>Showroom & Office Address</label>
-                  <input type="text" id="about-address" class="form-control" placeholder="e.g. 104 Marble Avenue, Stone District">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                  <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                      <label style="margin: 0;">Showroom & Office Address</label>
+                      <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                        <input type="checkbox" id="about-address-visible" checked> Display
+                      </label>
+                    </div>
+                    <input type="text" id="about-address" class="form-control" placeholder="e.g. 104 Marble Avenue, Stone District">
+                  </div>
+                  <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                      <label style="margin: 0;">Working Hours</label>
+                      <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                        <input type="checkbox" id="about-hours-visible" checked> Display
+                      </label>
+                    </div>
+                    <input type="text" id="about-hours" class="form-control" placeholder="e.g. Mon - Sat: 8:00 AM - 6:00 PM">
+                  </div>
                 </div>
               </div>
             </div>
@@ -464,17 +500,99 @@
       </section>
 
       <!-- ======================================================================
-           TAB 7: SOCIAL MEDIA LINKS EDITOR
+           TAB 7: SOCIAL MEDIA & SHOWROOM CONTACT DETAILS EDITOR
            ====================================================================== -->
       <section id="tab-social" class="admin-tab-pane">
         <div class="pane-header">
           <div class="pane-title-group">
-            <h2><i class="ri-share-line"></i> Social Media Links</h2>
-            <p>Manage social media profile links, icons, and display visibility across the site header & footer.</p>
+            <h2><i class="ri-share-line"></i> Social Media & Showroom Contact Details</h2>
+            <p>Manage social media profile links, Showroom & Office contact information (address, email, phone, working hours), and display visibility across the site header & footer.</p>
           </div>
           <button class="btn btn-primary" onclick="openSocialModal()">
             <i class="ri-add-line"></i> Add Social Platform
           </button>
+        </div>
+
+        <!-- Showroom & Office Contact Details Form Card -->
+        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border-gold); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px dashed var(--color-border-gold); padding-bottom: 0.75rem;">
+            <h3 style="font-family: 'Cinzel', serif; color: var(--color-gold-primary); font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="ri-building-4-line"></i> Showroom & Office Information
+            </h3>
+            <button type="button" class="btn btn-primary btn-sm" onclick="saveShowroomContact()">
+              <i class="ri-save-line"></i> Save Showroom Details
+            </button>
+          </div>
+          <form id="showroom-contact-form" onsubmit="event.preventDefault(); saveShowroomContact();">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-main); font-weight: 600; margin: 0;">
+                    <i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> Showroom & Office Address
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                    <input type="checkbox" id="social-contact-address-visible" checked> Display on site
+                  </label>
+                </div>
+                <input type="text" id="social-contact-address" class="form-control" placeholder="e.g. 104 Marble Avenue, Stone District">
+              </div>
+
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-main); font-weight: 600; margin: 0;">
+                    <i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> Primary Email Address
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                    <input type="checkbox" id="social-contact-email-visible" checked> Display on site
+                  </label>
+                </div>
+                <input type="email" id="social-contact-email" class="form-control" placeholder="e.g. info@tutstones.com">
+              </div>
+
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-main); font-weight: 600; margin: 0;">
+                    <i class="ri-mail-send-line" style="color: var(--color-gold-primary);"></i> Secondary / Sales Email
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                    <input type="checkbox" id="social-contact-email2-visible" checked> Display on site
+                  </label>
+                </div>
+                <input type="email" id="social-contact-email2" class="form-control" placeholder="e.g. sales@tutstones.com">
+              </div>
+
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-main); font-weight: 600; margin: 0;">
+                    <i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> Phone Number
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                    <input type="checkbox" id="social-contact-phone-visible" checked> Display on site
+                  </label>
+                </div>
+                <input type="text" id="social-contact-phone" class="form-control" placeholder="e.g. +1 (800) 555-TUT-STONE">
+              </div>
+
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-main); font-weight: 600; margin: 0;">
+                    <i class="ri-time-line" style="color: var(--color-gold-primary);"></i> Working Hours
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                    <input type="checkbox" id="social-contact-hours-visible" checked> Display on site
+                  </label>
+                </div>
+                <input type="text" id="social-contact-hours" class="form-control" placeholder="e.g. Mon - Sat: 8:00 AM - 6:00 PM">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <h3 style="font-family: 'Cinzel', serif; color: var(--color-gold-primary); font-size: 1.15rem; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-links-line"></i> Social Media Links Table
+          </h3>
+          <p style="color: var(--color-text-muted); font-size: 0.88rem; margin: 0;">Configure platforms, custom icons, profile links, and toggle visibility for site header & footer.</p>
         </div>
 
         <div class="data-table-container">

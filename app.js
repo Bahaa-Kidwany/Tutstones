@@ -101,10 +101,10 @@ function renderAboutSection() {
 
   if (contactBar) {
     let pills = [];
-    if (about.phone) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <strong>Phone:</strong> <a href="tel:${about.phone}">${about.phone}</a></span>`);
-    if (about.phoneSecondary) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-whatsapp-line" style="color: var(--color-gold-primary);"></i> <strong>Sales:</strong> <a href="tel:${about.phoneSecondary}">${about.phoneSecondary}</a></span>`);
-    if (about.email) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <strong>Email:</strong> <a href="mailto:${about.email}">${about.email}</a></span>`);
-    if (about.emailSecondary) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-send-line" style="color: var(--color-gold-primary);"></i> <strong>Direct:</strong> <a href="mailto:${about.emailSecondary}">${about.emailSecondary}</a></span>`);
+    if (about.phone && about.phoneVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <strong>Phone:</strong> <a href="tel:${about.phone}">${about.phone}</a></span>`);
+    if (about.phoneSecondary && about.phoneSecondaryVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-whatsapp-line" style="color: var(--color-gold-primary);"></i> <strong>Sales:</strong> <a href="tel:${about.phoneSecondary}">${about.phoneSecondary}</a></span>`);
+    if (about.email && about.emailVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <strong>Email:</strong> <a href="mailto:${about.email}">${about.email}</a></span>`);
+    if (about.emailSecondary && about.emailSecondaryVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-send-line" style="color: var(--color-gold-primary);"></i> <strong>Direct:</strong> <a href="mailto:${about.emailSecondary}">${about.emailSecondary}</a></span>`);
     contactBar.innerHTML = pills.join('');
   }
 }
@@ -121,24 +121,22 @@ function renderContactDetails() {
       const ul = col.querySelector('.footer-links');
       if (ul) {
         let items = [];
-        if (about.address) {
+        if (about.address && about.addressVisible !== false) {
           items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> ${about.address}</li>`);
         }
-        if (about.email) {
+        if (about.email && about.emailVisible !== false) {
           items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${about.email}">${about.email}</a></li>`);
         }
-        if (about.emailSecondary) {
+        if (about.emailSecondary && about.emailSecondaryVisible !== false) {
           items.push(`<li><i class="ri-mail-send-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${about.emailSecondary}">${about.emailSecondary}</a></li>`);
         }
-        if (about.phone) {
+        if (about.phone && about.phoneVisible !== false) {
           items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${about.phone}">${about.phone}</a></li>`);
         }
-        if (about.phoneSecondary) {
-          items.push(`<li><i class="ri-whatsapp-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${about.phoneSecondary}">${about.phoneSecondary}</a></li>`);
+        if (about.hours && about.hoursVisible !== false) {
+          items.push(`<li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> ${about.hours}</li>`);
         }
-        if (items.length > 0) {
-          ul.innerHTML = items.join('');
-        }
+        ul.innerHTML = items.join('');
       }
     }
   });
