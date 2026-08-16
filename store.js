@@ -624,14 +624,26 @@ class Store {
     const defaultAbout = DEFAULT_DATA.about;
     const currentAbout = this.data.about || {};
     return {
-      ...defaultAbout,
-      ...currentAbout,
+      tag: currentAbout.tag || defaultAbout.tag,
+      title: currentAbout.title || defaultAbout.title,
+      desc1: currentAbout.desc1 || defaultAbout.desc1,
+      desc2: currentAbout.desc2 || defaultAbout.desc2,
+      craftImage: currentAbout.craftImage || defaultAbout.craftImage,
+      expNumber: currentAbout.expNumber || defaultAbout.expNumber,
+      expText: currentAbout.expText || defaultAbout.expText,
+      phone: currentAbout.phone !== undefined ? currentAbout.phone : defaultAbout.phone,
       phoneVisible: currentAbout.phoneVisible !== undefined ? currentAbout.phoneVisible : true,
+      phoneSecondary: currentAbout.phoneSecondary !== undefined ? currentAbout.phoneSecondary : defaultAbout.phoneSecondary,
       phoneSecondaryVisible: currentAbout.phoneSecondaryVisible !== undefined ? currentAbout.phoneSecondaryVisible : true,
+      email: currentAbout.email !== undefined ? currentAbout.email : defaultAbout.email,
       emailVisible: currentAbout.emailVisible !== undefined ? currentAbout.emailVisible : true,
+      emailSecondary: currentAbout.emailSecondary !== undefined ? currentAbout.emailSecondary : defaultAbout.emailSecondary,
       emailSecondaryVisible: currentAbout.emailSecondaryVisible !== undefined ? currentAbout.emailSecondaryVisible : true,
+      address: currentAbout.address !== undefined ? currentAbout.address : defaultAbout.address,
       addressVisible: currentAbout.addressVisible !== undefined ? currentAbout.addressVisible : true,
-      hoursVisible: currentAbout.hoursVisible !== undefined ? currentAbout.hoursVisible : true
+      hours: currentAbout.hours !== undefined ? currentAbout.hours : defaultAbout.hours,
+      hoursVisible: currentAbout.hoursVisible !== undefined ? currentAbout.hoursVisible : true,
+      stats: currentAbout.stats || defaultAbout.stats
     };
   }
 
