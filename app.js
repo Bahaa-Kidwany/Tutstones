@@ -328,34 +328,49 @@ function initCatalogue() {
 
   if (!catalogueGrid) return;
 
-  const categories = TutStonesStore.getCategories();
-  const stones = TutStonesStore.getStones();
+  let currentCategory = 'all';
+  let searchQuery = '';
 
-  // Render Dynamic Category Filter Pills if container exists
-  if (filterPillsContainer) {
-    let pillsHTML = `<button class="filter-pill active" data-filter="all">All Stone Types</button>`;
+  // Check URL query param or hash (e.g. catalogue.html?category=marble or catalogue.html#granite)
+  const urlParams = new URLSearchParams(window.location.search);
+  const catParam = urlParams.get('category') || urlParams.get('cat') || (window.location.hash ? window.location.hash.replace('#', '') : null);
+  if (catParam) {
+    currentCategory = catParam;
+  }
+
+  function renderFilterPills() {
+    if (!filterPillsContainer) return;
+    const categories = TutStonesStore.getCategories();
+    let pillsHTML = `<button class="filter-pill ${currentCategory === 'all' ? 'active' : ''}" data-filter="all">All Stone Types</button>`;
     categories.forEach(cat => {
-      pillsHTML += `<button class="filter-pill" data-filter="${cat.id}">${cat.name}</button>`;
+      const isActive = currentCategory.toLowerCase() === cat.id.toLowerCase() || currentCategory.toLowerCase() === (cat.slug || '').toLowerCase();
+      pillsHTML += `<button class="filter-pill ${isActive ? 'active' : ''}" data-filter="${cat.id}">${cat.name}</button>`;
     });
     filterPillsContainer.innerHTML = pillsHTML;
   }
 
-  let currentCategory = 'all';
-  let searchQuery = '';
+  renderFilterPills();
 
-  // Background sync with WordPress REST API (port 8888) if active
-  if (TutStonesStore.syncWithWordPress) {
+  // Event Delegation for Filter Pills (Handles dynamic pills gracefully)
+  if (filterPillsContainer) {
+    filterPillsContainer.addEventListener('click', (e) => {
+      const pill = e.target.closest('.filter-pill');
+      if (!pill) return;
+      
+      const allPills = filterPillsContainer.querySelectorAll('.filter-pill');
+      allPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      
+      currentCategory = pill.dataset.filter || 'all';
+      filterAndRender();
+    });
+  }
+
+  // Background sync with WordPress REST API (port 8888) if active & local
+  if (TutStonesStore.syncWithWordPress && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
     TutStonesStore.syncWithWordPress().then(res => {
       if (res && res.success) {
-        // Refresh category filter pills and grid if new WP content arrived
-        const updatedCats = TutStonesStore.getCategories();
-        if (filterPillsContainer) {
-          let pillsHTML = `<button class="filter-pill active" data-filter="all">All Stone Types</button>`;
-          updatedCats.forEach(cat => {
-            pillsHTML += `<button class="filter-pill" data-filter="${cat.id}">${cat.name}</button>`;
-          });
-          filterPillsContainer.innerHTML = pillsHTML;
-        }
+        renderFilterPills();
         filterAndRender();
       }
     });
@@ -379,7 +394,11 @@ function initCatalogue() {
     }
 
     const currentCats = TutStonesStore.getCategories();
-    const cat = currentCats.find(c => c.id === catId || c.slug === catId || (c.id && c.id.toLowerCase() === catId.toLowerCase()));
+    const cat = currentCats.find(c => 
+      c.id.toLowerCase() === catId.toLowerCase() || 
+      (c.slug && c.slug.toLowerCase() === catId.toLowerCase()) || 
+      c.name.toLowerCase().includes(catId.toLowerCase())
+    );
 
     if (cat && cat.desc) {
       banner.innerHTML = `
@@ -411,7 +430,11 @@ function initCatalogue() {
     let filtered = TutStonesStore.getStones();
 
     if (currentCategory !== 'all') {
-      filtered = filtered.filter(s => s.category === currentCategory || s.category.toLowerCase() === currentCategory.toLowerCase());
+      const targetCat = currentCategory.toLowerCase();
+      filtered = filtered.filter(s => {
+        const stoneCat = (s.category || '').toLowerCase();
+        return stoneCat === targetCat;
+      });
     }
 
     if (searchQuery.trim()) {
@@ -435,16 +458,6 @@ function initCatalogue() {
       catalogueGrid.innerHTML = filtered.map(createStoneCardHTML).join('');
     }
   }
-
-  const filterPills = document.querySelectorAll('.filter-pill');
-  filterPills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      filterPills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      currentCategory = pill.dataset.filter;
-      filterAndRender();
-    });
-  });
 
   searchInput?.addEventListener('input', (e) => {
     searchQuery = e.target.value;
