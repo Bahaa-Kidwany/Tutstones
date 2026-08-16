@@ -309,6 +309,12 @@ function renderAboutForm() {
   document.getElementById('about-craft-img-preview').src = about.craftImage || '';
   document.getElementById('about-exp-num').value = about.expNumber || '';
   document.getElementById('about-exp-text').value = about.expText || '';
+  
+  if (document.getElementById('about-phone')) document.getElementById('about-phone').value = about.phone || '';
+  if (document.getElementById('about-phone2')) document.getElementById('about-phone2').value = about.phoneSecondary || '';
+  if (document.getElementById('about-email')) document.getElementById('about-email').value = about.email || '';
+  if (document.getElementById('about-email2')) document.getElementById('about-email2').value = about.emailSecondary || '';
+  if (document.getElementById('about-address')) document.getElementById('about-address').value = about.address || '';
 
   const statsContainer = document.getElementById('about-stats-container');
   if (statsContainer && about.stats) {
@@ -330,6 +336,11 @@ function saveAboutForm() {
     craftImage: document.getElementById('about-craft-url').value,
     expNumber: document.getElementById('about-exp-num').value,
     expText: document.getElementById('about-exp-text').value,
+    phone: document.getElementById('about-phone')?.value || '',
+    phoneSecondary: document.getElementById('about-phone2')?.value || '',
+    email: document.getElementById('about-email')?.value || '',
+    emailSecondary: document.getElementById('about-email2')?.value || '',
+    address: document.getElementById('about-address')?.value || '',
     stats: [
       { id: 'stat-1', count: document.getElementById('about-stat-count-0')?.value || '150+', label: document.getElementById('about-stat-label-0')?.value || 'Stone Varieties' },
       { id: 'stat-2', count: document.getElementById('about-stat-count-1')?.value || '1,200+', label: document.getElementById('about-stat-label-1')?.value || 'Completed Projects' },
@@ -338,7 +349,7 @@ function saveAboutForm() {
   };
 
   TutStonesStore.saveAbout(about);
-  showToast('About Us content saved successfully!');
+  showToast('About Us & Contact content saved successfully!');
   refreshAllAdminViews();
 }
 

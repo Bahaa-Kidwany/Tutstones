@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   renderSocialLinks();
   renderAboutSection();
+  renderContactDetails();
   initHeroSlider();
   renderFeaturedSections();
   initCatalogue();
@@ -50,7 +51,7 @@ function renderSocialLinks() {
 }
 
 /* ==========================================================================
-   2. Dynamic About Section Rendering
+   2. Dynamic About Section & Contact Info Rendering
    ========================================================================== */
 function renderAboutSection() {
   if (typeof TutStonesStore === 'undefined') return;
@@ -88,6 +89,59 @@ function renderAboutSection() {
       </div>
     `).join('');
   }
+
+  // Render contact info pills in About section
+  let contactBar = aboutSection.querySelector('.about-contact-bar');
+  if (!contactBar && textContainer) {
+    contactBar = document.createElement('div');
+    contactBar.className = 'about-contact-bar';
+    contactBar.style.cssText = 'margin-top: 1.5rem; padding: 1rem; background: var(--color-bg-surface); border: 1px solid var(--color-border-gold); border-radius: var(--radius-sm); display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;';
+    textContainer.appendChild(contactBar);
+  }
+
+  if (contactBar) {
+    let pills = [];
+    if (about.phone) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <strong>Phone:</strong> <a href="tel:${about.phone}">${about.phone}</a></span>`);
+    if (about.phoneSecondary) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-whatsapp-line" style="color: var(--color-gold-primary);"></i> <strong>Sales:</strong> <a href="tel:${about.phoneSecondary}">${about.phoneSecondary}</a></span>`);
+    if (about.email) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <strong>Email:</strong> <a href="mailto:${about.email}">${about.email}</a></span>`);
+    if (about.emailSecondary) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-send-line" style="color: var(--color-gold-primary);"></i> <strong>Direct:</strong> <a href="mailto:${about.emailSecondary}">${about.emailSecondary}</a></span>`);
+    contactBar.innerHTML = pills.join('');
+  }
+}
+
+function renderContactDetails() {
+  if (typeof TutStonesStore === 'undefined') return;
+  const about = TutStonesStore.getAbout();
+  if (!about) return;
+
+  const footerCols = document.querySelectorAll('.footer-col');
+  footerCols.forEach(col => {
+    const h5 = col.querySelector('h5');
+    if (h5 && h5.textContent.includes('Showroom & Office')) {
+      const ul = col.querySelector('.footer-links');
+      if (ul) {
+        let items = [];
+        if (about.address) {
+          items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> ${about.address}</li>`);
+        }
+        if (about.email) {
+          items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${about.email}">${about.email}</a></li>`);
+        }
+        if (about.emailSecondary) {
+          items.push(`<li><i class="ri-mail-send-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${about.emailSecondary}">${about.emailSecondary}</a></li>`);
+        }
+        if (about.phone) {
+          items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${about.phone}">${about.phone}</a></li>`);
+        }
+        if (about.phoneSecondary) {
+          items.push(`<li><i class="ri-whatsapp-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${about.phoneSecondary}">${about.phoneSecondary}</a></li>`);
+        }
+        if (items.length > 0) {
+          ul.innerHTML = items.join('');
+        }
+      }
+    }
+  });
 }
 
 /* ==========================================================================

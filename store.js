@@ -157,6 +157,11 @@ const DEFAULT_DATA = {
     craftImage: 'assets/images/about_craft.png',
     expNumber: '25+',
     expText: 'Years Sourcing Rare Natural Stone',
+    phone: '+1 (800) 555-8887',
+    phoneSecondary: '+1 (800) 555-8888',
+    email: 'info@tutstones.com',
+    emailSecondary: 'sales@tutstones.com',
+    address: '104 Marble Avenue, Stone District',
     stats: [
       { id: 'stat-1', count: '150+', label: 'Stone Varieties' },
       { id: 'stat-2', count: '1,200+', label: 'Completed Projects' },
