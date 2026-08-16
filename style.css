@@ -201,25 +201,26 @@ button {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  text-decoration: none;
 }
 
-.brand-icon {
-  width: 38px;
-  height: 38px;
-  background: linear-gradient(135deg, var(--color-gold-primary), #9B781E);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  color: #000;
-  font-size: 1.2rem;
+.brand-logo-img {
+  height: 48px;
+  width: auto;
+  max-height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.brand-logo:hover .brand-logo-img {
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.6));
 }
 
 .brand-name {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: #FFF;
@@ -550,7 +551,7 @@ button {
 
 .stone-thumb {
   position: relative;
-  height: 220px;
+  height: 140px;
   overflow: hidden;
 }
 
@@ -567,20 +568,20 @@ button {
 
 .stone-badge {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(11, 12, 14, 0.75);
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(11, 12, 14, 0.85);
   backdrop-filter: blur(6px);
   border: 1px solid var(--color-border-gold);
-  padding: 0.25rem 0.75rem;
+  padding: 0.2rem 0.6rem;
   border-radius: var(--radius-full);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--color-gold-primary);
 }
 
 .stone-body {
-  padding: 1.5rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -588,10 +589,44 @@ button {
 
 .stone-name {
   font-family: var(--font-heading);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: #FFF;
   margin-bottom: 0.35rem;
+}
+
+/* Inline Stone Specifications Table */
+.card-spec-table {
+  width: 100%;
+  margin: 0.85rem 0;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.card-spec-table tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-spec-table tr:last-child {
+  border-bottom: none;
+}
+
+.card-spec-table td {
+  padding: 0.35rem 0.6rem;
+}
+
+.card-spec-table td:first-child {
+  color: var(--color-gold-primary);
+  font-weight: 600;
+  width: 42%;
+}
+
+.card-spec-table td:last-child {
+  color: var(--color-text-muted);
 }
 
 .stone-meta {
@@ -648,11 +683,60 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   background: var(--color-bg-card);
   padding: 1.25rem 1.75rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
+}
+
+/* Category Description Banner (Catalogue Page) */
+.category-desc-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: linear-gradient(135deg, rgba(26, 29, 35, 0.95) 0%, rgba(18, 20, 24, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-left: 4px solid var(--color-gold-primary);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.category-desc-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--color-gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.category-desc-content {
+  flex: 1;
+}
+
+.category-desc-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: var(--color-gold-primary);
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.category-desc-text {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .filter-pills {

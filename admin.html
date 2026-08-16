@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | TUT STONES Content Management Portal</title>
+  <meta name="description" content="TutStones Luxury Admin Portal. Edit images, slider slides, categories, About text, and social links with real-time thumbnail previews.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/tut_stones_logo.png">
+
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="mode-editor">
+
+  <!-- ==========================================================================
+       AUTHENTICATION WALL & LOGIN OVERLAY
+       ========================================================================== -->
+  <div id="admin-auth-overlay" class="admin-auth-overlay">
+    <div class="auth-card">
+      <div class="auth-header">
+        <img src="assets/images/tut_stones_logo.png" alt="TutStones Logo" class="auth-brand-logo">
+        <h2 class="auth-title">TUT STONES</h2>
+        <p class="auth-subtitle"><i class="ri-lock-2-line" style="color: var(--color-gold-primary);"></i> Authentication Required</p>
+      </div>
+
+      <div id="auth-alert-box" class="auth-alert" style="display: none;">
+        <i class="ri-error-warning-line" style="font-size: 1.1rem; flex-shrink: 0;"></i>
+        <span id="auth-alert-msg">Invalid credentials.</span>
+      </div>
+
+      <form onsubmit="event.preventDefault(); handleAdminLogin();">
+        <div class="form-group">
+          <label><i class="ri-user-3-line"></i> Username</label>
+          <input type="text" id="login-username" class="form-control" required placeholder="e.g. tut_admin" autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label><i class="ri-key-2-line"></i> Password</label>
+          <div class="input-password-wrapper">
+            <input type="password" id="login-password" class="form-control" required placeholder="Enter strong password..." autocomplete="current-password">
+            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', this)">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.95rem; margin-top: 1rem;">
+          <i class="ri-login-box-line"></i> Authenticate & Access Portal
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); font-size: 0.78rem; color: var(--color-text-dim); text-align: center;">
+        <p><i class="ri-shield-check-line" style="color: var(--color-gold-primary);"></i> Enforces Strong Passwords & Brute-Force Rate Limiting</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       HEADER BAR WITH BRAND & ROLE SWITCHER
+       ========================================================================== -->
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="admin.html" class="admin-brand">
+        <img src="assets/images/tut_stones_logo.png" alt="TutStones Admin Logo" class="admin-brand-logo">
+        <div class="admin-brand-title">TUT <span>STONES</span></div>
+        <span class="admin-badge-portal">ADMIN PORTAL</span>
+      </a>
+
+      <div class="admin-header-controls">
+        <!-- Active Access Role Switcher -->
+        <div class="role-switcher-box">
+          <span class="role-switcher-label">
+            <i class="ri-user-shield-line"></i> Active Role:
+          </span>
+          <div class="role-btn-group">
+            <button id="role-btn-editor" class="role-btn active" onclick="switchActiveRole('editor')">
+              <i class="ri-edit-circle-line"></i> Content Editor
+            </button>
+            <button id="role-btn-admin" class="role-btn" onclick="switchActiveRole('admin')">
+              <i class="ri-code-box-line"></i> Developer / Super Admin
+            </button>
+          </div>
+        </div>
+
+        <div id="user-session-info" style="display: flex; align-items: center; gap: 0.75rem;">
+          <span id="user-display-name" style="font-size: 0.85rem; color: var(--color-gold-light); font-weight: 600;">
+            <i class="ri-user-star-line" style="color: var(--color-gold-primary);"></i> Authenticating...
+          </span>
+          <button class="btn-logout" onclick="performAdminLogout()">
+            <i class="ri-logout-box-r-line"></i> Logout
+          </button>
+        </div>
+
+        <a href="index.html" target="_blank" class="btn-view-site">
+          <i class="ri-external-link-line"></i> View Live Site
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN LAYOUT: SIDEBAR NAV & TAB PANES
+       ========================================================================== -->
+  <div class="admin-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="nav-section-title">Main Management</div>
+      
+      <div class="admin-nav-item active" data-tab="tab-overview" onclick="switchTab('tab-overview')">
+        <i class="ri-dashboard-line"></i>
+        <span>Overview Dashboard</span>
+      </div>
+
+      <div class="admin-nav-item" data-tab="tab-categories" onclick="switchTab('tab-categories')">
+        <i class="ri-folders-line"></i>
+        <span>Categories</span>
+      </div>
+
+      <div class="admin-nav-item" data-tab="tab-stones" onclick="switchTab('tab-stones')">
+        <i class="ri-image-edit-line"></i>
+        <span>Stone & Image Editor</span>
+      </div>
+
+      <div class="admin-nav-item" data-tab="tab-slider" onclick="switchTab('tab-slider')">
+        <i class="ri-slideshow-3-line"></i>
+        <span>Hero Slider Images</span>
+      </div>
+
+      <div class="admin-nav-item" data-tab="tab-paragraphs" onclick="switchTab('tab-paragraphs')">
+        <i class="ri-layout-4-line"></i>
+        <span>Paragraph Images</span>
+      </div>
+
+      <div class="admin-nav-item" data-tab="tab-about" onclick="switchTab('tab-about')">
+        <i class="ri-file-text-line"></i>
+        <span>About Us Editor</span>
+      </div>
+
+      <div class="admin-nav-item" data-tab="tab-social" onclick="switchTab('tab-social')">
+        <i class="ri-share-line"></i>
+        <span>Social Media Links</span>
+      </div>
+
+      <div class="nav-section-title">Documentation</div>
+      <div class="admin-nav-item" data-tab="tab-guide" onclick="switchTab('tab-guide')">
+        <i class="ri-book-read-line"></i>
+        <span>Content Editor Guide</span>
+      </div>
+
+      <!-- Developer Settings Section (Hidden for Content Editor Role) -->
+      <div class="nav-section-title developer-only">Developer Settings</div>
+      <div class="admin-nav-item developer-only" data-tab="tab-dev" onclick="switchTab('tab-dev')">
+        <i class="ri-terminal-box-line"></i>
+        <span>Developer / Raw JSON</span>
+      </div>
+    </aside>
+
+    <!-- Content Workspace -->
+    <main class="admin-content">
+
+      <!-- ======================================================================
+           TAB 1: OVERVIEW DASHBOARD
+           ====================================================================== -->
+      <section id="tab-overview" class="admin-tab-pane active">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-dashboard-line"></i> Content Overview</h2>
+            <p>Welcome to TutStones Admin. Manage website visual assets, slider images, categories, and company details.</p>
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('tab-stones')">
+            <i class="ri-add-line"></i> Add New Stone
+          </button>
+        </div>
+
+        <!-- Role Notification Banner -->
+        <div class="role-notice-banner">
+          <div class="role-notice-content">
+            <i class="ri-information-line role-notice-icon"></i>
+            <div class="role-notice-text">
+              <h4 id="banner-role-title">Currently in Content Editor Mode</h4>
+              <p id="banner-role-desc">Technical developer options are hidden so content managers can focus cleanly on editing images, categories, and copy.</p>
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="switchTab('tab-guide')">
+            <i class="ri-book-open-line"></i> Read Editor Guide
+          </button>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon"><i class="ri-image-2-line"></i></div>
+            <div class="metric-data">
+              <h3 id="metric-stone-count">0</h3>
+              <p>Total Stone Items</p>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon"><i class="ri-folders-line"></i></div>
+            <div class="metric-data">
+              <h3 id="metric-category-count">0</h3>
+              <p>Active Categories</p>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon"><i class="ri-slideshow-3-line"></i></div>
+            <div class="metric-data">
+              <h3 id="metric-slider-count">0</h3>
+              <p>Hero Slider Images</p>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon"><i class="ri-share-line"></i></div>
+            <div class="metric-data">
+              <h3 id="metric-social-count">0</h3>
+              <p>Social Links</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Access Action Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+          <div class="guide-card" onclick="switchTab('tab-categories')" style="cursor: pointer;">
+            <div class="guide-card-icon"><i class="ri-folders-line"></i></div>
+            <h3>Categories Management</h3>
+            <p>Add new stone categories and edit category names, icons, and detailed descriptions.</p>
+          </div>
+
+          <div class="guide-card" onclick="switchTab('tab-slider')" style="cursor: pointer;">
+            <div class="guide-card-icon"><i class="ri-slideshow-line"></i></div>
+            <h3>Edit Hero Slider</h3>
+            <p>Update homepage hero slider images, headline text, badges, and action buttons in real-time.</p>
+          </div>
+
+          <div class="guide-card" onclick="switchTab('tab-about')" style="cursor: pointer;">
+            <div class="guide-card-icon"><i class="ri-file-text-line"></i></div>
+            <h3>Edit About Us Content</h3>
+            <p>Modify company story, craftsmanship details, stats, experience count, and hero craft photo.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           TAB 2: CATEGORY MANAGEMENT
+           ====================================================================== -->
+      <section id="tab-categories" class="admin-tab-pane">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-folders-line"></i> Categories</h2>
+            <p>Add new stone categories and edit category names, icons, and detailed descriptions.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openCategoryModal()">
+            <i class="ri-folder-add-line"></i> Add New Category
+          </button>
+        </div>
+
+        <!-- Category Management Table -->
+        <div style="margin-top: 1.5rem;">
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Icon</th>
+                  <th>Category Name</th>
+                  <th>Slug / ID</th>
+                  <th>Description</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="categories-table-body">
+                <!-- Dynamically populated via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           TAB 3: STONE & IMAGE CATALOGUE EDITOR
+           ====================================================================== -->
+      <section id="tab-stones" class="admin-tab-pane">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-image-edit-line"></i> Stone & Image Catalogue</h2>
+            <p>Edit images, technical specifications, origins, and applications for all stones.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openStoneModal()">
+            <i class="ri-add-circle-line"></i> Add New Stone Item
+          </button>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 250px;">
+            <input type="text" id="stone-search-input" class="form-control" placeholder="Search stone name, origin, tag..." oninput="filterStoneCards()">
+          </div>
+          <div style="min-width: 200px;">
+            <select id="stone-cat-filter" class="form-control" onchange="filterStoneCards()">
+              <option value="all">All Categories</option>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Stone Cards Grid -->
+        <div id="stone-cards-grid" class="admin-card-grid">
+          <!-- Dynamically populated via admin.js -->
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           TAB 4: HERO SLIDER IMAGES EDITOR
+           ====================================================================== -->
+      <section id="tab-slider" class="admin-tab-pane">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-slideshow-3-line"></i> Hero Slider Images</h2>
+            <p>Customize background slide images, badges, headings, and CTA button links on the main homepage slider.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openSliderModal()">
+            <i class="ri-add-line"></i> Add New Slide
+          </button>
+        </div>
+
+        <div id="slider-cards-grid" class="admin-card-grid">
+          <!-- Dynamically populated via admin.js -->
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           TAB 5: PARAGRAPH IMAGES EDITOR
+           ====================================================================== -->
+      <section id="tab-paragraphs" class="admin-tab-pane">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-layout-4-line"></i> Paragraph & Page Images</h2>
+            <p>Edit images displayed inside text blocks and paragraph sections (About craft image, brand logo, section headers).</p>
+          </div>
+        </div>
+
+        <div id="paragraph-images-grid" class="admin-card-grid">
+          <!-- Dynamically populated via admin.js -->
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           TAB 6: ABOUT US SECTION EDITOR
+           ====================================================================== -->
+      <section id="tab-about" class="admin-tab-pane">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-file-text-line"></i> About Us Section Editor</h2>
+            <p>Update section titles, story text, experience metrics, craft image, and stat counters.</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveAboutForm()">
+            <i class="ri-save-3-line"></i> Save About Changes
+          </button>
+        </div>
+
+        <form id="about-form" onsubmit="event.preventDefault(); saveAboutForm();">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div>
+              <div class="form-group">
+                <label>Section Tag Line</label>
+                <input type="text" id="about-tag" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label>Main Section Title (Use &lt;span&gt; to highlight in gold)</label>
+                <input type="text" id="about-title" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label>First Paragraph Text</label>
+                <textarea id="about-desc1" class="form-control" rows="4" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Second Paragraph Text</label>
+                <textarea id="about-desc2" class="form-control" rows="4" required></textarea>
+              </div>
+            </div>
+
+            <div>
+              <div class="form-group">
+                <label>Craftsmanship Image</label>
+                <div class="image-upload-wrapper">
+                  <img id="about-craft-img-preview" src="" alt="About Craft Preview" class="image-preview-thumb">
+                  <div class="upload-actions">
+                    <label class="upload-btn-label">
+                      <i class="ri-upload-cloud-2-line"></i> Upload Image File
+                      <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'about-craft-url', 'about-craft-img-preview')" hidden>
+                    </label>
+                    <input type="text" id="about-craft-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('about-craft-img-preview').src=this.value">
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 100px 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Exp. Number</label>
+                  <input type="text" id="about-exp-num" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Exp. Badge Text</label>
+                  <input type="text" id="about-exp-text" class="form-control" required>
+                </div>
+              </div>
+
+              <h4 style="margin: 1rem 0 0.5rem; font-size: 0.95rem; color: var(--color-gold-light);">Statistics Cards Counter</h4>
+              <div id="about-stats-container">
+                <!-- Dynamically populated via admin.js -->
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ======================================================================
+           TAB 7: SOCIAL MEDIA LINKS EDITOR
+           ====================================================================== -->
+      <section id="tab-social" class="admin-tab-pane">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-share-line"></i> Social Media Links</h2>
+            <p>Manage social media profile links, icons, and display visibility across the site header & footer.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openSocialModal()">
+            <i class="ri-add-line"></i> Add Social Platform
+          </button>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Platform Name</th>
+                <th>Target URL</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="social-table-body">
+              <!-- Dynamically populated via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           TAB 8: CONTENT EDITOR GUIDE & ROLE CONFIGURATION
+           ====================================================================== -->
+      <section id="tab-guide" class="admin-tab-pane">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-book-read-line"></i> Content Editor Role Guide</h2>
+            <p>Learn how to set up, deploy, and assign restricted Content Editor accounts for team members.</p>
+          </div>
+        </div>
+
+        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border-gold); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 2rem;">
+          <h3 style="font-family: 'Cinzel', serif; color: var(--color-gold-primary); font-size: 1.3rem; margin-bottom: 0.5rem;">
+            <i class="ri-shield-user-line"></i> Creating a Content-Only Admin Account
+          </h3>
+          <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+            To ensure non-technical staff or client content managers can safely edit stone images, categories, hero slides, About text, and social links without risk of breaking developer settings or database schemas:
+          </p>
+
+          <ol class="guide-steps-list">
+            <li><strong>Assign Role State:</strong> Set the user account role property to <code>editor</code> (Content Editor) rather than <code>admin</code> (Developer / Super Admin).</li>
+            <li><strong>Automatic Interface Lock:</strong> When logged in as <code>editor</code>, the Admin Panel automatically applies the CSS class <code>mode-editor</code> to the document body.</li>
+            <li><strong>Hidden Developer Tools:</strong> All technical developer components (such as Database Reset, Raw JSON Import/Export, and System Diagnostics) are automatically hidden from the navigation sidebar and interface.</li>
+            <li><strong>Streamlined Workflow:</strong> Content editors can comfortably update images via file upload or URL, preview category thumbnail grids, edit slider slides, update About copy, and toggle social media links.</li>
+          </ol>
+        </div>
+
+        <div class="guide-card-grid">
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="ri-image-edit-line"></i></div>
+            <h3>1. Managing Images & Thumbnails</h3>
+            <p>Click on <strong>Stone & Image Editor</strong> or <strong>Category Thumbnails</strong>. You can upload image files directly from your computer or paste image URLs. Use the category thumbnail gallery to preview images grouped by collection.</p>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="ri-slideshow-3-line"></i></div>
+            <h3>2. Editing Hero Slider</h3>
+            <p>Navigate to <strong>Hero Slider Images</strong>. You can change background imagery, badge text, headings, and action button target links. Changes appear immediately on the main homepage slider.</p>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="ri-file-text-line"></i></div>
+            <h3>3. Updating About & Social Links</h3>
+            <p>Use <strong>About Us Editor</strong> to modify company copy, stats, and craft photo. Use <strong>Social Media Links</strong> to update Instagram, LinkedIn, Facebook, Pinterest, or WhatsApp links.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           TAB 9: DEVELOPER SETTINGS (SUPER ADMIN ONLY)
+           ====================================================================== -->
+      <section id="tab-dev" class="admin-tab-pane developer-only">
+        <div class="pane-header">
+          <div class="pane-title-group">
+            <h2><i class="ri-terminal-box-line"></i> Developer / Raw JSON Settings</h2>
+            <p>Advanced system utilities reserved exclusively for developers and Super Admin role.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <div class="guide-card" style="border-color: rgba(59, 130, 246, 0.4);">
+            <div class="guide-card-icon" style="background: rgba(59, 130, 246, 0.15); color: #3B82F6;">
+              <i class="ri-wordpress-fill"></i>
+            </div>
+            <h3>Classic WordPress Admin (WP-Admin)</h3>
+            <p style="margin-bottom: 1rem;">Launch full WordPress Dashboard on port 8888 to manage WP settings, <code>ron-wpcom</code> theme, plugins, and core users.</p>
+            <a href="http://localhost:8888/wp-admin" target="_blank" class="btn btn-primary btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+              <i class="ri-external-link-line"></i> Open WordPress Admin (port 8888)
+            </a>
+          </div>
+
+          <div class="guide-card" style="border-color: rgba(16, 185, 129, 0.4);">
+            <div class="guide-card-icon" style="background: rgba(16, 185, 129, 0.15); color: #10B981;">
+              <i class="ri-sync-line"></i>
+            </div>
+            <h3>Bi-Directional WordPress Sync</h3>
+            <p style="margin-bottom: 1rem;">Pull new posts & categories from WordPress REST API (port 8888) or push local stones into WordPress.</p>
+            <button class="btn btn-outline btn-sm" onclick="triggerWPSync()">
+              <i class="ri-refresh-line"></i> Sync Now with WordPress
+            </button>
+          </div>
+
+          <div class="guide-card" style="border-color: rgba(239, 68, 68, 0.4);">
+            <div class="guide-card-icon" style="background: rgba(239, 68, 68, 0.15); color: #EF4444;">
+              <i class="ri-refresh-line"></i>
+            </div>
+            <h3>Reset Store to Default Factory State</h3>
+            <p style="margin-bottom: 1rem;">Restores initial default stones, categories, hero slides, and about text. All custom additions will be cleared.</p>
+            <button class="btn btn-danger btn-sm" onclick="resetDatabaseWithConfirmation()">
+              <i class="ri-alert-line"></i> Reset Factory Data
+            </button>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-card-icon"><i class="ri-code-s-slash-line"></i></div>
+            <h3>Export Raw Store Data (JSON)</h3>
+            <p style="margin-bottom: 1rem;">Export full system data payload for backup or database migration.</p>
+            <button class="btn btn-outline btn-sm" onclick="exportStoreJSON()">
+              <i class="ri-download-cloud-line"></i> Download JSON Backup
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top: 3rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--color-gold-light);">
+              <i class="ri-user-shield-line"></i> User Accounts & Credentials Management
+            </h3>
+            <button class="btn btn-primary btn-sm" onclick="openUserModal()">
+              <i class="ri-user-add-line"></i> Add New Admin User
+            </button>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>User Name</th>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Security Level</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <!-- Dynamically populated via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+          <h4 style="margin-bottom: 0.5rem; color: var(--color-gold-light);">Raw Data Viewer</h4>
+          <textarea id="raw-json-viewer" class="form-control" rows="12" readonly style="font-family: monospace; font-size: 0.82rem; background: #000; color: #00FF66;"></textarea>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: STONE ITEM ADD / EDIT
+       ========================================================================== -->
+  <div id="stone-modal" class="admin-modal-overlay">
+    <div class="admin-modal-dialog">
+      <div class="admin-modal-header">
+        <h3 id="stone-modal-title"><i class="ri-image-edit-line"></i> Edit Stone Details</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('stone-modal')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveStoneForm();">
+        <div class="admin-modal-body">
+          <input type="hidden" id="stone-id">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Stone Name</label>
+              <input type="text" id="stone-name" class="form-control" required placeholder="e.g. Calacatta Gold">
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="stone-category" class="form-control" required>
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Stone Image (Upload File or Enter Image Path/URL)</label>
+            <div class="image-upload-wrapper">
+              <img id="stone-img-preview" src="" alt="Stone Preview" class="image-preview-thumb">
+              <div class="upload-actions">
+                <label class="upload-btn-label">
+                  <i class="ri-upload-cloud-2-line"></i> Choose File
+                  <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'stone-image-url', 'stone-img-preview')" hidden>
+                </label>
+                <input type="text" id="stone-image-url" class="form-control" placeholder="assets/images/marble_calacatta.png or URL" required oninput="document.getElementById('stone-img-preview').src=this.value">
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Country of Origin</label>
+              <input type="text" id="stone-origin" class="form-control" placeholder="e.g. Carrara, Italy">
+            </div>
+            <div class="form-group">
+              <label>Tag Badge</label>
+              <input type="text" id="stone-tag" class="form-control" placeholder="e.g. Exclusive Luxury">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Finishes</label>
+              <input type="text" id="stone-finish" class="form-control" placeholder="e.g. Polished / Honed">
+            </div>
+            <div class="form-group">
+              <label>Bulk Density</label>
+              <input type="text" id="stone-density" class="form-control" placeholder="e.g. 2.72 g/cm³">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Water Absorption</label>
+              <input type="text" id="stone-water" class="form-control" placeholder="e.g. 0.15%">
+            </div>
+            <div class="form-group">
+              <label>Flexural Strength</label>
+              <input type="text" id="stone-flexural" class="form-control" placeholder="e.g. 14.8 MPa">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="stone-desc" class="form-control" rows="3" placeholder="Brief paragraph description of veining and aesthetic..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Recommended Applications</label>
+            <input type="text" id="stone-applications" class="form-control" placeholder="e.g. Flooring, Countertops, Bathroom Vanities">
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAdminModal('stone-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save Stone Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: CATEGORY ADD / EDIT
+       ========================================================================== -->
+  <div id="category-modal" class="admin-modal-overlay">
+    <div class="admin-modal-dialog">
+      <div class="admin-modal-header">
+        <h3 id="cat-modal-title"><i class="ri-folder-add-line"></i> Edit Category</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('category-modal')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveCategoryForm();">
+        <div class="admin-modal-body">
+          <input type="hidden" id="cat-id">
+
+          <div class="form-group">
+            <label>Category Display Name</label>
+            <input type="text" id="cat-name" class="form-control" required placeholder="e.g. Onyx Collection">
+          </div>
+
+          <div class="form-group">
+            <label>Remix Icon Class</label>
+            <input type="text" id="cat-icon" class="form-control" required placeholder="e.g. ri-vip-diamond-line">
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="cat-desc" class="form-control" rows="3" placeholder="Describe the characteristics of this stone category..."></textarea>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAdminModal('category-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: HERO SLIDE ADD / EDIT
+       ========================================================================== -->
+  <div id="slider-modal" class="admin-modal-overlay">
+    <div class="admin-modal-dialog">
+      <div class="admin-modal-header">
+        <h3 id="slider-modal-title"><i class="ri-slideshow-3-line"></i> Edit Hero Slide</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('slider-modal')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveSliderForm();">
+        <div class="admin-modal-body">
+          <input type="hidden" id="slider-id">
+
+          <div class="form-group">
+            <label>Slide Background Image</label>
+            <div class="image-upload-wrapper">
+              <img id="slider-img-preview" src="" alt="Slide Background Preview" class="image-preview-thumb">
+              <div class="upload-actions">
+                <label class="upload-btn-label">
+                  <i class="ri-upload-cloud-2-line"></i> Choose File
+                  <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'slider-image-url', 'slider-img-preview')" hidden>
+                </label>
+                <input type="text" id="slider-image-url" class="form-control" placeholder="assets/images/hero_slider_1.png or URL" required oninput="document.getElementById('slider-img-preview').src=this.value">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Badge Text</label>
+            <input type="text" id="slider-badge" class="form-control" placeholder="e.g. Natural Stone Curators">
+          </div>
+
+          <div class="form-group">
+            <label>Main Headline Title (Use &lt;span&gt; for highlighted text)</label>
+            <input type="text" id="slider-title" class="form-control" required placeholder="Masterpieces <span>Sculpted by Nature</span>">
+          </div>
+
+          <div class="form-group">
+            <label>Slogan / Subtitle</label>
+            <textarea id="slider-slogan" class="form-control" rows="3" placeholder="Timeless Elegance & Superior Durability..."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>CTA Button Label</label>
+              <input type="text" id="slider-btn-text" class="form-control" placeholder="e.g. Explore Full Catalogue">
+            </div>
+            <div class="form-group">
+              <label>CTA Button Link</label>
+              <input type="text" id="slider-btn-link" class="form-control" placeholder="e.g. catalogue.html or #about">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAdminModal('slider-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save Slide</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: PARAGRAPH IMAGE EDIT
+       ========================================================================== -->
+  <div id="paragraph-modal" class="admin-modal-overlay">
+    <div class="admin-modal-dialog">
+      <div class="admin-modal-header">
+        <h3><i class="ri-layout-4-line"></i> Edit Paragraph Image</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('paragraph-modal')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveParagraphImageForm();">
+        <div class="admin-modal-body">
+          <input type="hidden" id="para-img-id">
+
+          <div class="form-group">
+            <label>Image Target Location</label>
+            <input type="text" id="para-img-key" class="form-control" readonly style="background: var(--color-bg-surface);">
+          </div>
+
+          <div class="form-group">
+            <label>Image File / URL</label>
+            <div class="image-upload-wrapper">
+              <img id="para-img-preview" src="" alt="Paragraph Image Preview" class="image-preview-thumb">
+              <div class="upload-actions">
+                <label class="upload-btn-label">
+                  <i class="ri-upload-cloud-2-line"></i> Choose File
+                  <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'para-img-url', 'para-img-preview')" hidden>
+                </label>
+                <input type="text" id="para-img-url" class="form-control" required oninput="document.getElementById('para-img-preview').src=this.value">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Section Description</label>
+            <input type="text" id="para-img-desc" class="form-control" placeholder="Describe how this image fits into the layout...">
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAdminModal('paragraph-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save Image</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: SOCIAL MEDIA LINK ADD / EDIT
+       ========================================================================== -->
+  <div id="social-modal" class="admin-modal-overlay">
+    <div class="admin-modal-dialog">
+      <div class="admin-modal-header">
+        <h3 id="social-modal-title"><i class="ri-share-line"></i> Edit Social Link</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('social-modal')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveSocialForm();">
+        <div class="admin-modal-body">
+          <input type="hidden" id="social-id">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Platform Name</label>
+              <input type="text" id="social-platform" class="form-control" required placeholder="e.g. Instagram">
+            </div>
+            <div class="form-group">
+              <label>Remix Icon Class</label>
+              <input type="text" id="social-icon" class="form-control" required placeholder="e.g. ri-instagram-line">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Profile / Page URL</label>
+            <input type="url" id="social-url" class="form-control" required placeholder="https://instagram.com/tutstones">
+          </div>
+
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="social-active" checked> Active & Displayed in Footer
+            </label>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAdminModal('social-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save Social Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: ADMIN USER ADD / EDIT & PASSWORD METER
+       ========================================================================== -->
+  <div id="user-modal" class="admin-modal-overlay">
+    <div class="admin-modal-dialog">
+      <div class="admin-modal-header">
+        <h3 id="user-modal-title"><i class="ri-user-add-line"></i> Edit User Account</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('user-modal')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveUserForm();">
+        <div class="admin-modal-body">
+          <input type="hidden" id="user-original-username">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Full Display Name</label>
+              <input type="text" id="user-name" class="form-control" required placeholder="e.g. Sarah Jenkins">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="user-username" class="form-control" required placeholder="e.g. s_jenkins">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Assigned Access Role</label>
+            <select id="user-role" class="form-control" required>
+              <option value="editor">Content Editor (Images, Categories & Copy)</option>
+              <option value="admin">Developer / Super Admin (Full Control & User Management)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Password (Enforce Strong Password)</label>
+            <div class="input-password-wrapper">
+              <input type="password" id="user-password" class="form-control" required placeholder="Min 10 chars, A-Z, a-z, 0-9, special char..." oninput="evaluateModalPasswordStrength(this.value)">
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('user-password', this)">
+                <i class="ri-eye-line"></i>
+              </button>
+            </div>
+            
+            <div class="password-meter-container">
+              <div class="password-meter-bar">
+                <div id="modal-password-fill" class="password-meter-fill"></div>
+              </div>
+              <ul id="modal-password-feedback" class="password-feedback-list">
+                <li id="rule-len"><i class="ri-close-circle-line"></i> Minimum 10 characters</li>
+                <li id="rule-upper"><i class="ri-close-circle-line"></i> At least one uppercase letter (A-Z)</li>
+                <li id="rule-lower"><i class="ri-close-circle-line"></i> At least one lowercase letter (a-z)</li>
+                <li id="rule-num"><i class="ri-close-circle-line"></i> At least one number (0-9)</li>
+                <li id="rule-spec"><i class="ri-close-circle-line"></i> At least one special character (!@#$%^&*)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAdminModal('user-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save User Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Central Store Script & Admin Script -->
+  <script src="store.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
