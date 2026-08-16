@@ -133,6 +133,9 @@ function renderContactDetails() {
         if (about.phone && about.phoneVisible !== false) {
           items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${about.phone}">${about.phone}</a></li>`);
         }
+        if (about.phoneSecondary && about.phoneSecondaryVisible !== false) {
+          items.push(`<li><i class="ri-whatsapp-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${about.phoneSecondary}">${about.phoneSecondary}</a></li>`);
+        }
         if (about.hours && about.hoursVisible !== false) {
           items.push(`<li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> ${about.hours}</li>`);
         }

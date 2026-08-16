@@ -523,7 +523,7 @@
               <i class="ri-save-line"></i> Save Showroom Details
             </button>
           </div>
-          <form id="showroom-contact-form" onsubmit="event.preventDefault(); saveShowroomContact();">
+          <form id="showroom-contact-form" novalidate onsubmit="event.preventDefault(); saveShowroomContact();">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
               <div class="form-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
@@ -546,7 +546,7 @@
                     <input type="checkbox" id="social-contact-email-visible" checked> Display on site
                   </label>
                 </div>
-                <input type="email" id="social-contact-email" class="form-control" placeholder="e.g. info@tutstones.com">
+                <input type="text" id="social-contact-email" class="form-control" placeholder="e.g. info@tutstones.com">
               </div>
 
               <div class="form-group">
@@ -558,19 +558,31 @@
                     <input type="checkbox" id="social-contact-email2-visible" checked> Display on site
                   </label>
                 </div>
-                <input type="email" id="social-contact-email2" class="form-control" placeholder="e.g. sales@tutstones.com">
+                <input type="text" id="social-contact-email2" class="form-control" placeholder="e.g. sales@tutstones.com">
               </div>
 
               <div class="form-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
                   <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-main); font-weight: 600; margin: 0;">
-                    <i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> Phone Number
+                    <i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> Primary Phone Number
                   </label>
                   <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
                     <input type="checkbox" id="social-contact-phone-visible" checked> Display on site
                   </label>
                 </div>
                 <input type="text" id="social-contact-phone" class="form-control" placeholder="e.g. +1 (800) 555-TUT-STONE">
+              </div>
+
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--color-text-main); font-weight: 600; margin: 0;">
+                    <i class="ri-phone-fill" style="color: var(--color-gold-primary);"></i> Secondary / Sales Phone
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.82rem; color: var(--color-gold-light); margin: 0;">
+                    <input type="checkbox" id="social-contact-phone2-visible" checked> Display on site
+                  </label>
+                </div>
+                <input type="text" id="social-contact-phone2" class="form-control" placeholder="e.g. +1 (800) 555-8888">
               </div>
 
               <div class="form-group">
@@ -999,7 +1011,7 @@
         <h3 id="social-modal-title"><i class="ri-share-line"></i> Edit Social Link</h3>
         <button class="admin-modal-close" onclick="closeAdminModal('social-modal')">&times;</button>
       </div>
-      <form onsubmit="event.preventDefault(); saveSocialForm();">
+      <form novalidate onsubmit="event.preventDefault(); saveSocialForm();">
         <div class="admin-modal-body">
           <input type="hidden" id="social-id">
 
@@ -1016,7 +1028,7 @@
 
           <div class="form-group">
             <label>Profile / Page URL</label>
-            <input type="url" id="social-url" class="form-control" required placeholder="https://instagram.com/tutstones">
+            <input type="text" id="social-url" class="form-control" required placeholder="https://instagram.com/tutstones">
           </div>
 
           <div class="form-group">

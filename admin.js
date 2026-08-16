@@ -413,6 +413,9 @@ function renderSocialTable() {
   if (document.getElementById('social-contact-phone')) document.getElementById('social-contact-phone').value = about.phone || '';
   if (document.getElementById('social-contact-phone-visible')) document.getElementById('social-contact-phone-visible').checked = about.phoneVisible !== false;
 
+  if (document.getElementById('social-contact-phone2')) document.getElementById('social-contact-phone2').value = about.phoneSecondary || '';
+  if (document.getElementById('social-contact-phone2-visible')) document.getElementById('social-contact-phone2-visible').checked = about.phoneSecondaryVisible !== false;
+
   if (document.getElementById('social-contact-hours')) document.getElementById('social-contact-hours').value = about.hours || '';
   if (document.getElementById('social-contact-hours-visible')) document.getElementById('social-contact-hours-visible').checked = about.hoursVisible !== false;
 }
@@ -421,19 +424,22 @@ function saveShowroomContact() {
   const currentAbout = TutStonesStore.getAbout();
   const updatedAbout = {
     ...currentAbout,
-    address: document.getElementById('social-contact-address')?.value || currentAbout.address,
+    address: document.getElementById('social-contact-address') ? document.getElementById('social-contact-address').value : currentAbout.address,
     addressVisible: document.getElementById('social-contact-address-visible')?.checked ?? true,
 
-    email: document.getElementById('social-contact-email')?.value || currentAbout.email,
+    email: document.getElementById('social-contact-email') ? document.getElementById('social-contact-email').value : currentAbout.email,
     emailVisible: document.getElementById('social-contact-email-visible')?.checked ?? true,
 
-    emailSecondary: document.getElementById('social-contact-email2')?.value || currentAbout.emailSecondary,
+    emailSecondary: document.getElementById('social-contact-email2') ? document.getElementById('social-contact-email2').value : currentAbout.emailSecondary,
     emailSecondaryVisible: document.getElementById('social-contact-email2-visible')?.checked ?? true,
 
-    phone: document.getElementById('social-contact-phone')?.value || currentAbout.phone,
+    phone: document.getElementById('social-contact-phone') ? document.getElementById('social-contact-phone').value : currentAbout.phone,
     phoneVisible: document.getElementById('social-contact-phone-visible')?.checked ?? true,
 
-    hours: document.getElementById('social-contact-hours')?.value || currentAbout.hours,
+    phoneSecondary: document.getElementById('social-contact-phone2') ? document.getElementById('social-contact-phone2').value : currentAbout.phoneSecondary,
+    phoneSecondaryVisible: document.getElementById('social-contact-phone2-visible')?.checked ?? true,
+
+    hours: document.getElementById('social-contact-hours') ? document.getElementById('social-contact-hours').value : currentAbout.hours,
     hoursVisible: document.getElementById('social-contact-hours-visible')?.checked ?? true
   };
 
