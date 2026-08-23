@@ -203,16 +203,17 @@ const DEFAULT_DATA = {
     craftImage: 'assets/images/about_craft.png',
     expNumber: '24+',
     expText: 'Years Exporting Egyptian Stone Worldwide',
-    phone: '+20 100 000 0000',
+    phone: '+201104539397',
     phoneVisible: true,
-    phoneSecondary: '+20 120 000 0000',
+    phoneSecondary: '+201104539397',
     phoneSecondaryVisible: true,
     email: 'info@tutstones.com',
     emailVisible: true,
-    emailSecondary: 'export@tutstones.com',
+    emailSecondary: 'sales@tutstones.com',
     emailSecondaryVisible: true,
-    address: 'Shaq El Thoban Industrial Zone, Cairo, Egypt',
+    address: 'Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
     addressVisible: true,
+    mapsUrl: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
     hours: 'Mon - Sat: 8:00 AM - 6:00 PM (GMT+2)',
     hoursVisible: true,
     stats: [
@@ -267,7 +268,7 @@ const DEFAULT_DATA = {
     { id: 'soc-2', platform: 'LinkedIn', icon: 'ri-linkedin-fill', url: 'https://linkedin.com/company/tutstones', active: true },
     { id: 'soc-3', platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://facebook.com/tutstones', active: true },
     { id: 'soc-4', platform: 'Pinterest', icon: 'ri-pinterest-line', url: 'https://pinterest.com/tutstones', active: true },
-    { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/18005558887', active: true }
+    { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/201104539397', active: true }
   ],
 
   // 7. Active Role State (admin = Super Admin / Developer, editor = Content Editor)
