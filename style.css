@@ -4,31 +4,40 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
-:root {
+:root,
+[data-theme="palette-1"] {
   --font-heading: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  /* Color Palette */
-  --color-bg-dark: #0B0C0E;
-  --color-bg-card: #14161A;
-  --color-bg-surface: #1C1F26;
-  --color-bg-surface-glass: rgba(20, 22, 26, 0.75);
+  /* Palette 1: Copper, Martinique, Kashmir Blue, Redwood, Gold Sand */
+  --color-bg-dark: #0E111F;
+  --color-bg-card: #181C2E;
+  --color-bg-surface: #242A42;
+  --color-bg-surface-glass: #181C2E; /* Solid non-transparent surface */
 
-  --color-gold-primary: #D4AF37;
-  --color-gold-hover: #E5C158;
-  --color-gold-muted: rgba(212, 175, 55, 0.15);
-  --color-gold-glow: rgba(212, 175, 55, 0.35);
+  --color-gold-primary: #B36633; /* Copper */
+  --color-gold-hover: #E7BA80;   /* Gold Sand */
+  --color-accent-blue: #5474A1;  /* Kashmir Blue */
+  --color-accent-martinique: #323659; /* Martinique */
+  --color-accent-redwood: #5B1F11;    /* Redwood */
 
-  --color-text-main: #F3F4F6;
-  --color-text-muted: #9CA3AF;
-  --color-text-dim: #6B7280;
+  --color-gold-muted: #2E211A; /* Solid dark copper badge background */
+  --color-gold-glow: rgba(179, 102, 51, 0.4);
 
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-gold: rgba(212, 175, 55, 0.3);
+  --color-text-main: #F4F6FA;
+  --color-text-muted: #A3ADC2;
+  --color-text-dim: #717D96;
 
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.7);
-  --shadow-gold: 0 0 25px rgba(212, 175, 55, 0.2);
+  --color-border: #282E47;
+  --color-border-gold: #B36633;
+
+  --logo-filter: drop-shadow(0 0 8px #B36633) sepia(0.8) hue-rotate(330deg) saturate(2.5) brightness(1.1);
+  --logo-brand-main: #F4F6FA;
+  --logo-brand-span: #B36633;
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.8);
+  --shadow-gold: 0 0 25px rgba(179, 102, 51, 0.3);
 
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -37,6 +46,38 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-full: 9999px;
+}
+
+[data-theme="palette-2"] {
+  /* Palette 2: Egyptian Hieroglyph Tomb Relief (Ochre Sand, Slate, Nile Lapis, Terracotta, Limestone) */
+  --color-bg-dark: #141210;
+  --color-bg-card: #221E1A;
+  --color-bg-surface: #2E2924;
+  --color-bg-surface-glass: #221E1A; /* Solid non-transparent surface */
+
+  --color-gold-primary: #D6B585; /* Ochre Sandstone */
+  --color-gold-hover: #E4C8A0;   /* Light Sandstone Gold */
+  --color-accent-blue: #57758D;  /* Nile Lapis Blue */
+  --color-accent-martinique: #7A8B92; /* Faded Mineral Slate */
+  --color-accent-redwood: #935352;    /* Hieroglyph Terracotta Rust */
+
+  --color-gold-muted: #332B20; /* Solid dark sandstone badge background */
+  --color-gold-glow: rgba(214, 181, 133, 0.4);
+
+  --color-text-main: #F7F4EF;
+  --color-text-muted: #B8B0A5;
+  --color-text-dim: #847C72;
+
+  --color-border: #3A332B;
+  --color-border-gold: #D6B585;
+
+  --logo-filter: drop-shadow(0 0 8px #D6B585) sepia(0.6) hue-rotate(15deg) saturate(1.8) brightness(1.25);
+  --logo-brand-main: #F7F4EF;
+  --logo-brand-span: #D6B585;
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.85);
+  --shadow-gold: 0 0 25px rgba(214, 181, 133, 0.3);
 }
 
 /* Reset & Base Styles */
@@ -184,11 +225,10 @@ button {
 }
 
 .header.scrolled {
-  background: var(--color-bg-surface-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border-gold);
   padding: 0.85rem 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 
 .nav-wrapper {
@@ -209,13 +249,13 @@ button {
   width: auto;
   max-height: 48px;
   object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+  filter: var(--logo-filter);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .brand-logo:hover .brand-logo-img {
   transform: scale(1.06);
-  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.6));
+  filter: var(--logo-filter) drop-shadow(0 0 12px var(--color-gold-hover));
 }
 
 .brand-name {
@@ -223,12 +263,14 @@ button {
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #FFF;
+  color: var(--logo-brand-main, #FFF);
+  transition: color 0.3s ease;
 }
 
 .brand-name span {
-  color: var(--color-gold-primary);
-  font-weight: 400;
+  color: var(--logo-brand-span, var(--color-gold-primary));
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .nav-menu {
@@ -535,17 +577,18 @@ button {
 
 .stone-card {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-gold);
   border-radius: var(--radius-md);
   overflow: hidden;
   transition: var(--transition-smooth);
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-sm);
 }
 
 .stone-card:hover {
   transform: translateY(-6px);
-  border-color: var(--color-border-gold);
+  border-color: var(--color-gold-hover);
   box-shadow: var(--shadow-gold);
 }
 
@@ -570,14 +613,14 @@ button {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: rgba(11, 12, 14, 0.85);
-  backdrop-filter: blur(6px);
+  background: var(--color-bg-surface);
   border: 1px solid var(--color-border-gold);
-  padding: 0.2rem 0.6rem;
+  padding: 0.25rem 0.7rem;
   border-radius: var(--radius-full);
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--color-gold-primary);
+  color: var(--color-gold-hover);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 .stone-body {
@@ -601,9 +644,9 @@ button {
   margin: 0.85rem 0;
   border-collapse: collapse;
   font-size: 0.8rem;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--color-bg-surface);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-gold);
   overflow: hidden;
 }
 
@@ -992,4 +1035,270 @@ button {
   .section-title { font-size: 2rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .catalogue-controls { flex-direction: column; align-items: stretch; }
+}
+
+/* ==========================================================================
+   Pharaonic Hero & Standalone Pages Styling
+   ========================================================================== */
+.home-section-hero {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 8rem 0 5rem;
+  overflow: hidden;
+}
+
+.home-section-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--color-bg-dark) 0%, var(--color-bg-card) 100%);
+  opacity: 0.93;
+  z-index: 1;
+}
+
+.pharaonic-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 30%, var(--color-gold-glow), transparent 70%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.home-hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.home-hero-content h1 {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+.home-hero-content h1 span {
+  color: var(--color-gold-primary);
+  font-style: italic;
+}
+
+.home-hero-content p {
+  font-size: 1.25rem;
+  color: #E2E8F0;
+  line-height: 1.7;
+  max-width: 820px;
+  margin: 0 auto 2.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Page Banner Header for Dedicated Pages */
+.page-banner {
+  position: relative;
+  padding: 9.5rem 0 3.5rem;
+  background: var(--color-bg-card);
+  border-bottom: 2px solid var(--color-border-gold);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.page-banner::before {
+  display: none;
+}
+
+.page-banner-content {
+  position: relative;
+  z-index: 2;
+}
+
+.page-banner h1 {
+  font-family: var(--font-heading);
+  font-size: 3.2rem;
+  color: #FFF;
+  margin-bottom: 1rem;
+}
+
+.page-banner h1 span {
+  color: var(--color-gold-primary);
+  font-style: italic;
+}
+
+.page-banner p {
+  color: var(--color-text-muted);
+  font-size: 1.15rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Factory & Packaging Cards */
+.feature-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.feature-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  padding: 2.25rem;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-gold-primary);
+  box-shadow: var(--shadow-gold);
+}
+
+.feature-card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  background: var(--color-gold-muted);
+  border: 1px solid var(--color-border-gold);
+  color: var(--color-gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: #FFF;
+  margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Contact Cards & Form */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.contact-card-box {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.contact-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-gold-muted);
+  color: var(--color-gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.contact-info h4 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: #FFF;
+  margin-bottom: 0.35rem;
+}
+
+.contact-info p, .contact-info a {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.contact-info a:hover {
+  color: var(--color-gold-primary);
+}
+
+/* ==========================================================================
+   Header Color Palette Switcher Control
+   ========================================================================== */
+.theme-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-full);
+  padding: 0.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.theme-switch-btn:hover {
+  color: var(--color-text-main);
+}
+
+.theme-switch-btn.active {
+  background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-hover) 100%);
+  color: #0B0C0E;
+  border-color: var(--color-gold-hover);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.theme-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.theme-dot-p1 {
+  background: linear-gradient(135deg, #B36633 50%, #5474A1 50%);
+}
+
+.theme-dot-p2 {
+  background: linear-gradient(135deg, #D6B585 50%, #57758D 50%);
 }

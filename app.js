@@ -4,6 +4,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeSwitcher();
   initNavbar();
   renderSocialLinks();
   renderAboutSection();
@@ -13,6 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
   initCatalogue();
   initModal();
 });
+
+/* ==========================================================================
+   0. Color Palette Theme Switcher
+   ========================================================================== */
+function initThemeSwitcher() {
+  const savedTheme = localStorage.getItem('tut_stones_theme') || 'palette-1';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  const btns = document.querySelectorAll('.theme-switch-btn');
+  btns.forEach(btn => {
+    const theme = btn.dataset.theme;
+    if (theme === savedTheme) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+
+    btn.addEventListener('click', () => {
+      const selectedTheme = btn.dataset.theme;
+      document.documentElement.setAttribute('data-theme', selectedTheme);
+      localStorage.setItem('tut_stones_theme', selectedTheme);
+      
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+}
 
 /* ==========================================================================
    1. Navbar Scroll & Dynamic Links
@@ -31,6 +59,20 @@ function initNavbar() {
   const navMenu = document.querySelector('.nav-menu');
   toggle?.addEventListener('click', () => {
     navMenu?.classList.toggle('active');
+  });
+
+  // Highlight active page link
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    const linkPath = href.split('#')[0];
+    if (linkPath === currentPath || (currentPath === '' && linkPath === 'index.html')) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
   });
 }
 
@@ -322,46 +364,42 @@ function createStoneCardHTML(stone) {
    ========================================================================== */
 function initCatalogue() {
   if (typeof TutStonesStore === 'undefined') return;
-  const catalogueGrid = document.getElementById('catalogue-grid');
-  const filterPillsContainer = document.querySelector('.filter-pills');
-  const searchInput = document.getElementById('catalogue-search');
+  const catalogueGrid = document.getElementById('stones-grid') || document.getElementById('catalogue-grid');
+  const filterPillsContainer = document.querySelector('.filter-pills') || document.querySelector('.filter-tabs');
+  const searchInput = document.getElementById('stone-search') || document.getElementById('catalogue-search');
 
   if (!catalogueGrid) return;
 
   let currentCategory = 'all';
   let searchQuery = '';
 
-  // Check URL query param or hash (e.g. catalogue.html?category=marble or catalogue.html#granite)
+  // Check URL query param or hash (e.g. materials.html?category=marble or materials.html#granite)
   const urlParams = new URLSearchParams(window.location.search);
   const catParam = urlParams.get('category') || urlParams.get('cat') || (window.location.hash ? window.location.hash.replace('#', '') : null);
   if (catParam) {
     currentCategory = catParam;
   }
 
-  function renderFilterPills() {
-    if (!filterPillsContainer) return;
-    const categories = TutStonesStore.getCategories();
-    let pillsHTML = `<button class="filter-pill ${currentCategory === 'all' ? 'active' : ''}" data-filter="all">All Stone Types</button>`;
-    categories.forEach(cat => {
-      const isActive = currentCategory.toLowerCase() === cat.id.toLowerCase() || currentCategory.toLowerCase() === (cat.slug || '').toLowerCase();
-      pillsHTML += `<button class="filter-pill ${isActive ? 'active' : ''}" data-filter="${cat.id}">${cat.name}</button>`;
-    });
-    filterPillsContainer.innerHTML = pillsHTML;
-  }
-
-  renderFilterPills();
-
-  // Event Delegation for Filter Pills (Handles dynamic pills gracefully)
+  // Handle click on filter tabs/pills
   if (filterPillsContainer) {
     filterPillsContainer.addEventListener('click', (e) => {
-      const pill = e.target.closest('.filter-pill');
-      if (!pill) return;
+      const btn = e.target.closest('.filter-tab, .filter-pill');
+      if (!btn) return;
       
-      const allPills = filterPillsContainer.querySelectorAll('.filter-pill');
-      allPills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
+      const allBtns = filterPillsContainer.querySelectorAll('.filter-tab, .filter-pill');
+      allBtns.forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'var(--color-bg-surface)';
+        b.style.color = 'var(--color-text-muted)';
+        b.style.borderColor = 'var(--color-border)';
+      });
+
+      btn.classList.add('active');
+      btn.style.background = 'var(--color-gold-muted)';
+      btn.style.color = '#FFF';
+      btn.style.borderColor = 'var(--color-border-gold)';
       
-      currentCategory = pill.dataset.filter || 'all';
+      currentCategory = btn.dataset.filter || 'all';
       filterAndRender();
     });
   }
