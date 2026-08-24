@@ -196,7 +196,7 @@ button {
 }
 
 .mobile-toggle {
-  display: none !important;
+  display: none;
 }
 
 .nav-wrapper {
@@ -336,9 +336,12 @@ button {
   text-align: center;
 }
 
-.page-header-banner p {
+.page-header-banner p,
+.page-header-banner .section-desc {
   color: #FFFFFF !important;
-  opacity: 0.95;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6) !important;
 }
 
 /* Process Card & Feature Cards */
@@ -1151,14 +1154,49 @@ button {
 /* ==========================================================================
    Comprehensive Responsive Breakpoints & Mobile Phone Optimization
    ========================================================================== */
+/* Mobile-Only Pages Dropdown Menu */
+.mobile-page-dropdown {
+  display: none;
+}
+
+.mobile-page-select {
+  background: rgba(14, 18, 26, 0.95) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #DFB77D !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.3rem 0.5rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+  outline: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  height: 36px !important;
+  max-width: 130px !important;
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+}
+
+.mobile-page-select option {
+  background: #1B212D !important;
+  color: #FFFFFF !important;
+  padding: 0.5rem !important;
+}
+
+[data-theme="pharaonic"] .mobile-page-select {
+  background: #8D4F4E !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #DFB77D !important;
+}
+
 .mobile-toggle {
   display: none;
-  background: rgba(14, 18, 26, 0.75);
-  border: 1px solid #DFB77D;
+  background: rgba(14, 18, 26, 0.85);
+  border: 1.5px solid #DFB77D;
   color: #FFFFFF;
-  font-size: 1.3rem;
-  width: 42px;
-  height: 42px;
+  font-size: 1.2rem;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   align-items: center;
@@ -1193,7 +1231,7 @@ button {
   }
 
   .container {
-    padding: 0 1.25rem !important;
+    padding: 0 1rem !important;
     width: 100% !important;
   }
 
@@ -1201,14 +1239,28 @@ button {
     display: none;
   }
 
+  .mobile-page-dropdown {
+    display: block !important;
+  }
+
   .mobile-toggle {
     display: flex !important;
+  }
+
+  .nav-contact-btn {
+    display: inline-flex !important;
+    padding: 0.35rem 0.6rem !important;
+    font-size: 0.75rem !important;
+    height: 36px !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    border-radius: var(--radius-sm) !important;
   }
 
   .nav-menu.active {
     display: flex !important;
     position: fixed;
-    top: 70px;
+    top: 65px;
     left: 0;
     width: 100%;
     background: rgba(14, 18, 26, 0.98) !important;
@@ -1224,10 +1276,6 @@ button {
     visibility: visible !important;
     transform: translateY(0) !important;
     z-index: 999;
-  }
-
-  .nav-contact-btn {
-    display: none !important;
   }
 
   .hero {
@@ -2170,10 +2218,12 @@ html[data-theme="pharaonic"] .page-header-banner,
 }
 
 [data-theme="pharaonic"] .page-header-banner p,
-[data-theme="pharaonic"] .page-header-banner .section-desc {
-  color: #F5E9D8 !important;
+[data-theme="pharaonic"] .page-header-banner .section-desc,
+[data-theme="pharaonic"] .page-header-banner p.section-desc {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
   font-family: var(--font-body) !important;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5) !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7) !important;
 }
 
 /* Pharaonic Section Tags & Badges */
@@ -2239,8 +2289,8 @@ html[data-theme="pharaonic"] .page-header-banner,
   filter: none !important;
 }
 
-[data-theme="pharaonic"] .section-desc,
-[data-theme="pharaonic"] p {
+[data-theme="pharaonic"] .section-desc:not(.page-header-banner *),
+[data-theme="pharaonic"] p:not(.page-header-banner *):not(.hero *) {
   color: #241C18 !important;
   font-family: var(--font-body) !important;
   text-shadow: none !important;
