@@ -2,7 +2,7 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const STORAGE_KEY = 'tut_stones_data_v2';
+const STORAGE_KEY = 'tut_stones_data_v3';
 
 const DEFAULT_DATA = {
   // 1. Categories
@@ -149,15 +149,16 @@ const DEFAULT_DATA = {
     craftImage: 'assets/images/about_craft.png',
     expNumber: '24+',
     expText: 'Years Exporting<br>Egyptian Natural Stone',
-    phone: '+20 100 000 0000',
+    phone: '+201104539397',
     phoneVisible: true,
-    phoneSecondary: '+20 120 000 0000',
+    phoneSecondary: '+201104539397',
     phoneSecondaryVisible: true,
     email: 'info@tutstones.com',
     emailVisible: true,
-    emailSecondary: 'export@tutstones.com',
+    emailSecondary: 'sales@tutstones.com',
     emailSecondaryVisible: true,
-    address: 'Cairo, Egypt',
+    address: 'Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
+    addressLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
     addressVisible: true,
     hours: 'Mon - Sat: 8:00 AM - 6:00 PM',
     hoursVisible: true,
