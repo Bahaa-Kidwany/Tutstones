@@ -1139,12 +1139,35 @@ button {
 .palette-switch-wrapper {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--color-border);
-  padding: 3px;
+  padding: 4px 6px;
   border-radius: var(--radius-full);
   transition: var(--transition-fast);
+}
+
+.palette-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.swatch-dark {
+  background: linear-gradient(135deg, #DFB77D 0%, #0B0C0E 100%);
+  border: 1px solid #DFB77D;
+}
+
+.swatch-eastern {
+  background: linear-gradient(135deg, #E7BA80 0%, #323659 100%);
+  border: 1px solid #E7BA80;
+}
+
+.swatch-pharaonic {
+  background: linear-gradient(135deg, #8D4F4E 0%, #DFB77D 100%);
+  border: 1px solid #DFB77D;
 }
 
 [data-theme="eastern-light"] .palette-switch-wrapper {
@@ -1174,6 +1197,7 @@ button {
 .palette-switch-btn.active {
   background: var(--color-gold-primary);
   color: #000000;
+  font-weight: 700;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
