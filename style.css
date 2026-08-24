@@ -289,16 +289,24 @@ button {
   box-shadow: var(--shadow-heavy);
   opacity: 0;
   visibility: hidden;
+  display: none;
   transform: translateY(10px);
   transition: all 0.25s ease;
-  list-style: none;
+  list-style: none !important;
+  list-style-type: none !important;
   z-index: 1100;
+}
+
+.nav-dropdown-menu li {
+  list-style: none !important;
+  list-style-type: none !important;
 }
 
 .nav-item-dropdown:hover .nav-dropdown-menu,
 .nav-item-dropdown.active .nav-dropdown-menu {
   opacity: 1;
   visibility: visible;
+  display: block;
   transform: translateY(0);
 }
 

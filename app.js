@@ -8,8 +8,10 @@
   const savedTheme = localStorage.getItem('tutstones_palette') || 'default';
   if (savedTheme && savedTheme !== 'default') {
     document.documentElement.setAttribute('data-theme', savedTheme);
+    if (document.body) document.body.setAttribute('data-theme', savedTheme);
   } else {
     document.documentElement.removeAttribute('data-theme');
+    if (document.body) document.body.removeAttribute('data-theme');
   }
 })();
 
@@ -46,8 +48,10 @@ function initThemeSwitcher() {
 function applyTheme(theme) {
   if (theme && theme !== 'default') {
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
   } else {
     document.documentElement.removeAttribute('data-theme');
+    document.body.removeAttribute('data-theme');
   }
 
   const switchBtns = document.querySelectorAll('.palette-switch-btn');
