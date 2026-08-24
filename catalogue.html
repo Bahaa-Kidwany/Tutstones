@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="pharaonic">
 
 <head>
   <meta charset="UTF-8">
@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="style.css?v=1.0.7">
 </head>
 
-<body data-page="catalogue">
+<body data-page="catalogue" data-theme="pharaonic">
 
   <!-- ==========================================================================
        HEADER & NAV BAR
@@ -46,23 +46,12 @@
       </ul>
 
       <div style="display: flex; gap: 0.75rem; align-items: center;">
-        <div class="palette-switch-wrapper">
-          <button type="button" class="palette-switch-btn active" data-theme-val="default" title="Palette 1: Classic Dark Gold">
-            <span class="palette-swatch swatch-dark"></span>
-            <span class="palette-label">Classic</span>
-          </button>
-          <button type="button" class="palette-switch-btn" data-theme-val="eastern-light" title="Palette 2: Eastern Light">
-            <span class="palette-swatch swatch-eastern"></span>
-            <span class="palette-label">Eastern</span>
-          </button>
-          <button type="button" class="palette-switch-btn" data-theme-val="pharaonic" title="Palette 3: Pharaonic Heritage">
-            <span class="palette-swatch swatch-pharaonic"></span>
-            <span class="palette-label">Pharaonic</span>
-          </button>
-        </div>
-        <a href="index.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+        <a href="index.html" class="btn btn-primary nav-contact-btn" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
           <i class="ri-home-4-line"></i> Back Home
         </a>
+        <button type="button" class="mobile-toggle" aria-label="Toggle Mobile Navigation">
+          <i class="ri-menu-line"></i>
+        </button>
       </div>
     </div>
   </header>

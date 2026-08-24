@@ -3,16 +3,11 @@
  * Powered by TutStonesStore (localStorage dynamic store)
  */
 
-// Immediately apply saved theme on script load to eliminate flicker
+// Immediately apply saved theme on script load to eliminate flicker (Default: Pharaonic)
 (function applyEarlyTheme() {
-  const savedTheme = localStorage.getItem('tutstones_palette') || 'default';
-  if (savedTheme && savedTheme !== 'default') {
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    if (document.body) document.body.setAttribute('data-theme', savedTheme);
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-    if (document.body) document.body.removeAttribute('data-theme');
-  }
+  const savedTheme = localStorage.getItem('tutstones_palette') || 'pharaonic';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  if (document.body) document.body.setAttribute('data-theme', savedTheme);
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -31,41 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
    0. Theme & Palette Switcher Logic
    ========================================================================== */
 function initThemeSwitcher() {
-  const savedTheme = localStorage.getItem('tutstones_palette') || 'default';
+  const savedTheme = localStorage.getItem('tutstones_palette') || 'pharaonic';
   applyTheme(savedTheme);
-
-  // Global event delegation for 100% reliable theme button clicks
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.palette-switch-btn');
-    if (!btn) return;
-
-    e.preventDefault();
-    const selectedTheme = btn.getAttribute('data-theme-val');
-    if (selectedTheme) {
-      applyTheme(selectedTheme);
-      localStorage.setItem('tutstones_palette', selectedTheme);
-    }
-  });
 }
 
 function applyTheme(theme) {
-  if (theme && theme !== 'default') {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (document.body) document.body.setAttribute('data-theme', theme);
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-    if (document.body) document.body.removeAttribute('data-theme');
-  }
-
-  const switchBtns = document.querySelectorAll('.palette-switch-btn');
-  switchBtns.forEach(btn => {
-    const val = btn.getAttribute('data-theme-val');
-    if (val === theme) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
+  const activeTheme = theme || 'pharaonic';
+  document.documentElement.setAttribute('data-theme', activeTheme);
+  if (document.body) document.body.setAttribute('data-theme', activeTheme);
 }
 
 
@@ -84,9 +52,34 @@ function initNavbar() {
 
   const toggle = document.querySelector('.mobile-toggle');
   const navMenu = document.querySelector('.nav-menu');
-  toggle?.addEventListener('click', () => {
-    navMenu?.classList.toggle('active');
-  });
+  const toggleIcon = toggle?.querySelector('i');
+
+  if (toggle && navMenu) {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isActive = navMenu.classList.toggle('active');
+      toggle.classList.toggle('active', isActive);
+      if (toggleIcon) {
+        toggleIcon.className = isActive ? 'ri-close-line' : 'ri-menu-line';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navMenu.contains(e.target) && !toggle.contains(e.target)) {
+        navMenu.classList.remove('active');
+        toggle.classList.remove('active');
+        if (toggleIcon) toggleIcon.className = 'ri-menu-line';
+      }
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        toggle.classList.remove('active');
+        if (toggleIcon) toggleIcon.className = 'ri-menu-line';
+      });
+    });
+  }
 }
 
 function renderSocialLinks() {
@@ -244,22 +237,28 @@ function initHeroSlider() {
 
   function updateHeroContent(slide) {
     if (!heroContentContainer || !slide) return;
-    heroContentContainer.innerHTML = `
-      <div class="hero-badge">
-        <i class="ri-vip-diamond-line"></i> ${slide.badge || 'Natural Stone Curators'}
-      </div>
-      <h1 class="hero-title">
-        ${slide.title || 'Masterpieces <span>Sculpted by Nature</span>'}
-      </h1>
-      <p class="hero-slogan">
-        ${slide.slogan || ''}
-      </p>
-      <div class="hero-actions">
-        <a href="${slide.btnLink || 'catalogue.html'}" class="btn btn-primary">
-          <i class="ri-compass-3-line"></i> ${slide.btnText || 'Explore Full Catalogue'}
-        </a>
-      </div>
-    `;
+    heroContentContainer.style.opacity = '0';
+    heroContentContainer.style.transform = 'translateY(8px)';
+    setTimeout(() => {
+      heroContentContainer.innerHTML = `
+        <div class="hero-badge">
+          <i class="ri-vip-diamond-line"></i> ${slide.badge || 'Natural Stone Curators'}
+        </div>
+        <h1 class="hero-title">
+          ${slide.title || 'Masterpieces <span>Sculpted by Nature</span>'}
+        </h1>
+        <p class="hero-slogan">
+          ${slide.slogan || ''}
+        </p>
+        <div class="hero-actions">
+          <a href="${slide.btnLink || 'catalogue.html'}" class="btn btn-primary">
+            <i class="ri-compass-3-line"></i> ${slide.btnText || 'Explore Full Catalogue'}
+          </a>
+        </div>
+      `;
+      heroContentContainer.style.opacity = '1';
+      heroContentContainer.style.transform = 'translateY(0)';
+    }, 200);
   }
 
   function goToSlide(index) {
