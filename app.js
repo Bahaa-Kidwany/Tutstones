@@ -16,15 +16,15 @@
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-  initThemeSwitcher();
-  initNavbar();
-  renderSocialLinks();
-  renderAboutSection();
-  renderContactDetails();
-  initHeroSlider();
-  renderFeaturedSections();
-  initCatalogue();
-  initModal();
+  try { initThemeSwitcher(); } catch (e) { console.error('Error initThemeSwitcher:', e); }
+  try { initNavbar(); } catch (e) { console.error('Error initNavbar:', e); }
+  try { renderSocialLinks(); } catch (e) { console.error('Error renderSocialLinks:', e); }
+  try { renderAboutSection(); } catch (e) { console.error('Error renderAboutSection:', e); }
+  try { renderContactDetails(); } catch (e) { console.error('Error renderContactDetails:', e); }
+  try { initHeroSlider(); } catch (e) { console.error('Error initHeroSlider:', e); }
+  try { renderFeaturedSections(); } catch (e) { console.error('Error renderFeaturedSections:', e); }
+  try { initCatalogue(); } catch (e) { console.error('Error initCatalogue:', e); }
+  try { initModal(); } catch (e) { console.error('Error initModal:', e); }
 });
 
 /* ==========================================================================
@@ -34,24 +34,27 @@ function initThemeSwitcher() {
   const savedTheme = localStorage.getItem('tutstones_palette') || 'default';
   applyTheme(savedTheme);
 
-  const switchBtns = document.querySelectorAll('.palette-switch-btn');
-  switchBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const selectedTheme = btn.getAttribute('data-theme-val');
+  // Global event delegation for 100% reliable theme button clicks
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.palette-switch-btn');
+    if (!btn) return;
+
+    e.preventDefault();
+    const selectedTheme = btn.getAttribute('data-theme-val');
+    if (selectedTheme) {
       applyTheme(selectedTheme);
       localStorage.setItem('tutstones_palette', selectedTheme);
-    });
+    }
   });
 }
 
 function applyTheme(theme) {
   if (theme && theme !== 'default') {
     document.documentElement.setAttribute('data-theme', theme);
-    document.body.setAttribute('data-theme', theme);
+    if (document.body) document.body.setAttribute('data-theme', theme);
   } else {
     document.documentElement.removeAttribute('data-theme');
-    document.body.removeAttribute('data-theme');
+    if (document.body) document.body.removeAttribute('data-theme');
   }
 
   const switchBtns = document.querySelectorAll('.palette-switch-btn');
