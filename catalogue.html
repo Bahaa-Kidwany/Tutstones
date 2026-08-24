@@ -1,12 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=materials.html">
-  <script>window.location.href = "materials.html";</script>
-  <title>Redirecting to Materials ( Marble – Granite )...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Catalogue | TUT STONES - Natural Marble & Granite</title>
+  <meta name="description"
+    content="Browse the complete natural stone catalogue at TutStones. Filter by marble, granite, finish, and origin. View detailed specifications and request sample sheets.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/tut_stones_logo.png">
+
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <p>Redirecting to <a href="materials.html">Materials ( Marble – Granite )</a>...</p>
+
+<body data-page="catalogue">
+
+  <!-- ==========================================================================
+       HEADER & NAV BAR
+       ========================================================================== -->
+  <header class="header scrolled">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/tut_stones_logo.png" alt="Tut Stones Winged Obelisk Logo" class="brand-logo-img">
+        <div class="brand-name">TUT <span>STONES</span></div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="factory.html" class="nav-link">Factory</a></li>
+        <li><a href="packaging.html" class="nav-link">Packaging & Loading</a></li>
+        <li class="nav-item-dropdown">
+          <a href="materials.html" class="nav-link active">Materials <i class="ri-arrow-down-s-line" style="font-size: 0.85rem; vertical-align: middle;"></i></a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="materials.html?type=marble"><i class="ri-vip-diamond-line"></i> Marble</a></li>
+            <li><a href="materials.html?type=granite"><i class="ri-shield-star-line"></i> Granite</a></li>
+          </ul>
+        </li>
+        <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+      </ul>
+
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <div class="palette-switch-wrapper">
+          <button type="button" class="palette-switch-btn active" data-theme-val="default" title="Palette 1: Classic Dark Gold">
+            <span class="palette-swatch swatch-dark"></span>
+            <span class="palette-label">Classic</span>
+          </button>
+          <button type="button" class="palette-switch-btn" data-theme-val="eastern-light" title="Palette 2: Eastern Light">
+            <span class="palette-swatch swatch-eastern"></span>
+            <span class="palette-label">Eastern</span>
+          </button>
+          <button type="button" class="palette-switch-btn" data-theme-val="pharaonic" title="Palette 3: Pharaonic Heritage">
+            <span class="palette-swatch swatch-pharaonic"></span>
+            <span class="palette-label">Pharaonic</span>
+          </button>
+        </div>
+        <a href="index.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+          <i class="ri-home-4-line"></i> Back Home
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       CATALOGUE HERO / HEADER BANNER
+       ========================================================================== -->
+  <section class="page-header-banner">
+    <div class="container" style="text-align: center;">
+      <span class="section-tag">ONLINE SHOWROOM</span>
+      <h1 class="section-title">The Complete <span>Stone Catalogue</span></h1>
+      <p class="section-desc" style="margin: 0 auto;">
+        Explore our curated collection of luxury natural stones. Search, filter by marble or granite, inspect
+        micro-specifications, and request technical sample sheets—strictly for architectural presentation with zero
+        payment requirements.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FULL CATALOGUE SECTION
+       ========================================================================== -->
+  <section id="catalogue-page" class="section-padding">
+    <div class="container">
+      <div class="catalogue-controls">
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="all">All Stone Types</button>
+          <button class="filter-pill" data-filter="marble">Marble Collection</button>
+          <button class="filter-pill" data-filter="granite">Granite Collection</button>
+        </div>
+
+        <div class="search-box">
+          <i class="ri-search-line search-icon"></i>
+          <input type="text" id="catalogue-search" class="search-input"
+            placeholder="Search stone name, origin, color...">
+        </div>
+      </div>
+
+      <!-- Category Description Banner (Dynamically rendered via app.js) -->
+      <div id="category-description-banner"></div>
+
+      <div id="catalogue-grid" class="stone-grid">
+        <!-- Dynamically rendered via app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SPECIFICATION MODAL VIEWER
+       ========================================================================== -->
+  <div id="spec-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-container">
+      <button id="modal-close-btn" class="modal-close" aria-label="Close modal">
+        <i class="ri-close-line"></i>
+      </button>
+      <div id="modal-content-body">
+        <!-- Dynamic content inserted via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer id="footer" class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-logo" style="margin-bottom: 1rem;">
+            <img src="assets/images/tut_stones_logo.png" alt="Tut Stones Winged Obelisk Logo" class="brand-logo-img">
+            <div class="brand-name">TUT <span>STONES</span></div>
+          </a>
+          <p>
+            Curators of global natural stone excellence. Providing architect-grade marble and granite slabs calibrated
+            to absolute precision.
+          </p>
+          <div class="footer-social-links"
+            style="display: flex; gap: 1rem; color: var(--color-gold-primary); font-size: 1.2rem;">
+            <a href="#"><i class="ri-instagram-line"></i></a>
+            <a href="#"><i class="ri-linkedin-fill"></i></a>
+            <a href="#"><i class="ri-facebook-fill"></i></a>
+            <a href="#"><i class="ri-pinterest-line"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Quick Navigation</h5>
+          <ul class="footer-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="catalogue.html">Catalogue Page</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Stone Types</h5>
+          <ul class="footer-links">
+            <li><a href="catalogue.html">Calacatta Gold</a></li>
+            <li><a href="catalogue.html">Bianco Carrara</a></li>
+            <li><a href="catalogue.html">Black Galaxy</a></li>
+            <li><a href="catalogue.html">Blue Pearl</a></li>
+            <li><a href="catalogue.html">Nero Marquina</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Showroom & Office</h5>
+          <ul class="footer-links" style="color: var(--color-text-muted);">
+            <li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> 104 Marble Avenue, Stone
+              District</li>
+            <li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> info@tutstones.com</li>
+            <li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> +1 (800) 555-TUT-STONE</li>
+            <li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> Mon - Sat: 8:00 AM - 6:00 PM</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 TUT STONES. All rights reserved. Dedicated Catalogue Page.</p>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Central Store & Application Script -->
+  <script src="store.js?v=1.0.3"></script>
+  <script src="app.js?v=1.0.3"></script>
 </body>
+
 </html>

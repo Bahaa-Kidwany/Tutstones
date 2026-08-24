@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us | TUT STONES - Egyptian Marble & Granite Exporter</title>
   <meta name="description"
-    content="Learn about TUT Stones, a distinguished Egyptian exporter of premium marble and granite founded in 2000. Sourcing directly from Egypt's finest quarries.">
+    content="Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering timeless natural stone to global architectural projects.">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/images/tut_stones_logo.png">
@@ -15,15 +15,15 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.0.5">
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body data-page="about">
 
   <!-- ==========================================================================
        HEADER & BRANDING NAVBAR
        ========================================================================== -->
-  <header class="header">
+  <header class="header scrolled">
     <div class="container nav-wrapper">
       <a href="index.html" class="brand-logo">
         <img src="assets/images/tut_stones_logo.png" alt="Tut Stones Logo" class="brand-logo-img">
@@ -35,83 +35,93 @@
         <li><a href="about.html" class="nav-link active">About Us</a></li>
         <li><a href="factory.html" class="nav-link">Factory</a></li>
         <li><a href="packaging.html" class="nav-link">Packaging & Loading</a></li>
-        <li><a href="materials.html" class="nav-link">Materials ( Marble – Granite )</a></li>
+        <li class="nav-item-dropdown">
+          <a href="materials.html" class="nav-link">Materials <i class="ri-arrow-down-s-line" style="font-size: 0.85rem; vertical-align: middle;"></i></a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="materials.html?type=marble"><i class="ri-vip-diamond-line"></i> Marble</a></li>
+            <li><a href="materials.html?type=granite"><i class="ri-shield-star-line"></i> Granite</a></li>
+          </ul>
+        </li>
         <li><a href="contact.html" class="nav-link">Contact Us</a></li>
       </ul>
 
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <div class="theme-switch-container" title="Choose Website Color Theme">
-          <button class="theme-switch-btn" data-theme="palette-1">
-            <span class="theme-dot theme-dot-p1"></span> Palette 1
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <div class="palette-switch-wrapper">
+          <button type="button" class="palette-switch-btn active" data-theme-val="default" title="Palette 1: Classic Dark Gold">
+            <span class="palette-swatch swatch-dark"></span>
+            <span class="palette-label">Classic</span>
           </button>
-          <button class="theme-switch-btn" data-theme="palette-2">
-            <span class="theme-dot theme-dot-p2"></span> Palette 2
+          <button type="button" class="palette-switch-btn" data-theme-val="eastern-light" title="Palette 2: Eastern Light">
+            <span class="palette-swatch swatch-eastern"></span>
+            <span class="palette-label">Eastern</span>
+          </button>
+          <button type="button" class="palette-switch-btn" data-theme-val="pharaonic" title="Palette 3: Pharaonic Heritage">
+            <span class="palette-swatch swatch-pharaonic"></span>
+            <span class="palette-label">Pharaonic</span>
           </button>
         </div>
-        <a href="materials.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
-          <i class="ri-compass-3-line"></i> Materials
+        <a href="contact.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+          <i class="ri-mail-send-line"></i> Contact Us
         </a>
       </div>
-
-      <button class="mobile-toggle" aria-label="Toggle Menu">
-        <i class="ri-menu-3-line"></i>
-      </button>
     </div>
   </header>
 
   <!-- ==========================================================================
-       PAGE BANNER HEADER
+       PAGE HERO BANNER
        ========================================================================== -->
-  <section class="page-banner">
-    <div class="container page-banner-content">
-      <span class="section-tag"><i class="ri-history-line"></i> OUR HERITAGE & VISION</span>
-      <h1>About <span>TUT Stones</span></h1>
-      <p>Delivering the timeless beauty of Egyptian marble and granite to architectural developments worldwide.</p>
+  <section class="page-header-banner">
+    <div class="container">
+      <span class="section-tag">HERITAGE & CRAFTSMANSHIP</span>
+      <h1 class="section-title">About <span>TUT Stones</span></h1>
+      <p class="section-desc" style="margin: 0 auto; max-width: 680px; color: var(--color-text-muted);">
+        Delivering the finest Egyptian marble and granite to international markets with passion, precision, and global logistics expertise.
+      </p>
     </div>
   </section>
 
   <!-- ==========================================================================
-       ABOUT US MAIN CONTENT SECTION
+       ABOUT MAIN STORY SECTION
        ========================================================================== -->
-  <section id="about" class="section-padding" style="background: var(--color-bg-dark);">
+  <section id="about" class="section-padding">
     <div class="container">
       <div class="about-grid">
         <div class="about-image-wrapper">
-          <img src="assets/images/about_craft.png" alt="TutStones Egyptian Quarry & Stone Craftsmanship">
+          <img src="assets/images/about_craft.png" alt="TutStones Egyptian Quarry & Craftsmanship">
           <div class="experience-badge">
-            <div class="exp-number">2000</div>
-            <div class="exp-text">Year Established<br>Egyptian Exporter</div>
+            <div class="exp-number">24+</div>
+            <div class="exp-text">Years Exporting<br>Egyptian Natural Stone</div>
           </div>
         </div>
 
         <div class="about-text">
-          <span class="section-tag">WHO WE ARE</span>
-          <h2 class="section-title">A Legacy of <span>Pure Egyptian Stone Artistry</span></h2>
+          <span class="section-tag">HERITAGE & CRAFTSMANSHIP</span>
+          <h2 class="section-title">Delivering The Timeless Beauty of <span>Egyptian Stone</span></h2>
           
-          <p style="color: var(--color-text-main); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.25rem; font-weight: 500;">
-            Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.
-          </p>
-          
-          <p style="color: var(--color-text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.25rem;">
-            At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.
-          </p>
-
-          <p style="color: var(--color-gold-hover); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem; font-weight: 600;">
-            We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.
-          </p>
+          <div class="about-paragraphs">
+            <p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">
+              Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.
+            </p>
+            <p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">
+              At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.
+            </p>
+            <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">
+              We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to custom cutting, quality control, packaging, and logistics, our experienced team ensures a seamless export experience tailored to your exact specifications.
+            </p>
+          </div>
 
           <div class="stats-grid">
             <div class="stat-card">
-              <h4>2000</h4>
-              <p>Founded Year</p>
+              <h4>24+</h4>
+              <p>Years Sourcing Rare Stone</p>
             </div>
             <div class="stat-card">
-              <h4>45+</h4>
-              <p>Export Countries</p>
+              <h4>50+</h4>
+              <p>Global Export Markets</p>
             </div>
             <div class="stat-card">
               <h4>100%</h4>
-              <p>Egyptian Origin</p>
+              <p>Authentic Egyptian Granite & Marble</p>
             </div>
           </div>
         </div>
@@ -120,35 +130,38 @@
   </section>
 
   <!-- ==========================================================================
-       CORE VALUES & COMPANY PILLARS
+       CORE VALUES & COMPANY MISSION
        ========================================================================== -->
-  <section class="section-padding" style="background: var(--color-bg-card); border-top: 1px solid var(--color-border-gold);">
+  <section class="section-padding" style="border-top: 1px solid var(--color-border);">
     <div class="container">
-      <div style="text-align: center; max-width: 750px; margin: 0 auto 3.5rem;">
-        <span class="section-tag">THE TUT STONES ADVANTAGE</span>
-        <h2 class="section-title">Why Global Clients <span>Partner With Us</span></h2>
-        <p style="color: var(--color-text-muted); font-size: 1.05rem;">
-          Our commitment to Egyptian natural stone excellence spans raw material quarrying, precision diamond processing, rigorous inspection, and export delivery.
-        </p>
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <span class="section-tag">WHY WORK WITH US</span>
+        <h2 class="section-title">Our Commitments <span>To Global Clients</span></h2>
       </div>
 
-      <div class="feature-grid-3">
+      <div class="process-grid">
         <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-landscape-fill"></i></div>
-          <h3>Direct Quarry Sourcing</h3>
-          <p>We select first-choice blocks directly from premier Egyptian marble and granite quarries in Sinai, Suez, Minya, and Aswan to ensure color consistency and structural density.</p>
+          <div class="feature-icon"><i class="ri-shield-check-line"></i></div>
+          <h3>Uncompromising Quality</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Every slab and cut-to-size order is strictly inspected for color consistency, grain uniformity, surface polish, and dimensional accuracy prior to loading.
+          </p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-tools-line"></i></div>
-          <h3>Custom Cut-To-Size</h3>
-          <p>Equipped with modern CNC bridge cutters and automated polishing lines, we fulfill exact architectural specifications for tiles, gangsaw slabs, and custom profiles.</p>
+          <div class="feature-icon"><i class="ri-price-tag-3-line"></i></div>
+          <h3>Competitive Direct Quarry Pricing</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            By controlling processing directly in Egypt, we offer competitive factory-direct prices without unnecessary intermediary costs.
+          </p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-ship-line"></i></div>
-          <h3>Full Export Logistics</h3>
-          <p>From seaworthy wooden crates to container weight optimization, moisture insulation, and ISPM-15 fumigation certificates, we manage global shipping smoothly.</p>
+          <div class="feature-icon"><i class="ri-global-line"></i></div>
+          <h3>Complete Export & Logistics</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Full container lashing, customs clearance documentation, certificate of origin, and sea freight handling to ports worldwide.
+          </p>
         </div>
       </div>
     </div>
@@ -166,9 +179,10 @@
             <div class="brand-name">TUT <span>STONES</span></div>
           </a>
           <p>
-            Distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to global markets.
+            Distinguished Egyptian exporter of premium marble and granite. Delivering timeless natural stone from Egypt to global markets.
           </p>
-          <div class="footer-social-links" style="display: flex; gap: 1rem; color: var(--color-gold-primary); font-size: 1.2rem;">
+          <div class="footer-social-links"
+            style="display: flex; gap: 1rem; color: var(--color-gold-primary); font-size: 1.2rem;">
             <a href="#"><i class="ri-instagram-line"></i></a>
             <a href="#"><i class="ri-linkedin-fill"></i></a>
             <a href="#"><i class="ri-facebook-fill"></i></a>
@@ -183,28 +197,28 @@
             <li><a href="about.html">About Us</a></li>
             <li><a href="factory.html">Factory</a></li>
             <li><a href="packaging.html">Packaging & Loading</a></li>
-            <li><a href="materials.html">Materials ( Marble – Granite )</a></li>
+            <li><a href="materials.html">Materials (Marble & Granite)</a></li>
             <li><a href="contact.html">Contact Us</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h5>Egyptian Materials</h5>
+          <h5>Materials</h5>
           <ul class="footer-links">
-            <li><a href="materials.html">Galala Extra Marble</a></li>
-            <li><a href="materials.html">Silvia Light Marble</a></li>
-            <li><a href="materials.html">Sunny Beige Marble</a></li>
-            <li><a href="materials.html">Sinai Pearl Grey</a></li>
-            <li><a href="materials.html">Aswan Red Granite</a></li>
+            <li><a href="materials.html?type=marble">Egyptian Marble</a></li>
+            <li><a href="materials.html?type=granite">Egyptian Granite</a></li>
+            <li><a href="materials.html">Galala Marble</a></li>
+            <li><a href="materials.html">Sunny Yellow Marble</a></li>
+            <li><a href="materials.html">Rosa Hudi Granite</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h5>Export Office & Factory</h5>
+          <h5>Export Office</h5>
           <ul class="footer-links" style="color: var(--color-text-muted);">
-            <li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.</li>
-            <li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:info@tutstones.com">info@tutstones.com</a> / <a href="mailto:sales@tutstones.com">sales@tutstones.com</a></li>
-            <li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:+201104539397">+20 110 453 9397</a></li>
+            <li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> Cairo, Egypt</li>
+            <li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> info@tutstones.com</li>
+            <li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> +20 100 000 0000</li>
             <li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> Mon - Sat: 8:00 AM - 6:00 PM</li>
           </ul>
         </div>
@@ -216,9 +230,8 @@
     </div>
   </footer>
 
-  <!-- Central Data Store & Application Script -->
-  <script src="store.js?v=1.0.5"></script>
-  <script src="app.js?v=1.0.5"></script>
+  <script src="store.js?v=1.0.4"></script>
+  <script src="app.js?v=1.0.4"></script>
 </body>
 
 </html>

@@ -2,42 +2,33 @@
    TUT STONES - Luxury Marble & Granite Catalogue Design System
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
-:root,
-[data-theme="palette-1"] {
+:root {
   --font-heading: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  /* Palette 1: Copper, Martinique, Kashmir Blue, Redwood, Gold Sand */
-  --color-bg-dark: #0E111F;
-  --color-bg-card: #181C2E;
-  --color-bg-surface: #242A42;
-  --color-bg-surface-glass: #181C2E; /* Solid non-transparent surface */
+  /* Color Palette */
+  --color-bg-dark: #0B0C0E;
+  --color-bg-card: #14161A;
+  --color-bg-surface: #1C1F26;
+  --color-bg-surface-glass: rgba(20, 22, 26, 0.75);
 
-  --color-gold-primary: #B36633; /* Copper */
-  --color-gold-hover: #E7BA80;   /* Gold Sand */
-  --color-accent-blue: #5474A1;  /* Kashmir Blue */
-  --color-accent-martinique: #323659; /* Martinique */
-  --color-accent-redwood: #5B1F11;    /* Redwood */
+  --color-gold-primary: #D4AF37;
+  --color-gold-hover: #E5C158;
+  --color-gold-muted: rgba(212, 175, 55, 0.15);
+  --color-gold-glow: rgba(212, 175, 55, 0.35);
 
-  --color-gold-muted: #2E211A; /* Solid dark copper badge background */
-  --color-gold-glow: rgba(179, 102, 51, 0.4);
+  --color-text-main: #F3F4F6;
+  --color-text-muted: #9CA3AF;
+  --color-text-dim: #6B7280;
 
-  --color-text-main: #F4F6FA;
-  --color-text-muted: #A3ADC2;
-  --color-text-dim: #717D96;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-gold: rgba(212, 175, 55, 0.3);
 
-  --color-border: #282E47;
-  --color-border-gold: #B36633;
-
-  --logo-filter: drop-shadow(0 0 8px #B36633) sepia(0.8) hue-rotate(330deg) saturate(2.5) brightness(1.1);
-  --logo-brand-main: #F4F6FA;
-  --logo-brand-span: #B36633;
-
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.8);
-  --shadow-gold: 0 0 25px rgba(179, 102, 51, 0.3);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.7);
+  --shadow-gold: 0 0 25px rgba(212, 175, 55, 0.2);
 
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -46,38 +37,6 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-full: 9999px;
-}
-
-[data-theme="palette-2"] {
-  /* Palette 2: Egyptian Hieroglyph Tomb Relief (Ochre Sand, Slate, Nile Lapis, Terracotta, Limestone) */
-  --color-bg-dark: #141210;
-  --color-bg-card: #221E1A;
-  --color-bg-surface: #2E2924;
-  --color-bg-surface-glass: #221E1A; /* Solid non-transparent surface */
-
-  --color-gold-primary: #D6B585; /* Ochre Sandstone */
-  --color-gold-hover: #E4C8A0;   /* Light Sandstone Gold */
-  --color-accent-blue: #57758D;  /* Nile Lapis Blue */
-  --color-accent-martinique: #7A8B92; /* Faded Mineral Slate */
-  --color-accent-redwood: #935352;    /* Hieroglyph Terracotta Rust */
-
-  --color-gold-muted: #332B20; /* Solid dark sandstone badge background */
-  --color-gold-glow: rgba(214, 181, 133, 0.4);
-
-  --color-text-main: #F7F4EF;
-  --color-text-muted: #B8B0A5;
-  --color-text-dim: #847C72;
-
-  --color-border: #3A332B;
-  --color-border-gold: #D6B585;
-
-  --logo-filter: drop-shadow(0 0 8px #D6B585) sepia(0.6) hue-rotate(15deg) saturate(1.8) brightness(1.25);
-  --logo-brand-main: #F7F4EF;
-  --logo-brand-span: #D6B585;
-
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.85);
-  --shadow-gold: 0 0 25px rgba(214, 181, 133, 0.3);
 }
 
 /* Reset & Base Styles */
@@ -220,80 +179,78 @@ button {
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 0.85rem 0;
-  background: var(--color-bg-card);
-  border-bottom: 1px solid var(--color-border-gold);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  padding: 1.25rem 0;
+  background: rgba(11, 12, 14, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border);
   transition: var(--transition-smooth);
 }
 
 .header.scrolled {
-  padding: 0.7rem 0;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.85);
+  background: rgba(11, 12, 14, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border-gold);
+  padding: 0.85rem 0;
+}
+
+.mobile-toggle {
+  display: none !important;
 }
 
 .nav-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap;
-  gap: 1rem;
 }
 
 .brand-logo {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.75rem;
   text-decoration: none;
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .brand-logo-img {
-  height: 44px;
+  height: 48px;
   width: auto;
-  max-height: 44px;
+  max-height: 48px;
   object-fit: contain;
-  filter: var(--logo-filter);
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .brand-logo:hover .brand-logo-img {
   transform: scale(1.06);
-  filter: var(--logo-filter) drop-shadow(0 0 12px var(--color-gold-hover));
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.6));
 }
 
 .brand-name {
   font-family: var(--font-heading);
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--logo-brand-main, #FFF);
-  white-space: nowrap;
-  transition: color 0.3s ease;
+  letter-spacing: 0.08em;
+  color: #FFF;
 }
 
 .brand-name span {
-  color: var(--logo-brand-span, var(--color-gold-primary));
-  font-weight: 600;
-  white-space: nowrap;
-  transition: color 0.3s ease;
+  color: var(--color-gold-primary);
+  font-weight: 400;
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 2.2rem;
   list-style: none;
-  white-space: nowrap;
 }
 
 .nav-link {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--color-text-muted);
   position: relative;
-  white-space: nowrap;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -315,12 +272,125 @@ button {
   width: 100%;
 }
 
-/* Mobile Toggle */
-.mobile-toggle {
-  display: none;
-  font-size: 1.6rem;
+/* Dropdown Menu for Materials */
+.nav-item-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0;
+  box-shadow: var(--shadow-heavy);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.25s ease;
+  list-style: none;
+  z-index: 1100;
+}
+
+.nav-item-dropdown:hover .nav-dropdown-menu,
+.nav-item-dropdown.active .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-dropdown-menu li a {
+  display: block;
+  padding: 0.6rem 1.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.nav-dropdown-menu li a:hover,
+.nav-dropdown-menu li a.active {
   color: var(--color-gold-primary);
-  cursor: pointer;
+  background: var(--color-gold-muted);
+  padding-left: 1.5rem;
+}
+
+/* Page Header Banner styling */
+.page-header-banner {
+  background: linear-gradient(180deg, rgba(11,12,14,0.95) 0%, var(--color-bg-card) 100%), url('assets/images/eastern_mosaic_hero_bg.png') center/cover;
+  padding-top: 9rem;
+  padding-bottom: 4.5rem;
+  border-bottom: 1px solid var(--color-border-gold);
+  text-align: center;
+}
+
+.page-header-banner p {
+  color: #FFFFFF !important;
+  opacity: 0.95;
+}
+
+/* Process Card & Feature Cards */
+.process-grid, .features-grid, .loading-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+}
+
+.feature-card, .process-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  transition: var(--transition-smooth);
+}
+
+.feature-card:hover, .process-card:hover {
+  border-color: var(--color-gold-primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-gold);
+}
+
+.feature-icon, .process-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--color-gold-muted);
+  color: var(--color-gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Mobile Nav Active state override */
+.nav-menu.active {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: var(--color-bg-card);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--color-border-gold);
+  box-shadow: var(--shadow-heavy);
+}
+
+.nav-menu.active .nav-dropdown-menu {
+  position: static;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  border: none;
+  box-shadow: none;
+  padding-left: 1rem;
+  background: transparent;
 }
 
 /* ==========================================================================
@@ -342,6 +412,7 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .hero-slide {
@@ -352,15 +423,25 @@ button {
   height: 100%;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(100%);
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease, visibility 0.85s ease;
   background-size: cover;
   background-position: center;
+  z-index: 1;
 }
 
 .hero-slide.active {
   opacity: 1;
   visibility: visible;
-  transform: scale(1);
+  transform: translateX(0);
+  z-index: 2;
+}
+
+.hero-slide.prev-slide {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-100%);
+  z-index: 1;
 }
 
 .hero-slide::before {
@@ -587,18 +668,17 @@ button {
 
 .stone-card {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border-gold);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
   transition: var(--transition-smooth);
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow-sm);
 }
 
 .stone-card:hover {
   transform: translateY(-6px);
-  border-color: var(--color-gold-hover);
+  border-color: var(--color-border-gold);
   box-shadow: var(--shadow-gold);
 }
 
@@ -623,14 +703,14 @@ button {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: var(--color-bg-surface);
+  background: rgba(11, 12, 14, 0.85);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--color-border-gold);
-  padding: 0.25rem 0.7rem;
+  padding: 0.2rem 0.6rem;
   border-radius: var(--radius-full);
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--color-gold-hover);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  color: var(--color-gold-primary);
 }
 
 .stone-body {
@@ -653,15 +733,15 @@ button {
   width: 100%;
   margin: 0.85rem 0;
   border-collapse: collapse;
-  font-size: 0.8rem;
-  background: var(--color-bg-surface);
+  font-size: 0.82rem;
+  background: rgba(0, 0, 0, 0.3);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-gold);
+  border: 1px solid var(--color-border);
   overflow: hidden;
 }
 
 .card-spec-table tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .card-spec-table tr:last-child {
@@ -669,17 +749,18 @@ button {
 }
 
 .card-spec-table td {
-  padding: 0.35rem 0.6rem;
+  padding: 0.45rem 0.65rem;
 }
 
 .card-spec-table td:first-child {
   color: var(--color-gold-primary);
-  font-weight: 600;
+  font-weight: 700;
   width: 42%;
 }
 
 .card-spec-table td:last-child {
-  color: var(--color-text-muted);
+  color: var(--color-text-main);
+  font-weight: 600;
 }
 
 .stone-meta {
@@ -1030,319 +1111,1185 @@ button {
   color: var(--color-text-dim);
 }
 
+
 /* Responsive Breakpoints */
-@media (max-width: 1180px) {
-  .mobile-toggle {
-    display: block;
-    cursor: pointer;
-  }
-
-  .nav-menu {
-    position: fixed;
-    top: 62px;
-    left: -100%;
-    width: 100%;
-    height: calc(100vh - 62px);
-    background: var(--color-bg-card);
-    border-top: 1px solid var(--color-border-gold);
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 3rem 1.5rem;
-    gap: 1.75rem;
-    transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow-y: auto;
-    z-index: 999;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.85);
-  }
-
-  .nav-menu.active {
-    left: 0;
-  }
-
-  .nav-link {
-    font-size: 1.15rem;
-  }
-
-  .hero-title { font-size: 2.8rem; }
-}
-
 @media (max-width: 992px) {
-  .hero-title { font-size: 2.5rem; }
+  .hero-title { font-size: 3rem; }
   .about-grid { grid-template-columns: 1fr; }
   .modal-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
-  .hero-title { font-size: 2.1rem; }
-  .section-title { font-size: 1.9rem; }
+  .nav-menu { display: none; }
+  .mobile-toggle { display: block; }
+  .hero-title { font-size: 2.2rem; }
+  .section-title { font-size: 2rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .catalogue-controls { flex-direction: column; align-items: stretch; }
+  .palette-label { display: none; }
+  .palette-switch-btn { padding: 0.35rem 0.45rem; }
 }
 
 /* ==========================================================================
-   Pharaonic Hero & Standalone Pages Styling
+   PALETTE SWITCHER CONTROL & PALETTE 2 (EASTERN LIGHT THEME)
    ========================================================================== */
-.home-section-hero {
-  position: relative;
-  min-height: 85vh;
+
+/* Palette Switcher Header Widget */
+.palette-switch-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding: 10.5rem 0 5rem;
-  overflow: hidden;
-}
-
-.home-section-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, var(--color-bg-dark) 0%, var(--color-bg-card) 100%);
-  opacity: 0.93;
-  z-index: 1;
-}
-
-.pharaonic-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 50% 30%, var(--color-gold-glow), transparent 70%);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.home-hero-content {
-  position: relative;
-  z-index: 3;
-  text-align: center;
-  max-width: 950px;
-  margin: 0 auto;
-}
-
-.home-hero-content h1 {
-  font-family: var(--font-heading);
-  font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1.15;
-  color: #FFFFFF;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-}
-
-.home-hero-content h1 span {
-  color: var(--color-gold-primary);
-  font-style: italic;
-}
-
-.home-hero-content p {
-  font-size: 1.25rem;
-  color: #E2E8F0;
-  line-height: 1.7;
-  max-width: 820px;
-  margin: 0 auto 2.5rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-}
-
-/* Page Banner Header for Dedicated Pages */
-.page-banner {
-  position: relative;
-  padding: 9.5rem 0 3.5rem;
-  background: var(--color-bg-card);
-  border-bottom: 2px solid var(--color-border-gold);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  text-align: center;
-}
-
-.page-banner::before {
-  display: none;
-}
-
-.page-banner-content {
-  position: relative;
-  z-index: 2;
-}
-
-.page-banner h1 {
-  font-family: var(--font-heading);
-  font-size: 3.2rem;
-  color: #FFF;
-  margin-bottom: 1rem;
-}
-
-.page-banner h1 span {
-  color: var(--color-gold-primary);
-  font-style: italic;
-}
-
-.page-banner p {
-  color: var(--color-text-muted);
-  font-size: 1.15rem;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-/* Factory & Packaging Cards */
-.feature-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.feature-card {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-gold);
-  border-radius: var(--radius-md);
-  padding: 2.25rem;
-  transition: var(--transition-smooth);
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--color-gold-primary);
-  box-shadow: var(--shadow-gold);
-}
-
-.feature-card-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-md);
-  background: var(--color-gold-muted);
-  border: 1px solid var(--color-border-gold);
-  color: var(--color-gold-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.feature-card h3 {
-  font-family: var(--font-heading);
-  font-size: 1.6rem;
-  color: #FFF;
-  margin-bottom: 0.75rem;
-}
-
-.feature-card p {
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-/* Contact Cards & Form */
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  gap: 3rem;
-  margin-top: 2rem;
-}
-
-.contact-card-box {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-gold);
-  border-radius: var(--radius-md);
-  padding: 2rem;
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
-}
-
-.contact-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--color-gold-muted);
-  color: var(--color-gold-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  flex-shrink: 0;
-}
-
-.contact-info h4 {
-  font-family: var(--font-heading);
-  font-size: 1.3rem;
-  color: #FFF;
-  margin-bottom: 0.35rem;
-}
-
-.contact-info p, .contact-info a {
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-}
-
-.contact-info a:hover {
-  color: var(--color-gold-primary);
-}
-
-/* ==========================================================================
-   Header Color Palette Switcher Control
-   ========================================================================== */
-.theme-switch-container {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-gold);
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
+  padding: 3px;
   border-radius: var(--radius-full);
-  padding: 0.25rem;
-  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
 }
 
-.theme-switch-btn {
+[data-theme="eastern-light"] .palette-switch-wrapper {
+  background: #EFE4D6;
+  border-color: #DFD5C4;
+}
+
+.palette-switch-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 6px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-full);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-  border: 1px solid transparent;
-  background: transparent;
   color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.theme-switch-btn:hover {
+.palette-switch-btn:hover {
   color: var(--color-text-main);
 }
 
-.theme-switch-btn.active {
-  background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-hover) 100%);
-  color: #0B0C0E;
-  border-color: var(--color-gold-hover);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+.palette-switch-btn.active {
+  background: var(--color-gold-primary);
+  color: #000000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-.theme-dot {
-  width: 10px;
-  height: 10px;
+[data-theme="eastern-light"] .palette-switch-btn.active {
+  background: #B36633;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(179, 102, 51, 0.35);
+}
+
+.palette-swatch {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   display: inline-block;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
-.theme-dot-p1 {
-  background: linear-gradient(135deg, #B36633 50%, #5474A1 50%);
+.swatch-dark {
+  background: linear-gradient(135deg, #0B0C0E 50%, #D4AF37 50%);
 }
 
-.theme-dot-p2 {
-  background: linear-gradient(135deg, #D6B585 50%, #57758D 50%);
+.swatch-eastern {
+  background: conic-gradient(#B36633 0deg 72deg, #323659 72deg 144deg, #5474A1 144deg 216deg, #5B1F11 216deg 288deg, #E7BA80 288deg 360deg);
 }
+
+.swatch-pharaonic {
+  background: conic-gradient(
+    #DFB77D 0deg 60deg,
+    #D8D3C8 60deg 120deg,
+    #BEADA1 120deg 180deg,
+    #7B8E93 180deg 240deg,
+    #567394 240deg 300deg,
+    #8D4F4E 300deg 360deg
+  );
+}
+
+.palette-label {
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   PALETTE 2: EASTERN MULTI-COLOR MOSAIC THEME OVERRIDES
+   Vibrant, multi-colored palette derived directly from Eastern Stained Glass & Mosaic:
+   - Copper: #B36633
+   - Martinique: #323659
+   - Kashmir Blue: #5474A1
+   - Redwood: #5B1F11
+   - Gold Sand: #E7BA80
+   -------------------------------------------------------------------------- */
+
+[data-theme="eastern-light"] {
+  color-scheme: light;
+
+  /* Multi-Color Theme Variables */
+  --color-bg-dark: #FAF5EE; /* Light warm sandstone page background */
+  --color-bg-card: #FFFFFF; /* Crisp solid white card surface */
+  --color-bg-surface: #F2E8DB; /* Soft warm ceramic surface */
+  --color-bg-surface-glass: #FAF5EE;
+
+  --color-gold-primary: #B36633; /* Copper */
+  --color-gold-hover: #5B1F11; /* Redwood */
+  --color-gold-muted: rgba(84, 116, 161, 0.12);
+  --color-gold-glow: rgba(179, 102, 51, 0.2);
+
+  --color-text-main: #323659; /* Martinique Deep Blue for main text */
+  --color-text-muted: #5474A1; /* Kashmir Blue for secondary text */
+  --color-text-dim: #5B1F11; /* Redwood for captions/dim text */
+
+  --color-border: #E0D5C5; /* Warm sandstone border */
+  --color-border-gold: #E7BA80; /* Gold Sand border */
+
+  --shadow-sm: 0 4px 14px rgba(50, 54, 89, 0.06);
+  --shadow-lg: 0 10px 30px -5px rgba(50, 54, 89, 0.12);
+  --shadow-gold: 0 4px 20px rgba(179, 102, 51, 0.18);
+}
+
+[data-theme="eastern-light"] body {
+  background-color: #FAF5EE;
+  color: #323659;
+}
+
+/* Header & Scrolled Navbar in Palette 2 - Translucent Oriental Blue */
+[data-theme="eastern-light"] .header {
+  background: rgba(50, 54, 89, 0.90) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 3px solid #E7BA80 !important;
+  box-shadow: 0 4px 20px rgba(50, 54, 89, 0.2) !important;
+}
+
+[data-theme="eastern-light"] .header.scrolled {
+  background: rgba(37, 40, 66, 0.96) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 3px solid #E7BA80 !important;
+}
+
+[data-theme="eastern-light"] .brand-name {
+  color: #FFFFFF !important;
+  font-family: var(--font-heading) !important;
+}
+
+[data-theme="eastern-light"] .brand-name span {
+  color: #E7BA80 !important;
+}
+
+[data-theme="eastern-light"] .nav-link {
+  color: #F3F4F6 !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="eastern-light"] .nav-link:hover,
+[data-theme="eastern-light"] .nav-link.active {
+  color: #E7BA80 !important;
+}
+
+[data-theme="eastern-light"] .nav-link::after {
+  background: #E7BA80 !important;
+}
+
+[data-theme="eastern-light"] .nav-dropdown-menu {
+  background: #323659 !important;
+  border: 2px solid #E7BA80 !important;
+  box-shadow: 0 10px 30px rgba(50, 54, 89, 0.3) !important;
+}
+
+[data-theme="eastern-light"] .nav-dropdown-menu li a {
+  color: #F3F4F6 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="eastern-light"] .nav-dropdown-menu li a:hover {
+  color: #FFFFFF !important;
+  background: #B36633 !important;
+}
+
+/* Header Palette Switcher Widget in Palette 2 */
+[data-theme="eastern-light"] .palette-switch-wrapper {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #E7BA80 !important;
+}
+
+[data-theme="eastern-light"] .palette-switch-btn {
+  color: #F3F4F6 !important;
+}
+
+[data-theme="eastern-light"] .palette-switch-btn.active {
+  background: #E7BA80 !important;
+  color: #323659 !important;
+  box-shadow: 0 2px 10px rgba(231, 186, 128, 0.4) !important;
+}
+
+/* Clear Sliders (No Translucent Blue Overlays!) */
+[data-theme="eastern-light"] .hero-slide::before {
+  background: linear-gradient(
+    180deg,
+    rgba(31, 26, 23, 0.35) 0%,
+    rgba(31, 26, 23, 0.55) 100%
+  ) !important;
+}
+
+/* Top Section Banner of Each Page - Redwood Theme (#5B1F11) */
+[data-theme="eastern-light"] .page-header-banner {
+  background: linear-gradient(135deg, rgba(91, 31, 17, 0.92) 0%, rgba(59, 19, 10, 0.92) 100%), url('assets/images/eastern_mosaic_hero_bg.png') center/cover !important;
+  background-blend-mode: overlay !important;
+  border-bottom: 4px solid #E7BA80 !important; /* Gold Sand accent border */
+  box-shadow: 0 4px 20px rgba(50, 54, 89, 0.2) !important;
+}
+
+[data-theme="eastern-light"] .page-header-banner h1,
+[data-theme="eastern-light"] .page-header-banner .section-title {
+  color: #FFFFFF !important;
+  font-family: var(--font-heading) !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="eastern-light"] .page-header-banner p,
+[data-theme="eastern-light"] .page-header-banner .section-desc {
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Section Tags & Badges - Distinct Side-by-Side Colors */
+[data-theme="eastern-light"] .section-tag {
+  background: #E7BA80; /* Gold Sand tag background */
+  color: #323659; /* Martinique text */
+  border: 1px solid #B36633; /* Copper border */
+  font-weight: 700;
+}
+
+[data-theme="eastern-light"] .hero-badge {
+  background: #FFFFFF;
+  border: 2px solid #E7BA80;
+  color: #B36633;
+  backdrop-filter: none;
+  box-shadow: 0 4px 14px rgba(50, 54, 89, 0.12);
+}
+
+[data-theme="eastern-light"] .stone-badge {
+  background: #5B1F11; /* Redwood badge */
+  border: 1px solid #E7BA80;
+  color: #E7BA80; /* Gold Sand text */
+  backdrop-filter: none;
+}
+
+[data-theme="eastern-light"] .experience-badge {
+  background: #FFFFFF;
+  border: 2px solid #5474A1; /* Kashmir Blue border */
+  color: #323659;
+  backdrop-filter: none;
+  box-shadow: 0 4px 16px rgba(50, 54, 89, 0.1);
+}
+
+[data-theme="eastern-light"] .exp-number {
+  color: #B36633; /* Copper */
+}
+
+[data-theme="eastern-light"] .exp-text {
+  color: #5474A1; /* Kashmir Blue */
+}
+
+/* Typography & Multi-Color Section Titles */
+[data-theme="eastern-light"] .section-title {
+  color: #323659; /* Martinique */
+}
+
+[data-theme="eastern-light"] .section-title span {
+  color: #B36633; /* Copper */
+}
+
+[data-theme="eastern-light"] .section-desc {
+  color: #5474A1; /* Kashmir Blue */
+}
+
+/* Multi-Color Cards - Displaying Multiple Palette Colors Simultaneously */
+[data-theme="eastern-light"] .feature-card,
+[data-theme="eastern-light"] .process-card,
+[data-theme="eastern-light"] .stone-card,
+[data-theme="eastern-light"] .catalogue-card,
+[data-theme="eastern-light"] .stat-card {
+  background: #FFFFFF;
+  border: 1px solid #E0D5C5;
+  border-top: 4px solid;
+  border-image: linear-gradient(90deg, #B36633 0%, #323659 25%, #5474A1 50%, #5B1F11 75%, #E7BA80 100%) 1;
+  box-shadow: 0 8px 24px rgba(50, 54, 89, 0.07);
+}
+
+[data-theme="eastern-light"] .feature-card:hover,
+[data-theme="eastern-light"] .process-card:hover,
+[data-theme="eastern-light"] .stone-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(179, 102, 51, 0.18);
+}
+
+/* Alternating Multi-Color Icon Circles across Cards */
+[data-theme="eastern-light"] .feature-grid > div:nth-child(1) .feature-icon,
+[data-theme="eastern-light"] .process-grid > div:nth-child(1) .process-icon {
+  background: #B36633; /* Copper */
+  color: #FFFFFF;
+}
+
+[data-theme="eastern-light"] .feature-grid > div:nth-child(2) .feature-icon,
+[data-theme="eastern-light"] .process-grid > div:nth-child(2) .process-icon {
+  background: #5474A1; /* Kashmir Blue */
+  color: #FFFFFF;
+}
+
+[data-theme="eastern-light"] .feature-grid > div:nth-child(3) .feature-icon,
+[data-theme="eastern-light"] .process-grid > div:nth-child(3) .process-icon {
+  background: #5B1F11; /* Redwood */
+  color: #FFFFFF;
+}
+
+[data-theme="eastern-light"] .feature-grid > div:nth-child(4) .feature-icon,
+[data-theme="eastern-light"] .process-grid > div:nth-child(4) .process-icon {
+  background: #323659; /* Martinique */
+  color: #E7BA80;
+}
+
+[data-theme="eastern-light"] .stat-card h4 {
+  color: #B36633;
+}
+
+[data-theme="eastern-light"] .stat-card p {
+  color: #5474A1;
+}
+
+/* Clean Alternating Section Backgrounds */
+[data-theme="eastern-light"] .stone-section {
+  background: #F4ECE1; /* Warm sandstone ceramic surface */
+  border-top: 1px solid #E0D5C5;
+  border-bottom: 1px solid #E0D5C5;
+}
+
+[data-theme="eastern-light"] .stone-section-alt {
+  background: #FAF5EE;
+}
+
+/* Distinct Multi-Color Buttons */
+[data-theme="eastern-light"] .btn-primary {
+  background: #B36633; /* Solid Copper */
+  color: #FFFFFF;
+  border: 1px solid #E7BA80; /* Gold Sand border */
+  box-shadow: 0 4px 15px rgba(179, 102, 51, 0.3);
+}
+
+[data-theme="eastern-light"] .btn-primary:hover {
+  background: #5B1F11; /* Redwood on hover */
+  color: #FFFFFF;
+}
+
+[data-theme="eastern-light"] .btn-outline {
+  background: #5474A1; /* Solid Kashmir Blue */
+  color: #FFFFFF;
+  border: 1px solid #E7BA80;
+}
+
+[data-theme="eastern-light"] .btn-outline:hover {
+  background: #323659; /* Martinique on hover */
+  color: #FFFFFF;
+}
+
+/* High Contrast Catalogue Specifications Table in Palette 2 */
+[data-theme="eastern-light"] .stone-name {
+  color: #1E2235 !important;
+  font-weight: 700;
+}
+
+[data-theme="eastern-light"] .card-spec-table {
+  background: #F4ECE1 !important;
+  border: 1px solid #D8CBB9 !important;
+}
+
+[data-theme="eastern-light"] .card-spec-table tr {
+  border-bottom: 1px solid #E4D7C5 !important;
+}
+
+[data-theme="eastern-light"] .card-spec-table td:first-child {
+  color: #5B1F11 !important; /* Deep Redwood Labels */
+  font-weight: 700 !important;
+}
+
+[data-theme="eastern-light"] .card-spec-table td:first-child i {
+  color: #B36633 !important; /* Copper Icons */
+}
+
+[data-theme="eastern-light"] .card-spec-table td:last-child {
+  color: #1E2235 !important; /* Deep Martinique Black-Blue Values */
+  font-weight: 700 !important;
+}
+
+/* Modal in Palette 2 */
+[data-theme="eastern-light"] .modal-content {
+  background: #FAF5EE;
+  border: 3px solid #E7BA80;
+  color: #323659;
+}
+
+/* Base Form Control Styles */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-main);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+/* High Contrast Form & Contact Section Styles in Palette 2 */
+[data-theme="eastern-light"] input[type="text"],
+[data-theme="eastern-light"] input[type="email"],
+[data-theme="eastern-light"] input[type="tel"],
+[data-theme="eastern-light"] input[type="number"],
+[data-theme="eastern-light"] select,
+[data-theme="eastern-light"] textarea {
+  background: #FFFFFF !important;
+  border: 1.5px solid #C4B6A4 !important;
+  color: #1E2235 !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="eastern-light"] input::placeholder,
+[data-theme="eastern-light"] textarea::placeholder {
+  color: #665E56 !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+}
+
+[data-theme="eastern-light"] input:focus,
+[data-theme="eastern-light"] select:focus,
+[data-theme="eastern-light"] textarea:focus {
+  border-color: #B36633 !important;
+  box-shadow: 0 0 0 3px rgba(179, 102, 51, 0.25) !important;
+}
+
+[data-theme="eastern-light"] label {
+  color: #5B1F11 !important; /* Deep Redwood Labels */
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+}
+
+[data-theme="eastern-light"] .inquiry-form p,
+[data-theme="eastern-light"] form p {
+  color: #323659 !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="eastern-light"] .contact-item,
+[data-theme="eastern-light"] div[style*="background: var(--color-bg-card)"] {
+  background: #FFFFFF !important;
+  border: 1px solid #DFD5C4 !important;
+  box-shadow: 0 4px 16px rgba(50, 54, 89, 0.06) !important;
+}
+
+[data-theme="eastern-light"] div[style*="background: var(--color-bg-card)"] h3,
+[data-theme="eastern-light"] div[style*="background: var(--color-bg-card)"] h5 {
+  color: #1E2235 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="eastern-light"] div[style*="background: var(--color-bg-card)"] p {
+  color: #1E2235 !important;
+  font-weight: 600 !important;
+}
+
+/* Gold Sand Footer in Palette 2 (#E7BA80) - High Contrast Readable Text */
+[data-theme="eastern-light"] footer {
+  background: #E7BA80; /* Gold Sand Footer */
+  border-top: 4px solid #B36633; /* Copper Top Border */
+  color: #1E2235;
+}
+
+[data-theme="eastern-light"] footer p,
+[data-theme="eastern-light"] footer li,
+[data-theme="eastern-light"] footer span,
+[data-theme="eastern-light"] .footer-brand-desc,
+[data-theme="eastern-light"] .footer-links,
+[data-theme="eastern-light"] .footer-links a,
+[data-theme="eastern-light"] .footer-col p {
+  color: #1E2235 !important;
+  font-weight: 600;
+}
+
+[data-theme="eastern-light"] footer i {
+  color: #5B1F11 !important; /* Redwood icons for crisp distinction */
+}
+
+[data-theme="eastern-light"] .footer-col h5 {
+  color: #5B1F11 !important; /* Redwood column titles */
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+[data-theme="eastern-light"] .footer-links a:hover {
+  color: #5B1F11 !important; /* Deep Redwood on link hover */
+  padding-left: 4px;
+}
+
+[data-theme="eastern-light"] .footer-bottom,
+[data-theme="eastern-light"] .footer-bottom p {
+  border-top: 1px solid rgba(30, 34, 53, 0.2);
+  color: #1E2235 !important;
+  font-weight: 600;
+}
+
+
+/* ==========================================================================
+   PALETTE 3: PHARAONIC HERITAGE THEME OVERRIDES (TRANSLUCENT DARK MODE)
+   Vibrant, royal Egyptian palette with close-up hieroglyphic stone wall backgrounds:
+   - Desert Sand Gold: #DFB77D
+   - Alabaster Limestone: #D8D3C8
+   - Sandstone Taupe: #BEADA1
+   - Slate Nile Teal: #7B8E93
+   - Royal Lapis Lazuli Blue: #567394 / #7AA2D0
+   - Egyptian Jasper Carnelian Red: #8D4F4E / #E58684
+   - Translucent Midnight Obsidian: rgba(10, 16, 24, 0.88)
+   ========================================================================== */
+
+/* ==========================================================================
+   PALETTE 3: PHARAONIC HERITAGE THEME OVERRIDES (RICH MULTI-COLOR LIGHT MODE)
+   Vibrant, multi-colored Egyptian palette derived directly from painted limestone wall reliefs:
+   - Sandstone Gold / Desert Ochre: #DFB77D / #E5C396
+   - Limestone Alabaster / Warm Off-White: #FAF6F0 / #F2ECDE
+   - Warm Stone Taupe / Desert Sand: #BEADA1 / #D2C4B7
+   - Slate Nile Teal: #7B8E93 / #5A6D72
+   - Royal Lapis Lazuli Blue: #567394 / #3E5A7B / #2D3E55
+   - Egyptian Jasper Carnelian Red: #8D4F4E / #723B3A
+   ========================================================================== */
+
+[data-theme="pharaonic"] {
+  color-scheme: light;
+
+  /* Pharaonic Rich Multi-Color Theme Variables */
+  --color-bg-dark: #F2E7D5; /* Rich warm sandstone gold page background */
+  --color-bg-card: #FFFDF5; /* Warm alabaster card surface */
+  --color-bg-surface: rgba(223, 183, 125, 0.25); /* Soft warm ochre surface */
+  --color-bg-surface-glass: rgba(245, 235, 218, 0.85);
+
+  --color-gold-primary: #8D4F4E; /* Terracotta Jasper Red primary accent */
+  --color-gold-hover: #567394; /* Royal Lapis Blue hover */
+  --color-gold-muted: rgba(141, 79, 78, 0.15);
+  --color-gold-glow: rgba(223, 183, 125, 0.4);
+
+  --color-text-main: #241C18; /* Deep Charcoal / Obsidian for crisp reading */
+  --color-text-muted: #3E5A7B; /* Royal Lapis Blue for subheadings/secondary text */
+  --color-text-dim: #5A6D72; /* Nile Slate Teal for captions */
+
+  --color-border: #DFB77D; /* Sandstone Gold border */
+  --color-border-gold: #8D4F4E; /* Jasper Red border accent */
+
+  --shadow-sm: 0 4px 14px rgba(36, 28, 24, 0.10);
+  --shadow-lg: 0 10px 30px rgba(36, 28, 24, 0.16);
+  --shadow-gold: 0 4px 20px rgba(223, 183, 125, 0.35);
+}
+
+/* Base Body Styling with Rich Warm Sandstone Gold Wash over Page-Specific Hieroglyphic Stone Wall Backgrounds */
+[data-theme="pharaonic"] body {
+  background-color: #F2E7D5 !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  color: #241C18 !important;
+  position: relative;
+}
+
+[data-theme="pharaonic"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Rich warm sandstone gold wash letting hieroglyphic wall drawings shine through in vivid warm stone tones */
+  background: radial-gradient(circle at 50% 30%, rgba(245, 235, 218, 0.60) 0%, rgba(232, 216, 192, 0.82) 100%) !important;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Multi-Colored Translucent Section Backgrounds in Pharaonic Mode */
+[data-theme="pharaonic"] section:not(.page-header-banner),
+[data-theme="pharaonic"] .section-padding:not(.page-header-banner),
+[data-theme="pharaonic"] main {
+  background: rgba(235, 222, 202, 0.35) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+[data-theme="pharaonic"] .stone-section {
+  background: rgba(223, 183, 125, 0.28) !important;
+  backdrop-filter: blur(6px);
+  border-top: 3px solid #DFB77D;
+  border-bottom: 3px solid #DFB77D;
+}
+
+[data-theme="pharaonic"] .stone-section-alt {
+  background: rgba(86, 115, 148, 0.15) !important;
+  backdrop-filter: blur(6px);
+  border-top: 3px solid #567394;
+  border-bottom: 3px solid #567394;
+}
+
+/* Page-Specific Hieroglyphic Backgrounds */
+[data-theme="pharaonic"] body[data-page="home"],
+[data-theme="pharaonic"] body:not([data-page]) {
+  background-image: url('assets/images/pharaonic_bg_home.png') !important;
+}
+
+[data-theme="pharaonic"] body[data-page="about"] {
+  background-image: url('assets/images/pharaonic_bg_about.png') !important;
+}
+
+[data-theme="pharaonic"] body[data-page="factory"] {
+  background-image: url('assets/images/pharaonic_bg_factory.png') !important;
+}
+
+[data-theme="pharaonic"] body[data-page="packaging"] {
+  background-image: url('assets/images/pharaonic_bg_packaging.png') !important;
+}
+
+[data-theme="pharaonic"] body[data-page="materials"] {
+  background-image: url('assets/images/pharaonic_bg_materials.png') !important;
+}
+
+[data-theme="pharaonic"] body[data-page="contact"] {
+  background-image: url('assets/images/pharaonic_bg_contact.png') !important;
+}
+
+[data-theme="pharaonic"] body[data-page="catalogue"] {
+  background-image: url('assets/images/pharaonic_bg_catalogue.png') !important;
+}
+
+/* Header & Scrolled Navbar - Royal Lapis Lazuli Midnight Header with Sandstone Gold Frieze */
+[data-theme="pharaonic"] .header {
+  background: rgba(45, 62, 85, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 3px solid #DFB77D !important;
+  box-shadow: 0 3px 0 #8D4F4E, 0 8px 25px rgba(36, 28, 24, 0.25) !important;
+}
+
+[data-theme="pharaonic"] .header.scrolled {
+  background: rgba(35, 48, 68, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 3px solid #DFB77D !important;
+  box-shadow: 0 3px 0 #8D4F4E, 0 10px 30px rgba(36, 28, 24, 0.3) !important;
+}
+
+[data-theme="pharaonic"] .brand-name {
+  color: #FFFFFF !important;
+  font-family: var(--font-heading) !important;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="pharaonic"] .brand-name span {
+  color: #DFB77D !important;
+}
+
+[data-theme="pharaonic"] .nav-link {
+  color: #F5E9D8 !important;
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="pharaonic"] .nav-link:hover,
+[data-theme="pharaonic"] .nav-link.active {
+  color: #DFB77D !important;
+}
+
+[data-theme="pharaonic"] .nav-link::after {
+  background: linear-gradient(90deg, #DFB77D, #8D4F4E) !important;
+}
+
+[data-theme="pharaonic"] .nav-dropdown-menu {
+  background: #2D3E55 !important;
+  backdrop-filter: blur(16px) !important;
+  border: 2px solid #DFB77D !important;
+  box-shadow: 0 14px 40px rgba(36, 28, 24, 0.3) !important;
+}
+
+[data-theme="pharaonic"] .nav-dropdown-menu li a {
+  color: #F5E9D8 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="pharaonic"] .nav-dropdown-menu li a:hover {
+  color: #FFFFFF !important;
+  background: #8D4F4E !important;
+}
+
+/* Palette Switcher Widget in Pharaonic Mode */
+[data-theme="pharaonic"] .palette-switch-wrapper {
+  background: rgba(223, 183, 125, 0.20) !important;
+  border-color: #DFB77D !important;
+}
+
+[data-theme="pharaonic"] .palette-switch-btn {
+  color: #F5E9D8 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="pharaonic"] .palette-switch-btn.active {
+  background: linear-gradient(135deg, #DFB77D 0%, #C49A50 100%) !important;
+  color: #241C18 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(223, 183, 125, 0.4) !important;
+}
+
+/* Pharaonic Hero Slider Overlay */
+[data-theme="pharaonic"] .hero-slide::before {
+  background: linear-gradient(
+    180deg,
+    rgba(36, 28, 24, 0.35) 0%,
+    rgba(36, 28, 24, 0.55) 100%
+  ) !important;
+}
+
+/* Page Header Banners in Pharaonic Light Theme - Rich Multi-Colored Egyptian Sunset Frieze */
+html[data-theme="pharaonic"] .page-header-banner,
+[data-theme="pharaonic"] .page-header-banner,
+[data-theme="pharaonic"] section.page-header-banner {
+  background: linear-gradient(135deg, #7A3A39 0%, #324861 50%, #5A6D72 100%) !important;
+  background-image: none !important;
+  border-top: none !important;
+  border-bottom: 4px solid #DFB77D !important;
+  box-shadow: 0 4px 0 #8D4F4E, 0 10px 30px rgba(36, 28, 24, 0.3) !important;
+  padding-top: 9.5rem !important;
+  padding-bottom: 4.5rem !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+[data-theme="pharaonic"] .page-header-banner h1,
+[data-theme="pharaonic"] .page-header-banner .section-title {
+  color: #FFFFFF !important;
+  font-family: var(--font-heading) !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(223, 183, 125, 0.4) !important;
+}
+
+[data-theme="pharaonic"] .page-header-banner p,
+[data-theme="pharaonic"] .page-header-banner .section-desc {
+  color: #F5E9D8 !important;
+  font-family: var(--font-body) !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Pharaonic Section Tags & Badges */
+[data-theme="pharaonic"] .section-tag {
+  background: linear-gradient(135deg, #8D4F4E 0%, #723B3A 100%) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #DFB77D !important;
+  font-family: var(--font-body) !important;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  box-shadow: 0 3px 12px rgba(141, 79, 78, 0.25) !important;
+}
+
+[data-theme="pharaonic"] .hero-badge {
+  background: #FFFDF5 !important;
+  border: 2px solid #8D4F4E !important;
+  color: #8D4F4E !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700;
+  backdrop-filter: none !important;
+  box-shadow: 0 4px 14px rgba(36, 28, 24, 0.1) !important;
+}
+
+[data-theme="pharaonic"] .stone-badge {
+  background: #8D4F4E !important;
+  border: 1.5px solid #DFB77D !important;
+  color: #FFFFFF !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="pharaonic"] .experience-badge {
+  background: #FFFDF5 !important;
+  border: 2px solid #567394 !important;
+  outline: 2px solid #8D4F4E !important;
+  color: #241C18 !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 8px 25px rgba(36, 28, 24, 0.12) !important;
+}
+
+[data-theme="pharaonic"] .exp-number {
+  color: #8D4F4E !important;
+  font-family: var(--font-heading) !important;
+}
+
+[data-theme="pharaonic"] .exp-text {
+  color: #567394 !important;
+  font-family: var(--font-body) !important;
+  font-weight: 600;
+}
+
+/* Pharaonic Section Titles & Typography */
+[data-theme="pharaonic"] .section-title {
+  color: #241C18 !important;
+  font-family: var(--font-heading) !important;
+  text-shadow: none !important;
+}
+
+[data-theme="pharaonic"] .section-title span {
+  color: #8D4F4E !important;
+  background: linear-gradient(135deg, #8D4F4E 0%, #567394 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: none !important;
+}
+
+[data-theme="pharaonic"] .section-desc,
+[data-theme="pharaonic"] p {
+  color: #241C18 !important;
+  font-family: var(--font-body) !important;
+  text-shadow: none !important;
+}
+
+/* Distinct Multi-Color Card Tints Derived from Pharaonic Stone & Pigment Palette */
+[data-theme="pharaonic"] .feature-card,
+[data-theme="pharaonic"] .process-card,
+[data-theme="pharaonic"] .stone-card,
+[data-theme="pharaonic"] .catalogue-card,
+[data-theme="pharaonic"] .stat-card {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(36, 28, 24, 0.10) !important;
+  transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Multi-Colored Card Variations */
+[data-theme="pharaonic"] .features-grid > div:nth-child(1),
+[data-theme="pharaonic"] .process-grid > div:nth-child(1),
+[data-theme="pharaonic"] .stone-grid > div:nth-child(4n+1) {
+  background: linear-gradient(180deg, #FFFDF7 0%, #F8EEDC 100%) !important;
+  border: 1.5px solid #DFB77D !important;
+  border-top: 5px solid #8D4F4E !important;
+}
+
+[data-theme="pharaonic"] .features-grid > div:nth-child(2),
+[data-theme="pharaonic"] .process-grid > div:nth-child(2),
+[data-theme="pharaonic"] .stone-grid > div:nth-child(4n+2) {
+  background: linear-gradient(180deg, #F5F8FC 0%, #E5EDF6 100%) !important;
+  border: 1.5px solid #567394 !important;
+  border-top: 5px solid #567394 !important;
+}
+
+[data-theme="pharaonic"] .features-grid > div:nth-child(3),
+[data-theme="pharaonic"] .process-grid > div:nth-child(3),
+[data-theme="pharaonic"] .stone-grid > div:nth-child(4n+3) {
+  background: linear-gradient(180deg, #F6F9F9 0%, #E4EBEE 100%) !important;
+  border: 1.5px solid #7B8E93 !important;
+  border-top: 5px solid #7B8E93 !important;
+}
+
+[data-theme="pharaonic"] .features-grid > div:nth-child(4),
+[data-theme="pharaonic"] .process-grid > div:nth-child(4),
+[data-theme="pharaonic"] .stone-grid > div:nth-child(4n+4) {
+  background: linear-gradient(180deg, #FCF5F5 0%, #F5E5E5 100%) !important;
+  border: 1.5px solid #8D4F4E !important;
+  border-top: 5px solid #8D4F4E !important;
+}
+
+[data-theme="pharaonic"] .feature-card:hover,
+[data-theme="pharaonic"] .process-card:hover,
+[data-theme="pharaonic"] .stone-card:hover,
+[data-theme="pharaonic"] .catalogue-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 35px rgba(36, 28, 24, 0.16), 0 0 20px rgba(141, 79, 78, 0.22) !important;
+}
+
+[data-theme="pharaonic"] .feature-card h3,
+[data-theme="pharaonic"] .process-card h3,
+[data-theme="pharaonic"] .stone-card h3,
+[data-theme="pharaonic"] .catalogue-card h3 {
+  font-family: var(--font-heading) !important;
+  color: #8D4F4E !important;
+  text-shadow: none !important;
+}
+
+[data-theme="pharaonic"] .feature-card p,
+[data-theme="pharaonic"] .process-card p,
+[data-theme="pharaonic"] .stone-card p,
+[data-theme="pharaonic"] .catalogue-card p {
+  color: #241C18 !important;
+  font-family: var(--font-body) !important;
+  line-height: 1.6;
+  text-shadow: none !important;
+}
+
+/* Alternating Multi-Color Pharaonic Icon Circles */
+[data-theme="pharaonic"] .feature-grid > div:nth-child(1) .feature-icon,
+[data-theme="pharaonic"] .process-grid > div:nth-child(1) .process-icon {
+  background: #8D4F4E;
+  color: #FFFFFF;
+  border: 1px solid #DFB77D;
+  box-shadow: 0 4px 14px rgba(141, 79, 78, 0.3);
+}
+
+[data-theme="pharaonic"] .feature-grid > div:nth-child(2) .feature-icon,
+[data-theme="pharaonic"] .process-grid > div:nth-child(2) .process-icon {
+  background: #567394;
+  color: #FFFFFF;
+  border: 1px solid #DFB77D;
+  box-shadow: 0 4px 14px rgba(86, 115, 148, 0.3);
+}
+
+[data-theme="pharaonic"] .feature-grid > div:nth-child(3) .feature-icon,
+[data-theme="pharaonic"] .process-grid > div:nth-child(3) .process-icon {
+  background: #7B8E93;
+  color: #FFFFFF;
+  border: 1px solid #DFB77D;
+  box-shadow: 0 4px 14px rgba(123, 142, 147, 0.3);
+}
+
+[data-theme="pharaonic"] .feature-grid > div:nth-child(4) .feature-icon,
+[data-theme="pharaonic"] .process-grid > div:nth-child(4) .process-icon {
+  background: #DFB77D;
+  color: #241C18;
+  border: 1px solid #8D4F4E;
+  box-shadow: 0 4px 14px rgba(223, 183, 125, 0.35);
+}
+
+/* Multi-Color Stat Cards */
+[data-theme="pharaonic"] .stats-grid > div:nth-child(1) {
+  background: linear-gradient(180deg, #FFFDF7 0%, #F5E8D3 100%) !important;
+  border-top: 4px solid #8D4F4E !important;
+}
+
+[data-theme="pharaonic"] .stats-grid > div:nth-child(2) {
+  background: linear-gradient(180deg, #F5F8FC 0%, #DFEAF4 100%) !important;
+  border-top: 4px solid #567394 !important;
+}
+
+[data-theme="pharaonic"] .stats-grid > div:nth-child(3) {
+  background: linear-gradient(180deg, #F6F9F9 0%, #DDE7E9 100%) !important;
+  border-top: 4px solid #7B8E93 !important;
+}
+
+[data-theme="pharaonic"] .stat-card h4 {
+  font-family: var(--font-heading) !important;
+  text-shadow: none !important;
+}
+
+[data-theme="pharaonic"] .stats-grid > div:nth-child(1) h4 { color: #8D4F4E !important; }
+[data-theme="pharaonic"] .stats-grid > div:nth-child(2) h4 { color: #567394 !important; }
+[data-theme="pharaonic"] .stats-grid > div:nth-child(3) h4 { color: #7B8E93 !important; }
+
+[data-theme="pharaonic"] .stat-card p {
+  color: #241C18 !important;
+  font-family: var(--font-body) !important;
+  font-weight: 600;
+  text-shadow: none !important;
+}
+
+/* Pharaonic Action Buttons */
+[data-theme="pharaonic"] .btn-primary {
+  background: linear-gradient(135deg, #567394 0%, #3E5A7B 100%) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #DFB77D !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 18px rgba(86, 115, 148, 0.35) !important;
+}
+
+[data-theme="pharaonic"] .btn-primary:hover {
+  background: linear-gradient(135deg, #8D4F4E 0%, #723B3A 100%) !important;
+  border-color: #DFB77D !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 22px rgba(141, 79, 78, 0.45) !important;
+}
+
+[data-theme="pharaonic"] .btn-outline {
+  background: linear-gradient(135deg, #8D4F4E 0%, #723B3A 100%) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #DFB77D !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 18px rgba(141, 79, 78, 0.3) !important;
+}
+
+[data-theme="pharaonic"] .btn-outline:hover {
+  background: #2D3E55 !important;
+  border-color: #DFB77D !important;
+  color: #DFB77D !important;
+}
+
+/* Specifications Table in Pharaonic Light Mode */
+[data-theme="pharaonic"] .stone-name {
+  color: #241C18 !important;
+  font-family: var(--font-heading) !important;
+  font-weight: 700;
+}
+
+[data-theme="pharaonic"] .card-spec-table {
+  background: rgba(250, 246, 240, 0.95) !important;
+  border: 1.5px solid #DFB77D !important;
+}
+
+[data-theme="pharaonic"] .card-spec-table tr {
+  border-bottom: 1px solid rgba(223, 183, 125, 0.4) !important;
+}
+
+[data-theme="pharaonic"] .card-spec-table td:first-child {
+  color: #8D4F4E !important;
+  font-weight: 700 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="pharaonic"] .card-spec-table td:first-child i {
+  color: #567394 !important;
+}
+
+[data-theme="pharaonic"] .card-spec-table td:last-child {
+  color: #241C18 !important;
+  font-weight: 600 !important;
+}
+
+/* Modal in Pharaonic Light Palette */
+[data-theme="pharaonic"] .modal-content {
+  background: #FAF6F0 !important;
+  backdrop-filter: blur(20px) !important;
+  border: 3px solid #8D4F4E !important;
+  outline: 2px solid #DFB77D !important;
+  color: #241C18 !important;
+  box-shadow: 0 15px 50px rgba(36, 28, 24, 0.2) !important;
+}
+
+[data-theme="pharaonic"] .modal-header h3 {
+  font-family: var(--font-heading) !important;
+  color: #8D4F4E !important;
+}
+
+/* Form Controls in Pharaonic Light Palette */
+[data-theme="pharaonic"] input[type="text"],
+[data-theme="pharaonic"] input[type="email"],
+[data-theme="pharaonic"] input[type="tel"],
+[data-theme="pharaonic"] input[type="number"],
+[data-theme="pharaonic"] select,
+[data-theme="pharaonic"] textarea {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1.5px solid #DFB77D !important;
+  color: #241C18 !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  box-shadow: inset 0 2px 4px rgba(36, 28, 24, 0.05) !important;
+}
+
+[data-theme="pharaonic"] input::placeholder,
+[data-theme="pharaonic"] textarea::placeholder {
+  color: #7B8E93 !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+}
+
+[data-theme="pharaonic"] input:focus,
+[data-theme="pharaonic"] select:focus,
+[data-theme="pharaonic"] textarea:focus {
+  border-color: #8D4F4E !important;
+  box-shadow: 0 0 0 3px rgba(141, 79, 78, 0.2) !important;
+}
+
+[data-theme="pharaonic"] label {
+  color: #8D4F4E !important;
+  font-weight: 700 !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.85rem !important;
+}
+
+[data-theme="pharaonic"] .inquiry-form p,
+[data-theme="pharaonic"] form p {
+  color: #241C18 !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="pharaonic"] .contact-item,
+[data-theme="pharaonic"] div[style*="background: var(--color-bg-card)"] {
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1.5px solid #DFB77D !important;
+  box-shadow: 0 6px 20px rgba(36, 28, 24, 0.08) !important;
+}
+
+[data-theme="pharaonic"] div[style*="background: var(--color-bg-card)"] h3,
+[data-theme="pharaonic"] div[style*="background: var(--color-bg-card)"] h5 {
+  color: #8D4F4E !important;
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="pharaonic"] div[style*="background: var(--color-bg-card)"] p {
+  color: #241C18 !important;
+  font-weight: 500 !important;
+}
+
+/* Light Alabaster Footer in Pharaonic Palette */
+[data-theme="pharaonic"] footer {
+  background: rgba(242, 236, 222, 0.96) !important;
+  backdrop-filter: blur(20px) !important;
+  border-top: 4px solid #8D4F4E !important;
+  box-shadow: 0 -3px 0 #DFB77D, 0 -10px 30px rgba(36, 28, 24, 0.1) !important;
+  color: #241C18 !important;
+}
+
+[data-theme="pharaonic"] footer p,
+[data-theme="pharaonic"] footer li,
+[data-theme="pharaonic"] footer span,
+[data-theme="pharaonic"] .footer-brand-desc,
+[data-theme="pharaonic"] .footer-links,
+[data-theme="pharaonic"] .footer-links a,
+[data-theme="pharaonic"] .footer-col p {
+  color: #241C18 !important;
+  font-weight: 500;
+}
+
+[data-theme="pharaonic"] footer i {
+  color: #8D4F4E !important;
+}
+
+[data-theme="pharaonic"] .footer-col h5 {
+  color: #8D4F4E !important;
+  font-family: var(--font-heading) !important;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+[data-theme="pharaonic"] .footer-links a:hover {
+  color: #8D4F4E !important;
+  padding-left: 4px;
+}
+
+[data-theme="pharaonic"] .footer-bottom,
+[data-theme="pharaonic"] .footer-bottom p {
+  border-top: 1px solid rgba(141, 79, 78, 0.2);
+  color: #567394 !important;
+}
+
+
+
+
+

@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TUT STONES | Egyptian Marble & Granite Exporter</title>
+  <title>TUT STONES | Premium Egyptian Marble & Granite Exporter</title>
   <meta name="description"
-    content="TUT Stones is a premier Egyptian exporter of high-quality marble and granite. Sourced from Egypt's rich quarries and cut to size with competitive prices.">
+    content="TUT Stones is a distinguished Egyptian exporter of premium marble and granite. Sourcing high quality natural stone cut to size with competitive prices globally.">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/images/tut_stones_logo.png">
@@ -15,10 +15,10 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.0.5">
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body data-page="home">
 
   <!-- ==========================================================================
        HEADER & BRANDING NAVBAR
@@ -31,198 +31,174 @@
       </a>
 
       <ul class="nav-menu">
-        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html" class="nav-link active">Home</a></li>
         <li><a href="about.html" class="nav-link">About Us</a></li>
         <li><a href="factory.html" class="nav-link">Factory</a></li>
         <li><a href="packaging.html" class="nav-link">Packaging & Loading</a></li>
-        <li><a href="materials.html" class="nav-link">Materials ( Marble – Granite )</a></li>
+        <li class="nav-item-dropdown">
+          <a href="materials.html" class="nav-link">Materials <i class="ri-arrow-down-s-line" style="font-size: 0.85rem; vertical-align: middle;"></i></a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="materials.html?type=marble"><i class="ri-vip-diamond-line"></i> Marble</a></li>
+            <li><a href="materials.html?type=granite"><i class="ri-shield-star-line"></i> Granite</a></li>
+          </ul>
+        </li>
         <li><a href="contact.html" class="nav-link">Contact Us</a></li>
       </ul>
 
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <div class="theme-switch-container" title="Choose Website Color Theme">
-          <button class="theme-switch-btn" data-theme="palette-1">
-            <span class="theme-dot theme-dot-p1"></span> Palette 1
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <div class="palette-switch-wrapper">
+          <button type="button" class="palette-switch-btn active" data-theme-val="default" title="Palette 1: Classic Dark Gold">
+            <span class="palette-swatch swatch-dark"></span>
+            <span class="palette-label">Classic</span>
           </button>
-          <button class="theme-switch-btn" data-theme="palette-2">
-            <span class="theme-dot theme-dot-p2"></span> Palette 2
+          <button type="button" class="palette-switch-btn" data-theme-val="eastern-light" title="Palette 2: Eastern Light">
+            <span class="palette-swatch swatch-eastern"></span>
+            <span class="palette-label">Eastern</span>
+          </button>
+          <button type="button" class="palette-switch-btn" data-theme-val="pharaonic" title="Palette 3: Pharaonic Heritage">
+            <span class="palette-swatch swatch-pharaonic"></span>
+            <span class="palette-label">Pharaonic</span>
           </button>
         </div>
-        <a href="materials.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
-          <i class="ri-compass-3-line"></i> Materials
+        <a href="contact.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+          <i class="ri-mail-send-line"></i> Contact Us
         </a>
       </div>
-
-      <button class="mobile-toggle" aria-label="Toggle Menu">
-        <i class="ri-menu-3-line"></i>
-      </button>
     </div>
   </header>
 
   <!-- ==========================================================================
-       FIRST SECTION: HERO BANNER (Pharaonic Background)
+       HERO SECTION WITH IMAGE SLIDER & BRANDING
        ========================================================================== -->
-  <section id="home-hero" class="home-section-hero" style="background-image: url('assets/images/pharaonic_hero_bg.png');">
-    <div class="pharaonic-overlay"></div>
-    <div class="container home-hero-content">
-      <div class="section-tag" style="margin-bottom: 1.5rem;">
-        <i class="ri-vip-diamond-line"></i> Egyptian Natural Stone Exporter
+  <section id="home" class="hero">
+    <div class="hero-slider">
+      <div class="hero-slide active" style="background-image: url('assets/images/pharaonic_hero_bg.png');"></div>
+      <div class="hero-slide" style="background-image: url('assets/images/eastern_mosaic_hero_bg.png');"></div>
+    </div>
+
+    <div class="container hero-content">
+      <div class="hero-badge">
+        <i class="ri-vip-diamond-line"></i> Egyptian Heritage & Excellence
       </div>
-      <h1>Premium Natural Stone from Egypt to Your Market.</h1>
-      <p>
+      <h1 class="hero-title">
+        Premium Natural Stone <span>from Egypt to Your Market.</span>
+      </h1>
+      <p class="hero-slogan">
         We specialize in importing high quality Egyptian marble and granite with a wide selection of colors and finishes cut to size with competitive prices.
       </p>
-      <div style="display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap;">
-        <a href="materials.html" class="btn btn-primary" style="padding: 1rem 2.25rem;">
-          <i class="ri-grid-fill"></i> Browse Marble & Granite
+
+      <div class="hero-actions">
+        <a href="materials.html" class="btn btn-primary">
+          <i class="ri-compass-3-line"></i> Explore Materials
         </a>
-        <a href="contact.html" class="btn btn-outline" style="padding: 1rem 2.25rem;">
-          <i class="ri-mail-send-line"></i> Request Direct Quote
+        <a href="contact.html" class="btn btn-outline">
+          <i class="ri-mail-line"></i> Request Quote
         </a>
+      </div>
+    </div>
+
+    <!-- Slider Controls -->
+    <div class="slider-controls">
+      <div class="slider-dots"></div>
+      <div class="slider-arrows">
+        <button class="slider-arrow prev" aria-label="Previous Slide"><i class="ri-arrow-left-s-line"></i></button>
+        <button class="slider-arrow next" aria-label="Next Slide"><i class="ri-arrow-right-s-line"></i></button>
       </div>
     </div>
   </section>
 
   <!-- ==========================================================================
-       SECOND SECTION: THE BEAUTY OF EGYPTIAN STONE (Tombs & Temples Background)
+       ABOUT US SECTION (TEXT NEXT TO IMAGE)
        ========================================================================== -->
-  <section id="beauty-section" class="section-padding"
-    style="position: relative; background: url('assets/images/egyptian_stone_beauty_bg.png') center/cover no-repeat; border-top: 1px solid var(--color-border-gold); border-bottom: 1px solid var(--color-border-gold);">
-    <div style="position: absolute; inset: 0; background: var(--color-bg-dark); opacity: 0.94;"></div>
-    
-    <div class="container" style="position: relative; z-index: 2;">
-      <div class="text-center" style="text-align: center; max-width: 850px; margin: 0 auto 3.5rem;">
-        <span class="section-tag">ANCIENT HERITAGE & MODERN LUXURY</span>
-        <h2 class="section-title" style="font-size: 3rem; margin-top: 0.5rem;">The Beauty of Egyptian Stone:</h2>
-        <p style="font-size: 1.2rem; color: #E2E8F0; line-height: 1.8;">
-          Egypt is renowned for it’s rich natural stone resources and varieties with elegant colors, unique patterns and exceptional durability.
-        </p>
-      </div>
-
-      <!-- Feature Grid of Signature Egyptian Stones -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.75rem;">
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-sun-line"></i></div>
-          <h3>Galala & Sunny Beige</h3>
-          <p>World-famous Egyptian beige marbles featuring warm sunlit tones, consistent grain structure, and high polishing capacity for grand floorings.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-landscape-line"></i></div>
-          <h3>Silvia & Triesta</h3>
-          <p>Exquisite vein-cut and cross-cut Egyptian marbles offering sophisticated horizontal movement for walls, bathrooms, and modern interiors.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-shield-check-line"></i></div>
-          <h3>Sinai Pearl & Grey</h3>
-          <p>Ultra-durable micro-crystalline grey limestone/marble engineered by geological pressure for heavy traffic plazas and exterior facades.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-fire-line"></i></div>
-          <h3>Imperial Aswan Granite</h3>
-          <p>Historic red, pink, and black Egyptian granites mined near Aswan—renowned since the era of Pharaohs for unyielding strength.</p>
-        </div>
-      </div>
-
-      <div style="text-align: center; margin-top: 3rem;">
-        <a href="materials.html" class="btn btn-outline" style="padding: 0.9rem 2rem;">
-          <i class="ri-arrow-right-line"></i> View All Materials ( Marble – Granite )
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       HIGHLIGHT SECTIONS FOR PAGES: ABOUT, FACTORY, PACKAGING
-       ========================================================================== -->
-  <section class="section-padding" style="background: var(--color-bg-dark);">
+  <section id="about" class="section-padding">
     <div class="container">
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
-        
-        <!-- About Preview Card -->
-        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border-gold); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);">
-          <div style="height: 200px; overflow: hidden; position: relative;">
-            <img src="assets/images/about_craft.png" alt="Tut Stones Craftsmanship" style="width: 100%; height: 100%; object-fit: cover;">
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, var(--color-bg-card) 100%);"></div>
-          </div>
-          <div style="padding: 2rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <span class="section-tag" style="font-size: 0.75rem;">SINCE 2000</span>
-              <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: #FFF; margin: 0.5rem 0 1rem;">About TUT Stones</h3>
-              <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-                Founded in 2000, TUT Stones is a distinguished Egyptian exporter delivering timeless natural marble and granite to international markets.
-              </p>
-            </div>
-            <a href="about.html" class="btn btn-outline" style="width: 100%;">
-              Read About Us <i class="ri-arrow-right-line"></i>
-            </a>
+      <div class="about-grid">
+        <div class="about-image-wrapper">
+          <img src="assets/images/about_craft.png" alt="TutStones Egyptian Quarry & Craftsmanship">
+          <div class="experience-badge">
+            <div class="exp-number">24+</div>
+            <div class="exp-text">Years Exporting<br>Egyptian Natural Stone</div>
           </div>
         </div>
 
-        <!-- Factory Preview Card -->
-        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border-gold); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);">
-          <div style="height: 200px; overflow: hidden; position: relative;">
-            <img src="assets/images/factory_processing.png" alt="Egyptian Stone Factory" style="width: 100%; height: 100%; object-fit: cover;">
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, var(--color-bg-card) 100%);"></div>
+        <div class="about-text">
+          <span class="section-tag">ABOUT TUT STONES</span>
+          <h2 class="section-title">Delivering The Timeless Beauty of <span>Egyptian Stone</span></h2>
+          
+          <div class="about-paragraphs">
+            <p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">
+              Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.
+            </p>
+            <p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">
+              At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.
+            </p>
+            <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">
+              We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.
+            </p>
           </div>
-          <div style="padding: 2rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <span class="section-tag" style="font-size: 0.75rem;">PRECISION CUTTING</span>
-              <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: #FFF; margin: 0.5rem 0 1rem;">Our Factory Facilities</h3>
-              <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-                High-capacity gang saws, bridge cutters, and automatic polishing lines calibrated for perfect slab dimensions and mirror polish.
-              </p>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h4>24+</h4>
+              <p>Years of Excellence</p>
             </div>
-            <a href="factory.html" class="btn btn-outline" style="width: 100%;">
-              Explore Factory <i class="ri-arrow-right-line"></i>
-            </a>
+            <div class="stat-card">
+              <h4>50+</h4>
+              <p>Export Destinations</p>
+            </div>
+            <div class="stat-card">
+              <h4>100%</h4>
+              <p>Egyptian Origin</p>
+            </div>
           </div>
         </div>
-
-        <!-- Packaging Preview Card -->
-        <div style="background: var(--color-bg-card); border: 1px solid var(--color-border-gold); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);">
-          <div style="height: 200px; overflow: hidden; position: relative;">
-            <img src="assets/images/packaging_loading.png" alt="Seaworthy Packaging & Container Loading" style="width: 100%; height: 100%; object-fit: cover;">
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, var(--color-bg-card) 100%);"></div>
-          </div>
-          <div style="padding: 2rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <span class="section-tag" style="font-size: 0.75rem;">EXPORT LOGISTICS</span>
-              <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: #FFF; margin: 0.5rem 0 1rem;">Packaging & Loading</h3>
-              <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-                Heavy-duty seaworthy wooden crates and A-frame bundles with fumigation certification, plastic protection, and safe shipping.
-              </p>
-            </div>
-            <a href="packaging.html" class="btn btn-outline" style="width: 100%;">
-              View Packaging <i class="ri-arrow-right-line"></i>
-            </a>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
 
   <!-- ==========================================================================
-       CALL TO ACTION BANNER
+       HIGHLIGHT SECTIONS: FACTORY & PACKAGING PREVIEWS
        ========================================================================== -->
-  <section class="section-padding"
-    style="background: linear-gradient(135deg, var(--color-bg-card) 0%, #1A1D24 100%); border-top: 1px solid var(--color-border-gold); text-align: center;">
+  <section class="section-padding" style="border-top: 1px solid var(--color-border);">
     <div class="container">
-      <span class="section-tag">GLOBAL EXPORT SOLUTIONS</span>
-      <h2 class="section-title">Ready to Import <span>Egyptian Marble & Granite?</span></h2>
-      <p style="color: var(--color-text-muted); max-width: 650px; margin: 0 auto 2.5rem; font-size: 1.1rem;">
-        Get in touch with our expert sales team to request material samples, pricing schedules, or custom cut-to-size container orders.
-      </p>
-      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-        <a href="materials.html" class="btn btn-primary" style="padding: 1rem 2.25rem;">
-          <i class="ri-grid-line"></i> Browse Materials
-        </a>
-        <a href="contact.html" class="btn btn-outline" style="padding: 1rem 2.25rem;">
-          <i class="ri-phone-line"></i> Contact Us
-        </a>
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <span class="section-tag">OUR EXPORT CAPABILITIES</span>
+        <h2 class="section-title">State-of-the-Art <span>Factory & Packaging</span></h2>
+      </div>
+
+      <div class="process-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-settings-4-line"></i></div>
+          <h3>Advanced Factory Processing</h3>
+          <p style="color: var(--color-text-muted); margin: 0.75rem 0 1.5rem; font-size: 0.9rem;">
+            Equipped with modern gangsaws, block cutters, and automated polishing lines ensuring precise thickness calibration and mirror finishes.
+          </p>
+          <a href="factory.html" class="btn btn-outline" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">
+            Explore Factory <i class="ri-arrow-right-line"></i>
+          </a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-box-3-line"></i></div>
+          <h3>Secure Packaging & Loading</h3>
+          <p style="color: var(--color-text-muted); margin: 0.75rem 0 1.5rem; font-size: 0.9rem;">
+            Heavy-duty ISPM-15 heat-treated wooden crates and lashing protocols guarantee zero breakage during sea container transport.
+          </p>
+          <a href="packaging.html" class="btn btn-outline" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">
+            Explore Packaging <i class="ri-arrow-right-line"></i>
+          </a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-grid-fill"></i></div>
+          <h3>Marble & Granite Selection</h3>
+          <p style="color: var(--color-text-muted); margin: 0.75rem 0 1.5rem; font-size: 0.9rem;">
+            Explore Galala, Sunny Yellow, Silvia, Sinai Pearl, Triesta, Rosa Hudi, Gandolla, and Aswan Black in slabs, tiles, and cut-to-size.
+          </p>
+          <a href="materials.html" class="btn btn-outline" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">
+            View Materials <i class="ri-arrow-right-line"></i>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -239,9 +215,10 @@
             <div class="brand-name">TUT <span>STONES</span></div>
           </a>
           <p>
-            Distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to global markets.
+            Distinguished Egyptian exporter of premium marble and granite. Delivering timeless natural stone from Egypt to global markets.
           </p>
-          <div class="footer-social-links" style="display: flex; gap: 1rem; color: var(--color-gold-primary); font-size: 1.2rem;">
+          <div class="footer-social-links"
+            style="display: flex; gap: 1rem; color: var(--color-gold-primary); font-size: 1.2rem;">
             <a href="#"><i class="ri-instagram-line"></i></a>
             <a href="#"><i class="ri-linkedin-fill"></i></a>
             <a href="#"><i class="ri-facebook-fill"></i></a>
@@ -256,28 +233,28 @@
             <li><a href="about.html">About Us</a></li>
             <li><a href="factory.html">Factory</a></li>
             <li><a href="packaging.html">Packaging & Loading</a></li>
-            <li><a href="materials.html">Materials ( Marble – Granite )</a></li>
+            <li><a href="materials.html">Materials (Marble & Granite)</a></li>
             <li><a href="contact.html">Contact Us</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h5>Egyptian Materials</h5>
+          <h5>Materials</h5>
           <ul class="footer-links">
-            <li><a href="materials.html">Galala Extra Marble</a></li>
-            <li><a href="materials.html">Silvia Light Marble</a></li>
-            <li><a href="materials.html">Sunny Beige Marble</a></li>
-            <li><a href="materials.html">Sinai Pearl Grey</a></li>
-            <li><a href="materials.html">Aswan Red Granite</a></li>
+            <li><a href="materials.html?type=marble">Egyptian Marble</a></li>
+            <li><a href="materials.html?type=granite">Egyptian Granite</a></li>
+            <li><a href="materials.html">Galala Marble</a></li>
+            <li><a href="materials.html">Sunny Yellow Marble</a></li>
+            <li><a href="materials.html">Rosa Hudi Granite</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h5>Export Office & Factory</h5>
+          <h5>Export Office</h5>
           <ul class="footer-links" style="color: var(--color-text-muted);">
-            <li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.</li>
-            <li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:info@tutstones.com">info@tutstones.com</a> / <a href="mailto:sales@tutstones.com">sales@tutstones.com</a></li>
-            <li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:+201104539397">+20 110 453 9397</a></li>
+            <li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> Cairo, Egypt</li>
+            <li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> info@tutstones.com</li>
+            <li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> +20 100 000 0000</li>
             <li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> Mon - Sat: 8:00 AM - 6:00 PM</li>
           </ul>
         </div>
@@ -290,8 +267,8 @@
   </footer>
 
   <!-- Central Data Store & Application Script -->
-  <script src="store.js?v=1.0.5"></script>
-  <script src="app.js?v=1.0.5"></script>
+  <script src="store.js?v=1.0.4"></script>
+  <script src="app.js?v=1.0.4"></script>
 </body>
 
 </html>

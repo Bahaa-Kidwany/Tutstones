@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Packaging & Loading | TUT STONES - Egyptian Marble & Granite Exporter</title>
+  <title>Packaging & Loading | TUT STONES - Export Logistics Standards</title>
   <meta name="description"
-    content="Discover TUT Stones export-grade seaworthy wooden crate packaging, slab bundle protection, ISPM-15 fumigation standards, and 20ft container loading procedures.">
+    content="Discover TUT Stones export packaging and container loading procedures. Fumigated wooden crates (ISPM-15), slab wooden A-frames, lashing, and moisture protection.">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/images/tut_stones_logo.png">
@@ -15,15 +15,15 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.0.5">
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body data-page="packaging">
 
   <!-- ==========================================================================
        HEADER & BRANDING NAVBAR
        ========================================================================== -->
-  <header class="header">
+  <header class="header scrolled">
     <div class="container nav-wrapper">
       <a href="index.html" class="brand-logo">
         <img src="assets/images/tut_stones_logo.png" alt="Tut Stones Logo" class="brand-logo-img">
@@ -35,134 +35,153 @@
         <li><a href="about.html" class="nav-link">About Us</a></li>
         <li><a href="factory.html" class="nav-link">Factory</a></li>
         <li><a href="packaging.html" class="nav-link active">Packaging & Loading</a></li>
-        <li><a href="materials.html" class="nav-link">Materials ( Marble – Granite )</a></li>
+        <li class="nav-item-dropdown">
+          <a href="materials.html" class="nav-link">Materials <i class="ri-arrow-down-s-line" style="font-size: 0.85rem; vertical-align: middle;"></i></a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="materials.html?type=marble"><i class="ri-vip-diamond-line"></i> Marble</a></li>
+            <li><a href="materials.html?type=granite"><i class="ri-shield-star-line"></i> Granite</a></li>
+          </ul>
+        </li>
         <li><a href="contact.html" class="nav-link">Contact Us</a></li>
       </ul>
 
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <div class="theme-switch-container" title="Choose Website Color Theme">
-          <button class="theme-switch-btn" data-theme="palette-1">
-            <span class="theme-dot theme-dot-p1"></span> Palette 1
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <div class="palette-switch-wrapper">
+          <button type="button" class="palette-switch-btn active" data-theme-val="default" title="Palette 1: Classic Dark Gold">
+            <span class="palette-swatch swatch-dark"></span>
+            <span class="palette-label">Classic</span>
           </button>
-          <button class="theme-switch-btn" data-theme="palette-2">
-            <span class="theme-dot theme-dot-p2"></span> Palette 2
+          <button type="button" class="palette-switch-btn" data-theme-val="eastern-light" title="Palette 2: Eastern Light">
+            <span class="palette-swatch swatch-eastern"></span>
+            <span class="palette-label">Eastern</span>
+          </button>
+          <button type="button" class="palette-switch-btn" data-theme-val="pharaonic" title="Palette 3: Pharaonic Heritage">
+            <span class="palette-swatch swatch-pharaonic"></span>
+            <span class="palette-label">Pharaonic</span>
           </button>
         </div>
-        <a href="materials.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
-          <i class="ri-compass-3-line"></i> Materials
+        <a href="contact.html" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">
+          <i class="ri-mail-send-line"></i> Contact Us
         </a>
       </div>
-
-      <button class="mobile-toggle" aria-label="Toggle Menu">
-        <i class="ri-menu-3-line"></i>
-      </button>
     </div>
   </header>
 
   <!-- ==========================================================================
-       PAGE BANNER HEADER
+       PAGE HERO BANNER
        ========================================================================== -->
-  <section class="page-banner">
-    <div class="container page-banner-content">
-      <span class="section-tag"><i class="ri-box-3-line"></i> EXPORT LOGISTICS & PROTECTION</span>
-      <h1>Packaging & <span>Container Loading</span></h1>
-      <p>Reinforced seaworthy wooden crates, A-frame slab bundles, ISPM-15 fumigation, and safe container shipping worldwide.</p>
+  <section class="page-header-banner">
+    <div class="container">
+      <span class="section-tag">EXPORT SAFETY & LOGISTICS</span>
+      <h1 class="section-title">Packaging & <span>Container Loading</span></h1>
+      <p class="section-desc" style="margin: 0 auto; max-width: 680px; color: var(--color-text-muted);">
+        Ensuring total protection during long sea voyages with fumigated wooden crates, slab A-frames, anti-scratch foam separation, and heavy-duty container lashing.
+      </p>
     </div>
   </section>
 
   <!-- ==========================================================================
-       MAIN PACKAGING CONTENT
+       PACKAGING & LOADING OVERVIEW
        ========================================================================== -->
-  <section class="section-padding" style="background: var(--color-bg-dark);">
+  <section class="section-padding">
     <div class="container">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; margin-bottom: 5rem;">
-        <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--color-border-gold); box-shadow: var(--shadow-gold);">
-          <img src="assets/images/packaging_loading.png" alt="Egyptian Marble & Granite Packaging Loading" style="width: 100%; display: block;">
+      <div class="about-grid">
+        <div class="about-image-wrapper">
+          <img src="assets/images/packaging_loading.png" alt="TutStones Wooden Crates & Container Loading">
+          <div class="experience-badge">
+            <div class="exp-number">ISPM-15</div>
+            <div class="exp-text">Heat-Treated Wood<br>& Certified Fumigation</div>
+          </div>
         </div>
 
-        <div>
-          <span class="section-tag">ZERO DAMAGE GUARANTEE</span>
-          <h2 class="section-title">Export-Grade <span>Seaworthy Packaging</span></h2>
-          <p style="color: var(--color-text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem;">
-            Exporting natural Egyptian marble and granite across long oceanic routes demands immaculate packaging engineering. At TUT Stones, every order is packed using heat-treated ISPM-15 compliant hardwood timber to ensure total stability against rough sea transit.
+        <div class="about-text">
+          <span class="section-tag">SAFE TRANSPORTATION</span>
+          <h2 class="section-title">Zero-Damage <span>International Delivery</span></h2>
+          <p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">
+            At TUT Stones, we take packaging as seriously as stone craftsmanship. Shipping natural stone across ocean waters requires robust outer protection and careful weight distribution inside 20-foot heavy-duty containers.
           </p>
-          <p style="color: var(--color-text-muted); font-size: 1rem; line-height: 1.8; margin-bottom: 2rem;">
-            Slabs and tiles are separated by protective polyethylene foam sheets, wrapped in waterproof plastic covers, and braced inside heavy duty wooden crates or A-frame bundles.
+          <p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 2rem;">
+            Every bundle of slabs and crate of tiles is reinforced with interior polyethylene foam, corner protectors, and steel lashing straps to ensure your order arrives in flawless condition at your port or warehouse.
           </p>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-            <div style="background: var(--color-bg-card); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-              <h4 style="color: var(--color-gold-primary); font-size: 1.1rem; margin-bottom: 0.25rem;"><i class="ri-shield-check-line"></i> ISPM-15 Certified</h4>
-              <p style="color: var(--color-text-muted); font-size: 0.85rem;">Official heat treatment & fumigation stamp on all wooden crates.</p>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h4>100%</h4>
+              <p>ISPM-15 Fumigation</p>
             </div>
-            <div style="background: var(--color-bg-card); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-              <h4 style="color: var(--color-gold-primary); font-size: 1.1rem; margin-bottom: 0.25rem;"><i class="ri-ship-line"></i> 20ft Container Payload</h4>
-              <p style="color: var(--color-text-muted); font-size: 0.85rem;">Maximized tonnage capacity with balanced weight distribution.</p>
+            <div class="stat-card">
+              <h4>27 Tons</h4>
+              <p>Max Container Capacity</p>
+            </div>
+            <div class="stat-card">
+              <h4>0%</h4>
+              <p>Breakage Target</p>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Packaging Standards Grid -->
-      <div style="text-align: center; max-width: 700px; margin: 0 auto 3rem;">
-        <span class="section-tag">OUR PACKAGING METHODS</span>
-        <h2 class="section-title">Tailored Protection <span>For Every Product</span></h2>
-      </div>
-
-      <div class="feature-grid-3">
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-archive-line"></i></div>
-          <h3>Seaworthy Wooden Crates</h3>
-          <p>Used for cut-to-size tiles, stairs, and vanity tops. Constructed from thick hardwood planks, lined with styrofoam padding and plastic wrap.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-layout-3-line"></i></div>
-          <h3>A-Frame Wooden Bundles</h3>
-          <p>For large gangsaw slabs (20mm & 30mm thickness). Slabs are bound back-to-back with polished faces protected by plastic film and steel strapping.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-drop-line"></i></div>
-          <h3>Moisture & Dust Shield</h3>
-          <p>Every crate and bundle is covered with heavy-duty polyethylene shrink wrap to shield against sea moisture, humidity, and dust during vessel transit.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-anchor-line"></i></div>
-          <h3>Container Lashing & Bracing</h3>
-          <p>Crates and wooden bundles are anchored to the container floor using heavy-duty steel wire ropes, wooden chocks, and tension belts to eliminate shift during voyage.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-scales-line"></i></div>
-          <h3>Weight Distribution Optimization</h3>
-          <p>Containers are loaded up to allowable port weight limits (typically 27 metric tons for 20ft containers) strictly adhering to destination country port regulations.</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-icon"><i class="ri-file-text-line"></i></div>
-          <h3>Export Documentation</h3>
-          <p>Every container leaves Egyptian ports with complete export documentation: Bill of Lading (B/L), Certificate of Origin (EUR.1 / Form A), Packing List, and Commercial Invoice.</p>
-        </div>
-      </div>
     </div>
   </section>
 
   <!-- ==========================================================================
-       CALL TO ACTION BANNER
+       STANDARDS & SPECIFICATIONS
        ========================================================================== -->
-  <section class="section-padding"
-    style="background: linear-gradient(135deg, var(--color-bg-card) 0%, #1A1D24 100%); border-top: 1px solid var(--color-border-gold); text-align: center;">
+  <section class="section-padding" style="border-top: 1px solid var(--color-border);">
     <div class="container">
-      <span class="section-tag">GLOBAL SHIPMENT ENQUIRIES</span>
-      <h2 class="section-title">Planning an Import <span>Container Order?</span></h2>
-      <p style="color: var(--color-text-muted); max-width: 650px; margin: 0 auto 2.5rem; font-size: 1.1rem;">
-        Our logistics team will calculate container capacities, slab counts, and shipping freight rates directly to your destination sea port.
-      </p>
-      <a href="contact.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.05rem;">
-        <i class="ri-ship-line"></i> Request Shipping Quote
-      </a>
+      <div style="text-align: center; margin-bottom: 3.5rem;">
+        <span class="section-tag">EXPORT PACKAGING SPECIFICATIONS</span>
+        <h2 class="section-title">Standard <span>Packaging Methods</span></h2>
+      </div>
+
+      <div class="process-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-box-3-line"></i></div>
+          <h3>Cut-to-Size & Tile Crates</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Strong wooden crates constructed from solid heat-treated timber. Lined with polyethylene sheet & styrofoam padding on all 6 inner sides.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-stack-line"></i></div>
+          <h3>Gang Saws Slab Bundles</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Random and jumbo slabs are secured into wooden A-frame bundles with polished faces turned inwards, separated by plastic film sheets.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-anchor-line"></i></div>
+          <h3>Container Lashing & Bracing</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Crates and bundles are anchored to container walls using heavy steel cables, wooden chocks, and tension belts to prevent shifts at sea.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-water-percent-line"></i></div>
+          <h3>Moisture & Rust Prevention</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Desiccant bags inside containers absorb moisture, protecting polished marble surfaces from condensation dulling during sea transit.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-barcode-box-line"></i></div>
+          <h3>Clear Barcode & Piece Marking</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Each crate features clear waterproof stenciling detailing project name, stone type, dimensions, slab count, gross weight, and crate ID.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ri-file-shield-line"></i></div>
+          <h3>Fumigation Certificate</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">
+            Official Phytosanitary and Fumigation certificates supplied with every export shipment meeting all international import customs requirements.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -178,9 +197,10 @@
             <div class="brand-name">TUT <span>STONES</span></div>
           </a>
           <p>
-            Distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to global markets.
+            Distinguished Egyptian exporter of premium marble and granite. Delivering timeless natural stone from Egypt to global markets.
           </p>
-          <div class="footer-social-links" style="display: flex; gap: 1rem; color: var(--color-gold-primary); font-size: 1.2rem;">
+          <div class="footer-social-links"
+            style="display: flex; gap: 1rem; color: var(--color-gold-primary); font-size: 1.2rem;">
             <a href="#"><i class="ri-instagram-line"></i></a>
             <a href="#"><i class="ri-linkedin-fill"></i></a>
             <a href="#"><i class="ri-facebook-fill"></i></a>
@@ -195,28 +215,28 @@
             <li><a href="about.html">About Us</a></li>
             <li><a href="factory.html">Factory</a></li>
             <li><a href="packaging.html">Packaging & Loading</a></li>
-            <li><a href="materials.html">Materials ( Marble – Granite )</a></li>
+            <li><a href="materials.html">Materials (Marble & Granite)</a></li>
             <li><a href="contact.html">Contact Us</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h5>Egyptian Materials</h5>
+          <h5>Materials</h5>
           <ul class="footer-links">
-            <li><a href="materials.html">Galala Extra Marble</a></li>
-            <li><a href="materials.html">Silvia Light Marble</a></li>
-            <li><a href="materials.html">Sunny Beige Marble</a></li>
-            <li><a href="materials.html">Sinai Pearl Grey</a></li>
-            <li><a href="materials.html">Aswan Red Granite</a></li>
+            <li><a href="materials.html?type=marble">Egyptian Marble</a></li>
+            <li><a href="materials.html?type=granite">Egyptian Granite</a></li>
+            <li><a href="materials.html">Galala Marble</a></li>
+            <li><a href="materials.html">Sunny Yellow Marble</a></li>
+            <li><a href="materials.html">Rosa Hudi Granite</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
-          <h5>Export Office & Factory</h5>
+          <h5>Export Office</h5>
           <ul class="footer-links" style="color: var(--color-text-muted);">
-            <li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.</li>
-            <li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:info@tutstones.com">info@tutstones.com</a> / <a href="mailto:sales@tutstones.com">sales@tutstones.com</a></li>
-            <li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:+201104539397">+20 110 453 9397</a></li>
+            <li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> Cairo, Egypt</li>
+            <li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> info@tutstones.com</li>
+            <li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> +20 100 000 0000</li>
             <li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> Mon - Sat: 8:00 AM - 6:00 PM</li>
           </ul>
         </div>
@@ -228,9 +248,8 @@
     </div>
   </footer>
 
-  <!-- Central Data Store & Application Script -->
-  <script src="store.js?v=1.0.5"></script>
-  <script src="app.js?v=1.0.5"></script>
+  <script src="store.js?v=1.0.4"></script>
+  <script src="app.js?v=1.0.4"></script>
 </body>
 
 </html>

@@ -3,6 +3,16 @@
  * Powered by TutStonesStore (localStorage dynamic store)
  */
 
+// Immediately apply saved theme on script load to eliminate flicker
+(function applyEarlyTheme() {
+  const savedTheme = localStorage.getItem('tutstones_palette') || 'default';
+  if (savedTheme && savedTheme !== 'default') {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
   initThemeSwitcher();
   initNavbar();
@@ -16,31 +26,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   0. Color Palette Theme Switcher
+   0. Theme & Palette Switcher Logic
    ========================================================================== */
 function initThemeSwitcher() {
-  const savedTheme = localStorage.getItem('tut_stones_theme') || 'palette-1';
-  document.documentElement.setAttribute('data-theme', savedTheme);
+  const savedTheme = localStorage.getItem('tutstones_palette') || 'default';
+  applyTheme(savedTheme);
 
-  const btns = document.querySelectorAll('.theme-switch-btn');
-  btns.forEach(btn => {
-    const theme = btn.dataset.theme;
-    if (theme === savedTheme) {
+  const switchBtns = document.querySelectorAll('.palette-switch-btn');
+  switchBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const selectedTheme = btn.getAttribute('data-theme-val');
+      applyTheme(selectedTheme);
+      localStorage.setItem('tutstones_palette', selectedTheme);
+    });
+  });
+}
+
+function applyTheme(theme) {
+  if (theme && theme !== 'default') {
+    document.documentElement.setAttribute('data-theme', theme);
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+
+  const switchBtns = document.querySelectorAll('.palette-switch-btn');
+  switchBtns.forEach(btn => {
+    const val = btn.getAttribute('data-theme-val');
+    if (val === theme) {
       btn.classList.add('active');
     } else {
       btn.classList.remove('active');
     }
-
-    btn.addEventListener('click', () => {
-      const selectedTheme = btn.dataset.theme;
-      document.documentElement.setAttribute('data-theme', selectedTheme);
-      localStorage.setItem('tut_stones_theme', selectedTheme);
-      
-      btns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    });
   });
 }
+
 
 /* ==========================================================================
    1. Navbar Scroll & Dynamic Links
@@ -59,20 +79,6 @@ function initNavbar() {
   const navMenu = document.querySelector('.nav-menu');
   toggle?.addEventListener('click', () => {
     navMenu?.classList.toggle('active');
-  });
-
-  // Highlight active page link
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  const navLinks = document.querySelectorAll('.nav-link');
-  navLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (!href) return;
-    const linkPath = href.split('#')[0];
-    if (linkPath === currentPath || (currentPath === '' && linkPath === 'index.html')) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
   });
 }
 
@@ -116,10 +122,19 @@ function renderAboutSection() {
   if (expTextElem) expTextElem.innerHTML = (about.expText || 'Years Sourcing<br>Rare Natural Stone').replace(/\n/g, '<br>');
 
   // Update paragraphs and stats cards
-  const paragraphs = textContainer?.querySelectorAll('p');
-  if (paragraphs && paragraphs.length >= 2) {
-    paragraphs[0].innerHTML = about.desc1 || paragraphs[0].innerHTML;
-    paragraphs[1].innerHTML = about.desc2 || paragraphs[1].innerHTML;
+  const paragraphContainer = textContainer?.querySelector('.about-paragraphs');
+  if (paragraphContainer) {
+    let pContent = `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${about.desc1}</p>`;
+    if (about.desc2) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${about.desc2}</p>`;
+    if (about.desc3) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${about.desc3}</p>`;
+    paragraphContainer.innerHTML = pContent;
+  } else {
+    const paragraphs = textContainer?.querySelectorAll('p');
+    if (paragraphs && paragraphs.length >= 2) {
+      paragraphs[0].innerHTML = about.desc1 || paragraphs[0].innerHTML;
+      paragraphs[1].innerHTML = about.desc2 || paragraphs[1].innerHTML;
+      if (paragraphs[2] && about.desc3) paragraphs[2].innerHTML = about.desc3;
+    }
   }
 
   const statsGrid = aboutSection.querySelector('.stats-grid');
@@ -241,13 +256,22 @@ function initHeroSlider() {
   }
 
   function goToSlide(index) {
-    if (slides[currentIndex]) slides[currentIndex].classList.remove('active');
-    if (dots[currentIndex]) dots[currentIndex].classList.remove('active');
+    const oldIndex = currentIndex;
+    slides.forEach(s => s.classList.remove('active', 'prev-slide'));
+    dots.forEach(d => d.classList.remove('active'));
+
+    if (slides[oldIndex]) {
+      slides[oldIndex].classList.add('prev-slide');
+    }
 
     currentIndex = (index + slides.length) % slides.length;
 
-    if (slides[currentIndex]) slides[currentIndex].classList.add('active');
-    if (dots[currentIndex]) dots[currentIndex].classList.add('active');
+    if (slides[currentIndex]) {
+      slides[currentIndex].classList.add('active');
+    }
+    if (dots[currentIndex]) {
+      dots[currentIndex].classList.add('active');
+    }
 
     updateHeroContent(slidesData[currentIndex]);
   }
@@ -364,42 +388,46 @@ function createStoneCardHTML(stone) {
    ========================================================================== */
 function initCatalogue() {
   if (typeof TutStonesStore === 'undefined') return;
-  const catalogueGrid = document.getElementById('stones-grid') || document.getElementById('catalogue-grid');
-  const filterPillsContainer = document.querySelector('.filter-pills') || document.querySelector('.filter-tabs');
-  const searchInput = document.getElementById('stone-search') || document.getElementById('catalogue-search');
+  const catalogueGrid = document.getElementById('catalogue-grid');
+  const filterPillsContainer = document.querySelector('.filter-pills');
+  const searchInput = document.getElementById('catalogue-search');
 
   if (!catalogueGrid) return;
 
   let currentCategory = 'all';
   let searchQuery = '';
 
-  // Check URL query param or hash (e.g. materials.html?category=marble or materials.html#granite)
+  // Check URL query param or hash (e.g. materials.html?type=marble or catalogue.html?category=marble)
   const urlParams = new URLSearchParams(window.location.search);
-  const catParam = urlParams.get('category') || urlParams.get('cat') || (window.location.hash ? window.location.hash.replace('#', '') : null);
+  const catParam = urlParams.get('type') || urlParams.get('category') || urlParams.get('cat') || (window.location.hash ? window.location.hash.replace('#', '') : null);
   if (catParam) {
     currentCategory = catParam;
   }
 
-  // Handle click on filter tabs/pills
+  function renderFilterPills() {
+    if (!filterPillsContainer) return;
+    const categories = TutStonesStore.getCategories();
+    let pillsHTML = `<button class="filter-pill ${currentCategory === 'all' ? 'active' : ''}" data-filter="all">All Stone Types</button>`;
+    categories.forEach(cat => {
+      const isActive = currentCategory.toLowerCase() === cat.id.toLowerCase() || currentCategory.toLowerCase() === (cat.slug || '').toLowerCase();
+      pillsHTML += `<button class="filter-pill ${isActive ? 'active' : ''}" data-filter="${cat.id}">${cat.name}</button>`;
+    });
+    filterPillsContainer.innerHTML = pillsHTML;
+  }
+
+  renderFilterPills();
+
+  // Event Delegation for Filter Pills (Handles dynamic pills gracefully)
   if (filterPillsContainer) {
     filterPillsContainer.addEventListener('click', (e) => {
-      const btn = e.target.closest('.filter-tab, .filter-pill');
-      if (!btn) return;
+      const pill = e.target.closest('.filter-pill');
+      if (!pill) return;
       
-      const allBtns = filterPillsContainer.querySelectorAll('.filter-tab, .filter-pill');
-      allBtns.forEach(b => {
-        b.classList.remove('active');
-        b.style.background = 'var(--color-bg-surface)';
-        b.style.color = 'var(--color-text-muted)';
-        b.style.borderColor = 'var(--color-border)';
-      });
-
-      btn.classList.add('active');
-      btn.style.background = 'var(--color-gold-muted)';
-      btn.style.color = '#FFF';
-      btn.style.borderColor = 'var(--color-border-gold)';
+      const allPills = filterPillsContainer.querySelectorAll('.filter-pill');
+      allPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
       
-      currentCategory = btn.dataset.filter || 'all';
+      currentCategory = pill.dataset.filter || 'all';
       filterAndRender();
     });
   }

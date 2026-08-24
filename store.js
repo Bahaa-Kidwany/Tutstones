@@ -2,7 +2,7 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const STORAGE_KEY = 'tut_stones_data_v1';
+const STORAGE_KEY = 'tut_stones_data_v2';
 
 const DEFAULT_DATA = {
   // 1. Categories
@@ -27,199 +27,144 @@ const DEFAULT_DATA = {
   heroSlides: [
     {
       id: 'slide-1',
-      image: 'assets/images/hero_slider_1.png',
-      badge: 'Natural Stone Curators',
-      title: 'Masterpieces <span>Sculpted by Nature</span>',
-      slogan: 'Timeless Elegance & Superior Durability for Architectural Marvels. Sourced directly from premier global quarries.',
-      btnText: 'Explore Full Catalogue',
-      btnLink: 'catalogue.html'
+      image: 'assets/images/pharaonic_hero_bg.png',
+      badge: 'Egyptian Heritage & Excellence',
+      title: 'Premium Natural Stone <span>from Egypt to Your Market.</span>',
+      slogan: 'We specialize in importing high quality Egyptian marble and granite with a wide selection of colors and finishes cut to size with competitive prices.',
+      btnText: 'Explore Materials',
+      btnLink: 'materials.html'
     },
     {
       id: 'slide-2',
-      image: 'assets/images/hero_slider_2.png',
-      badge: 'Architectural Grade',
-      title: 'Precision Cut <span>Marble & Granite</span>',
-      slogan: 'Micro-calibrated slab thickness and mirror-grade polish for luxury residential and commercial developments.',
-      btnText: 'View Marble Collection',
-      btnLink: '#marble-section'
-    },
-    {
-      id: 'slide-3',
-      image: 'assets/images/hero_slider_3.png',
-      badge: 'Global Sourcing',
-      title: 'Direct Quarry <span>Excellence</span>',
-      slogan: 'Hand-selected slabs imported from premier quarries across Italy, Spain, India, and Norway.',
-      btnText: 'Contact Stone Specialists',
-      btnLink: '#footer'
+      image: 'assets/images/pharaonic_temple_bg.png',
+      badge: 'Timeless Beauty',
+      title: 'The Beauty of <span>Egyptian Stone:</span>',
+      slogan: 'Egypt is renowned for it’s rich natural stone resources and varieties with elegant colors, unique patterns and exceptional durability.',
+      btnText: 'Discover Our Factory',
+      btnLink: 'factory.html'
     }
   ],
 
   // 3. Stone Catalogue
   stones: [
     {
-      id: 'galala-extra',
-      name: 'Galala Extra Marble',
+      id: 'calacatta-gold',
+      name: 'Calacatta Gold',
       category: 'marble',
-      origin: 'Suez Quarry, Egypt',
-      finish: 'Polished / Honed / Split-Face',
-      density: '2.63 g/cm³',
-      waterAbs: '0.19%',
-      flexural: '12.4 MPa',
+      origin: 'Carrara, Italy',
+      finish: 'Polished / Honed',
+      density: '2.72 g/cm³',
+      waterAbs: '0.15%',
+      flexural: '14.8 MPa',
       image: 'assets/images/marble_calacatta.png',
       featured: true,
-      tag: 'Premier Egyptian Marble',
-      desc: 'Egypt\'s flagship beige marble with soft creamy background and subtle floral fossil patterns. Outstanding choice for grand flooring and exterior cladding.',
-      applications: 'Flooring, Wall Cladding, Stairs, Architectural Columns'
+      tag: 'Exclusive Luxury',
+      desc: 'World-renowned white marble with thick, dramatic gold and taupe veining. Perfect for grand entrance halls and luxury vanity tops.',
+      applications: 'Flooring, Feature Walls, Countertops, Bathroom Vanities'
     },
     {
-      id: 'silvia-light',
-      name: 'Silvia Light Marble',
+      id: 'bianco-carrara',
+      name: 'Bianco Carrara',
       category: 'marble',
-      origin: 'Minya Quarry, Egypt',
-      finish: 'Polished / Honed / Brushed',
-      density: '2.61 g/cm³',
-      waterAbs: '0.22%',
-      flexural: '11.8 MPa',
-      image: 'assets/images/about_craft.png',
-      featured: true,
-      tag: 'Elegant Vein-Cut',
-      desc: 'Warm beige marble with distinctive horizontal veining. Offers architectural warmth and refined texture for commercial projects.',
-      applications: 'Lobby Floors, Bathrooms, Feature Walls, Facades'
-    },
-    {
-      id: 'sunny-beige',
-      name: 'Sunny Beige Marble',
-      category: 'marble',
-      origin: 'Sinai Peninsula, Egypt',
-      finish: 'Polished / Honed / Bush-Hammered',
-      density: '2.64 g/cm³',
-      waterAbs: '0.20%',
-      flexural: '13.1 MPa',
+      origin: 'Tuscany, Italy',
+      finish: 'Polished / Brushed',
+      density: '2.68 g/cm³',
+      waterAbs: '0.18%',
+      flexural: '13.5 MPa',
       image: 'assets/images/marble_carrara.png',
       featured: true,
-      tag: 'Versatile Warm Beige',
-      desc: 'Uniform golden-beige background praised worldwide for its durability, consistency, and competitive pricing.',
-      applications: 'Large-Scale Commercial Flooring, Tiles, Cladding'
+      tag: 'Classic Italian',
+      desc: 'Timeless light grey marble featuring feather-like soft veining. Known for its historical prestige in European sculpture and architecture.',
+      applications: 'Interior Floors, Sculptures, Staircases, Cladding'
     },
     {
-      id: 'triesta-yellow',
-      name: 'Triesta Yellow Marble',
-      category: 'marble',
-      origin: 'North Sinai, Egypt',
-      finish: 'Polished / Honed',
-      density: '2.62 g/cm³',
-      waterAbs: '0.25%',
-      flexural: '11.5 MPa',
-      image: 'assets/images/hero_slider_1.png',
-      featured: false,
-      tag: 'Golden Egyptian Heritage',
-      desc: 'Rich honey yellow and amber toned marble that reflects classical Egyptian warmth and sunlit elegance.',
-      applications: 'Interior Flooring, Decorative Panels, Staircases'
-    },
-    {
-      id: 'sinai-pearl',
-      name: 'Sinai Pearl (Grey/Beige)',
-      category: 'marble',
-      origin: 'Sinai Mountains, Egypt',
-      finish: 'Polished / Honed / Flamed',
-      density: '2.67 g/cm³',
-      waterAbs: '0.16%',
-      flexural: '14.2 MPa',
-      image: 'assets/images/hero_slider_3.png',
-      featured: true,
-      tag: 'High Hardness Limestone/Marble',
-      desc: 'Compact grey-beige natural stone with micro-crystalline density. Famous for high abrasion resistance in public plazas.',
-      applications: 'High-Traffic Paving, Facades, Countertops, Outdoor Plazas'
-    },
-    {
-      id: 'gandola-granite',
-      name: 'Gandola Egyptian Granite',
+      id: 'black-galaxy',
+      name: 'Black Galaxy',
       category: 'granite',
-      origin: 'Aswan Quarries, Egypt',
-      finish: 'Polished / Flamed / Bush-Hammered',
-      density: '2.76 g/cm³',
-      waterAbs: '0.07%',
-      flexural: '18.9 MPa',
-      image: 'assets/images/granite_blue_pearl.png',
-      featured: true,
-      tag: 'Heavy-Duty Egyptian Granite',
-      desc: 'Distinctive grey and black speckled granite with high structural compression strength. Resistant to harsh weathering.',
-      applications: 'Kitchen Worktops, Exterior Paving, Monumental Works'
-    },
-    {
-      id: 'rosa-hudi',
-      name: 'Rosa Hudi Pink Granite',
-      category: 'granite',
-      origin: 'Red Sea Quarries, Egypt',
-      finish: 'Polished / Honed / Flamed',
-      density: '2.74 g/cm³',
-      waterAbs: '0.06%',
-      flexural: '19.5 MPa',
+      origin: 'Andhra Pradesh, India',
+      finish: 'Polished',
+      density: '2.95 g/cm³',
+      waterAbs: '0.04%',
+      flexural: '22.1 MPa',
       image: 'assets/images/granite_black_galaxy.png',
       featured: true,
-      tag: 'Royal Pink Granite',
-      desc: 'Classic pink-salmon Egyptian granite with black and quartz flecks. Renowned since ancient Pharaonic times.',
-      applications: 'Structural Pillars, Cladding, Commercial Countertops'
+      tag: 'High Durability',
+      desc: 'Deep obsidian black granite embedded with natural copper and metallic gold bronzite crystals that sparkle like a night sky.',
+      applications: 'Kitchen Countertops, High-Traffic Commercial Flooring'
     },
     {
-      id: 'halayeb-granite',
-      name: 'Halayeb Light Grey Granite',
+      id: 'blue-pearl',
+      name: 'Blue Pearl',
       category: 'granite',
-      origin: 'Southern Egypt Quarries',
-      finish: 'Polished / Bush-Hammered / Flamed',
-      density: '2.80 g/cm³',
-      waterAbs: '0.05%',
-      flexural: '21.0 MPa',
+      origin: 'Larvik, Norway',
+      finish: 'Polished / Leathered',
+      density: '2.78 g/cm³',
+      waterAbs: '0.08%',
+      flexural: '19.4 MPa',
+      image: 'assets/images/granite_blue_pearl.png',
+      featured: true,
+      tag: 'Rare Pearlescent',
+      desc: 'Exotic Norwegian larvikite granite presenting mesmerizing silvery-blue feldspar reflections with ultra-high scratch resistance.',
+      applications: 'Exterior Facades, Bar Tops, Luxury Flooring'
+    },
+    {
+      id: 'nero-marquina',
+      name: 'Nero Marquina',
+      category: 'marble',
+      origin: 'Basque Country, Spain',
+      finish: 'Polished',
+      density: '2.69 g/cm³',
+      waterAbs: '0.17%',
+      flexural: '14.0 MPa',
+      image: 'assets/images/hero_slider_1.png',
+      featured: false,
+      tag: 'Dramatic Contrast',
+      desc: 'Intense deep black marble punctuated by crisp white linear quartz veins. Creates high-impact modern minimalist interiors.',
+      applications: 'Accent Walls, Fireplace Surrounds, Bathrooms'
+    },
+    {
+      id: 'absolute-black',
+      name: 'Absolute Black',
+      category: 'granite',
+      origin: 'Khammam, India',
+      finish: 'Honed / Leathered / Polished',
+      density: '3.01 g/cm³',
+      waterAbs: '0.02%',
+      flexural: '24.5 MPa',
       image: 'assets/images/hero_slider_2.png',
       featured: false,
-      tag: 'Uniform Light Grey',
-      desc: 'Crisp salt-and-pepper light grey granite with exceptional surface hardness and zero fading over centuries.',
-      applications: 'Heavy Civil Infrastructure, Flooring, Facades'
-    },
-    {
-      id: 'aswan-red',
-      name: 'Aswan Imperial Red Granite',
-      category: 'granite',
-      origin: 'Aswan, Egypt',
-      finish: 'Polished / Leathered',
-      density: '2.82 g/cm³',
-      waterAbs: '0.04%',
-      flexural: '22.4 MPa',
-      image: 'assets/images/egyptian_stone_beauty_bg.png',
-      featured: true,
-      tag: 'Pharaonic Legacy Granite',
-      desc: 'Deep crimson red granite used by ancient Egyptian master builders to carve obelisks and temple columns.',
-      applications: 'Luxury Feature Walls, Countertops, Historical Restorations'
+      tag: 'Maximum Hardness',
+      desc: 'Solid uniform dark granite devoid of grain variation. Renowned for zero porosity and supreme stain resistance.',
+      applications: 'Kitchen Countertops, Outdoor Kitchens, Monumental Works'
     }
   ],
 
   // 4. About Us Section Content
   about: {
-    tag: 'WHO WE ARE',
-    title: 'A Legacy of <span>Pure Egyptian Stone Artistry</span>',
-    desc1: 'Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt\'s rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.',
-    desc2: 'At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.',
-    desc3: 'We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.',
+    tag: 'ABOUT TUT STONES',
+    title: 'Delivering The Timeless Beauty of <span>Egyptian Stone</span>',
+    desc1: "Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.",
+    desc2: "At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
+    desc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.",
     craftImage: 'assets/images/about_craft.png',
     expNumber: '24+',
-    expText: 'Years Exporting Egyptian Stone Worldwide',
-    phone: '+201104539397',
+    expText: 'Years Exporting<br>Egyptian Natural Stone',
+    phone: '+20 100 000 0000',
     phoneVisible: true,
-    phoneSecondary: '+201104539397',
+    phoneSecondary: '+20 120 000 0000',
     phoneSecondaryVisible: true,
     email: 'info@tutstones.com',
     emailVisible: true,
-    emailSecondary: 'sales@tutstones.com',
+    emailSecondary: 'export@tutstones.com',
     emailSecondaryVisible: true,
-    address: 'Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
+    address: 'Cairo, Egypt',
     addressVisible: true,
-    mapsUrl: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
-    hours: 'Mon - Sat: 8:00 AM - 6:00 PM (GMT+2)',
+    hours: 'Mon - Sat: 8:00 AM - 6:00 PM',
     hoursVisible: true,
     stats: [
-      { id: 'stat-1', count: '2000', label: 'Established Year' },
-      { id: 'stat-2', count: '45+', label: 'Countries Exported To' },
-      { id: 'stat-3', count: '100%', label: 'Egyptian Natural Stone' }
+      { id: 'stat-1', count: '24+', label: 'Years of Excellence' },
+      { id: 'stat-2', count: '50+', label: 'Export Destinations' },
+      { id: 'stat-3', count: '100%', label: 'Egyptian Natural Origin' }
     ]
   },
 
@@ -268,7 +213,7 @@ const DEFAULT_DATA = {
     { id: 'soc-2', platform: 'LinkedIn', icon: 'ri-linkedin-fill', url: 'https://linkedin.com/company/tutstones', active: true },
     { id: 'soc-3', platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://facebook.com/tutstones', active: true },
     { id: 'soc-4', platform: 'Pinterest', icon: 'ri-pinterest-line', url: 'https://pinterest.com/tutstones', active: true },
-    { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/201104539397', active: true }
+    { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/18005558887', active: true }
   ],
 
   // 7. Active Role State (admin = Super Admin / Developer, editor = Content Editor)
