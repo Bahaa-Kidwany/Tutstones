@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TUT STONES — Brand & Design Assets Showcase</title>
+  <title>TUT STONES — Brand & Design Assets Showcase (Pharaonic Theme)</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <style>
@@ -12,7 +12,6 @@
       --font-body: 'Plus Jakarta Sans', sans-serif;
       --font-pharaonic: 'Cinzel', serif;
 
-      --color-gold: #D4AF37;
       --color-gold-pharaonic: #DFB77D;
       --color-terracotta: #8D4F4E;
       --color-lapis: #567394;
@@ -41,11 +40,9 @@
     .color-hex { font-family: monospace; color: var(--color-gold-pharaonic); font-size: 0.85rem; }
 
     /* Logo Grid */
-    .logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+    .logo-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 500px; margin: 0 auto; }
     .logo-card { background: #1B212E; border: 1px solid rgba(223, 183, 125, 0.3); border-radius: 12px; padding: 1.5rem; text-align: center; }
-    .logo-preview-box { height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; position: relative; }
-    .transparent-bg { background-color: #242B3B; background-image: radial-gradient(#323B4E 15%, transparent 16%); background-size: 16px 16px; }
-    .dark-stone-bg { background: #0E121A url('pharaonic_hero_bg.png') center/cover; }
+    .logo-preview-box { height: 220px; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; position: relative; background-color: #242B3B; }
     .logo-img { max-height: 180px; max-width: 90%; object-fit: contain; }
     .logo-title { font-weight: 700; color: #FFF; margin-bottom: 0.5rem; }
     .download-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.5rem 1.25rem; background: #8D4F4E; color: #FFF; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-decoration: none; margin-top: 0.5rem; }
@@ -65,52 +62,32 @@
 
   <header>
     <div class="container">
-      <h1>TUT STONES — Brand & Design Assets</h1>
-      <p>Official Palette Swatches, Typography Standards & Image Asset Reference Catalog</p>
+      <h1>TUT STONES — Pharaonic Design System</h1>
+      <p>Official Pharaonic Theme Color Palette, Typography & Assets Index</p>
     </div>
   </header>
 
   <div class="container">
 
-    <!-- LOGO VARIATIONS -->
+    <!-- OFFICIAL BRAND LOGO -->
     <div class="section-box">
-      <h2 class="section-title"><i class="ri-shield-star-line"></i> Official Brand Logos</h2>
+      <h2 class="section-title"><i class="ri-shield-star-line"></i> Official Brand Logo</h2>
       <div class="logo-grid">
         <div class="logo-card">
-          <div class="logo-preview-box transparent-bg">
-            <img src="tut_stones_logo_without_background.png" alt="TUT Stones Logo Transparent" class="logo-img">
+          <div class="logo-preview-box">
+            <img src="tut_stones_logo.png" alt="TUT Stones Official Logo" class="logo-img">
           </div>
-          <div class="logo-title">Logo Without Background (Transparent PNG)</div>
-          <p style="font-size: 0.82rem; color: #9CA3AF; margin-bottom: 0.5rem;">Isolated vector logo emblem for dark/light headers and print.</p>
-          <a href="tut_stones_logo_without_background.png" download class="download-btn"><i class="ri-download-line"></i> Download Transparent PNG</a>
-        </div>
-
-        <div class="logo-card">
-          <div class="logo-preview-box dark-stone-bg">
-            <img src="tut_stones_logo_with_background.png" alt="TUT Stones Logo With Background" class="logo-img">
-          </div>
-          <div class="logo-title">Logo With Luxury Background</div>
-          <p style="font-size: 0.82rem; color: #9CA3AF; margin-bottom: 0.5rem;">Set on luxury charcoal stone texture with golden Pharaonic accents.</p>
-          <a href="tut_stones_logo_with_background.png" download class="download-btn"><i class="ri-download-line"></i> Download Logo With Background</a>
-        </div>
-
-        <div class="logo-card">
-          <div class="logo-preview-box transparent-bg">
-            <img src="tut_stones_logo.png" alt="Original TUT Stones Logo" class="logo-img">
-          </div>
-          <div class="logo-title">Original Brand Emblem</div>
-          <p style="font-size: 0.82rem; color: #9CA3AF; margin-bottom: 0.5rem;">Original brand mark used across main site header navbar.</p>
-          <a href="tut_stones_logo.png" download class="download-btn"><i class="ri-download-line"></i> Download Original Logo</a>
+          <div class="logo-title">Official Brand Emblem (tut_stones_logo.png)</div>
+          <p style="font-size: 0.82rem; color: #9CA3AF; margin-bottom: 0.5rem;">Official brand mark used across main site header navbar and export presentation.</p>
+          <a href="tut_stones_logo.png" download class="download-btn"><i class="ri-download-line"></i> Download Logo PNG</a>
         </div>
       </div>
     </div>
 
-    <!-- COLOR PALETTES -->
+    <!-- PHARAONIC COLOR PALETTE -->
     <div class="section-box">
-      <h2 class="section-title"><i class="ri-palette-line"></i> Color Palettes & Themes</h2>
-
-      <h4 style="color: #FFF; margin-bottom: 1rem;">Theme 3: Pharaonic Heritage (Primary Theme)</h4>
-      <div class="color-grid" style="margin-bottom: 2rem;">
+      <h2 class="section-title"><i class="ri-palette-line"></i> Official Pharaonic Theme Color Palette</h2>
+      <div class="color-grid">
         <div class="color-card">
           <div class="color-swatch" style="background: #8D4F4E;"></div>
           <div class="color-info">
@@ -150,39 +127,12 @@
             <div class="color-hex">#241C18</div>
           </div>
         </div>
-      </div>
-
-      <h4 style="color: #FFF; margin-bottom: 1rem;">Theme 1: Default Dark Luxury (Noir & Gold)</h4>
-      <div class="color-grid">
-        <div class="color-card">
-          <div class="color-swatch" style="background: #D4AF37;"></div>
-          <div class="color-info">
-            <div class="color-name">Primary Gold</div>
-            <div class="color-hex">#D4AF37</div>
-          </div>
-        </div>
 
         <div class="color-card">
-          <div class="color-swatch" style="background: #0B0C0E;"></div>
+          <div class="color-swatch" style="background: #FFFDF5; border: 1px solid #CCC;"></div>
           <div class="color-info">
-            <div class="color-name">Noir Background</div>
-            <div class="color-hex">#0B0C0E</div>
-          </div>
-        </div>
-
-        <div class="color-card">
-          <div class="color-swatch" style="background: #14161A;"></div>
-          <div class="color-info">
-            <div class="color-name">Card Surface</div>
-            <div class="color-hex">#14161A</div>
-          </div>
-        </div>
-
-        <div class="color-card">
-          <div class="color-swatch" style="background: #F3F4F6;"></div>
-          <div class="color-info">
-            <div class="color-name">Text Main</div>
-            <div class="color-hex">#F3F4F6</div>
+            <div class="color-name" style="color: #000;">Sandstone Card Surface</div>
+            <div class="color-hex">#FFFDF5</div>
           </div>
         </div>
       </div>
@@ -208,7 +158,7 @@
       </div>
     </div>
 
-    <!-- COMPLETE ASSETS CATALOG TABLE -->
+    <!-- ASSETS CATALOG TABLE -->
     <div class="section-box">
       <h2 class="section-title"><i class="ri-folder-image-line"></i> Design Assets File Catalog</h2>
       <table class="assets-table">
@@ -222,21 +172,9 @@
         </thead>
         <tbody>
           <tr>
-            <td><code>tut_stones_logo_without_background.png</code></td>
-            <td>PNG (Transparent)</td>
-            <td>Isolated brand emblem without background</td>
-            <td><a href="tut_stones_logo_without_background.png" target="_blank" style="color: #DFB77D;">View Asset</a></td>
-          </tr>
-          <tr>
-            <td><code>tut_stones_logo_with_background.png</code></td>
-            <td>PNG</td>
-            <td>Brand emblem set on dark Pharaonic stone texture</td>
-            <td><a href="tut_stones_logo_with_background.png" target="_blank" style="color: #DFB77D;">View Asset</a></td>
-          </tr>
-          <tr>
             <td><code>tut_stones_logo.png</code></td>
             <td>PNG</td>
-            <td>Original header navbar brand logo mark</td>
+            <td>Official brand header logo mark</td>
             <td><a href="tut_stones_logo.png" target="_blank" style="color: #DFB77D;">View Asset</a></td>
           </tr>
           <tr>
@@ -268,18 +206,6 @@
             <td>PNG</td>
             <td>Egyptian stonemasonry craftsmanship feature image</td>
             <td><a href="about_craft.png" target="_blank" style="color: #DFB77D;">View Asset</a></td>
-          </tr>
-          <tr>
-            <td><code>marble_calacatta.png</code></td>
-            <td>PNG</td>
-            <td>Egyptian Galala / Calacatta Marble swatch tile</td>
-            <td><a href="marble_calacatta.png" target="_blank" style="color: #DFB77D;">View Asset</a></td>
-          </tr>
-          <tr>
-            <td><code>granite_black_galaxy.png</code></td>
-            <td>PNG</td>
-            <td>Egyptian Black Granite swatch tile</td>
-            <td><a href="granite_black_galaxy.png" target="_blank" style="color: #DFB77D;">View Asset</a></td>
           </tr>
         </tbody>
       </table>

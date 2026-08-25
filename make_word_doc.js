@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType, ShadingType } = require('docx');
+const { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, ShadingType, AlignmentType } = require('docx');
 
 async function createDesignDoc() {
   const doc = new Document({
@@ -17,7 +17,7 @@ async function createDesignDoc() {
         new Paragraph({
           children: [
             new TextRun({
-              text: "Official Brand & Design Specification Guide",
+              text: "Official Brand & Design Specification Guide (Pharaonic Theme)",
               bold: true,
               size: 28,
               color: "8D4F4E"
@@ -29,7 +29,7 @@ async function createDesignDoc() {
         new Paragraph({
           children: [
             new TextRun({
-              text: "Egyptian Marble & Granite Export Web Application | Visual Identity System",
+              text: "Egyptian Marble & Granite Export Web Application | Pharaonic Visual Identity",
               italic: true,
               size: 20,
               color: "567394"
@@ -48,31 +48,29 @@ async function createDesignDoc() {
         new Paragraph({
           children: [
             new TextRun({
-              text: "TUT Stones combines Egypt's 5,000-year geological heritage with modern luxury architectural design. The visual language is defined by rich stone textures, high-contrast dark modes, elegant Pharaonic color pigments (Terracotta Red, Nile Lapis Blue, Egyptian Gold), and classical typography."
+              text: "TUT Stones combines Egypt's 5,000-year geological heritage with modern luxury architectural design. The visual language is defined by rich stone textures, high-contrast Pharaonic color pigments (Terracotta Red, Nile Lapis Blue, Egyptian Gold), and classical typography."
             })
           ],
           spacing: { after: 200 }
         }),
 
-        // 2. Color Palettes
+        // 2. Pharaonic Color Palette
         new Paragraph({
-          text: "2. Color Palettes & Color Schemes",
+          text: "2. Official Color Palette — Pharaonic Heritage Theme",
           heading: HeadingLevel.HEADING_1,
           spacing: { before: 300, after: 120 }
         }),
         new Paragraph({
           children: [
             new TextRun({
-              text: "Theme 3: Pharaonic Heritage (Primary Brand Theme)",
-              bold: true,
-              size: 22,
-              color: "8D4F4E"
+              text: "Directly derived from ancient Egyptian temple frescoes, lapis lazuli, red ochre, and papyrus sandstone.",
+              italic: true
             })
           ],
-          spacing: { before: 100, after: 100 }
+          spacing: { before: 50, after: 150 }
         }),
 
-        // Table for Theme 3
+        // Table for Pharaonic Theme Only
         new Table({
           width: { size: 100, type: WidthType.PERCENTAGE },
           rows: [
@@ -81,7 +79,7 @@ async function createDesignDoc() {
                 new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Token Name", bold: true, color: "FFFFFF" })] })], shading: { fill: "8D4F4E", type: ShadingType.CLEAR } }),
                 new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Hex Code", bold: true, color: "FFFFFF" })] })], shading: { fill: "8D4F4E", type: ShadingType.CLEAR } }),
                 new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "RGB Value", bold: true, color: "FFFFFF" })] })], shading: { fill: "8D4F4E", type: ShadingType.CLEAR } }),
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Usage", bold: true, color: "FFFFFF" })] })], shading: { fill: "8D4F4E", type: ShadingType.CLEAR } })
+                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Usage & Application", bold: true, color: "FFFFFF" })] })], shading: { fill: "8D4F4E", type: ShadingType.CLEAR } })
               ]
             }),
             new TableRow({
@@ -89,7 +87,7 @@ async function createDesignDoc() {
                 new TableCell({ children: [new Paragraph("Egyptian Terracotta Red")] }),
                 new TableCell({ children: [new Paragraph("#8D4F4E")] }),
                 new TableCell({ children: [new Paragraph("rgb(141, 79, 78)")] }),
-                new TableCell({ children: [new Paragraph("Primary CTAs, badges, header borders")] })
+                new TableCell({ children: [new Paragraph("Section tags, primary CTAs, active buttons, card borders")] })
               ]
             }),
             new TableRow({
@@ -97,7 +95,7 @@ async function createDesignDoc() {
                 new TableCell({ children: [new Paragraph("Nile Lapis Blue")] }),
                 new TableCell({ children: [new Paragraph("#567394")] }),
                 new TableCell({ children: [new Paragraph("rgb(86, 115, 148)")] }),
-                new TableCell({ children: [new Paragraph("Subheaders, experience badges, icons")] })
+                new TableCell({ children: [new Paragraph("Subheaders, experience badges, secondary feature icons")] })
               ]
             }),
             new TableRow({
@@ -105,15 +103,15 @@ async function createDesignDoc() {
                 new TableCell({ children: [new Paragraph("Egyptian Sun Gold")] }),
                 new TableCell({ children: [new Paragraph("#DFB77D")] }),
                 new TableCell({ children: [new Paragraph("rgb(223, 183, 125)")] }),
-                new TableCell({ children: [new Paragraph("Header bottom border, active indicators")] })
+                new TableCell({ children: [new Paragraph("Header bottom border, active indicators, highlights")] })
               ]
             }),
             new TableRow({
               children: [
-                new TableCell({ children: [new Paragraph("Papyrus Light Base")] }),
+                new TableCell({ children: [new Paragraph("Papyrus Base")] }),
                 new TableCell({ children: [new Paragraph("#F5E9D8")] }),
                 new TableCell({ children: [new Paragraph("rgb(245, 233, 216)")] }),
-                new TableCell({ children: [new Paragraph("Light theme background base")] })
+                new TableCell({ children: [new Paragraph("Light papyrus background base")] })
               ]
             }),
             new TableRow({
@@ -121,66 +119,7 @@ async function createDesignDoc() {
                 new TableCell({ children: [new Paragraph("Hieroglyph Charcoal")] }),
                 new TableCell({ children: [new Paragraph("#241C18")] }),
                 new TableCell({ children: [new Paragraph("rgb(36, 28, 24)")] }),
-                new TableCell({ children: [new Paragraph("Body copy text readability")] })
-              ]
-            })
-          ]
-        }),
-
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "Theme 1: Default Dark Luxury (Noir & Gold)",
-              bold: true,
-              size: 22,
-              color: "B89025"
-            })
-          ],
-          spacing: { before: 200, after: 100 }
-        }),
-
-        // Table for Theme 1
-        new Table({
-          width: { size: 100, type: WidthType.PERCENTAGE },
-          rows: [
-            new TableRow({
-              children: [
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Token Name", bold: true, color: "FFFFFF" })] })], shading: { fill: "333333", type: ShadingType.CLEAR } }),
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Hex Code", bold: true, color: "FFFFFF" })] })], shading: { fill: "333333", type: ShadingType.CLEAR } }),
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "RGB Value", bold: true, color: "FFFFFF" })] })], shading: { fill: "333333", type: ShadingType.CLEAR } }),
-                new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Usage", bold: true, color: "FFFFFF" })] })], shading: { fill: "333333", type: ShadingType.CLEAR } })
-              ]
-            }),
-            new TableRow({
-              children: [
-                new TableCell({ children: [new Paragraph("Gold Primary")] }),
-                new TableCell({ children: [new Paragraph("#D4AF37")] }),
-                new TableCell({ children: [new Paragraph("rgb(212, 175, 55)")] }),
-                new TableCell({ children: [new Paragraph("Primary CTAs, title spans")] })
-              ]
-            }),
-            new TableRow({
-              children: [
-                new TableCell({ children: [new Paragraph("Noir Dark Background")] }),
-                new TableCell({ children: [new Paragraph("#0B0C0E")] }),
-                new TableCell({ children: [new Paragraph("rgb(11, 12, 14)")] }),
-                new TableCell({ children: [new Paragraph("Dark page body background")] })
-              ]
-            }),
-            new TableRow({
-              children: [
-                new TableCell({ children: [new Paragraph("Card Surface")] }),
-                new TableCell({ children: [new Paragraph("#14161A")] }),
-                new TableCell({ children: [new Paragraph("rgb(20, 22, 26)")] }),
-                new TableCell({ children: [new Paragraph("Card containers & modals")] })
-              ]
-            }),
-            new TableRow({
-              children: [
-                new TableCell({ children: [new Paragraph("Text Primary")] }),
-                new TableCell({ children: [new Paragraph("#F3F4F6")] }),
-                new TableCell({ children: [new Paragraph("rgb(243, 244, 246)")] }),
-                new TableCell({ children: [new Paragraph("High contrast white body text")] })
+                new TableCell({ children: [new Paragraph("Primary readable body text & section titles")] })
               ]
             })
           ]
@@ -221,7 +160,7 @@ async function createDesignDoc() {
           spacing: { before: 300, after: 120 }
         }),
         new Paragraph({
-          text: "All high-resolution image files copied into design_assets/ folder:",
+          text: "All high-resolution image files inside design_assets/ folder:",
           spacing: { after: 120 }
         }),
 
@@ -237,23 +176,9 @@ async function createDesignDoc() {
             }),
             new TableRow({
               children: [
-                new TableCell({ children: [new Paragraph("tut_stones_logo_without_background.png")] }),
-                new TableCell({ children: [new Paragraph("PNG (Transparent)")] }),
-                new TableCell({ children: [new Paragraph("Isolated brand logo emblem with transparent background")] })
-              ]
-            }),
-            new TableRow({
-              children: [
-                new TableCell({ children: [new Paragraph("tut_stones_logo_with_background.png")] }),
-                new TableCell({ children: [new Paragraph("PNG")] }),
-                new TableCell({ children: [new Paragraph("Brand emblem set on dark Pharaonic stone texture")] })
-              ]
-            }),
-            new TableRow({
-              children: [
                 new TableCell({ children: [new Paragraph("tut_stones_logo.png")] }),
                 new TableCell({ children: [new Paragraph("PNG")] }),
-                new TableCell({ children: [new Paragraph("Original header navbar brand mark")] })
+                new TableCell({ children: [new Paragraph("Official brand logo mark")] })
               ]
             }),
             new TableRow({
@@ -308,7 +233,7 @@ async function createDesignDoc() {
           ]
         }),
 
-        // 5. Contact & Company Data
+        // 5. Contact Details
         new Paragraph({
           text: "5. Official Company Contact Details",
           heading: HeadingLevel.HEADING_1,
@@ -349,7 +274,7 @@ async function createDesignDoc() {
   const buffer = await Packer.toBuffer(doc);
   const targetPath = path.join(__dirname, 'design_assets', 'TUT_Stones_Design_Specification.docx');
   fs.writeFileSync(targetPath, buffer);
-  console.log('Word document successfully created at:', targetPath);
+  console.log('Word document successfully updated at:', targetPath);
 }
 
 createDesignDoc().catch(err => {
