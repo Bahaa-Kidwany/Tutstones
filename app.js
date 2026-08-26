@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try { initNavbar(); } catch (e) { console.error('Error initNavbar:', e); }
   try { renderSocialLinks(); } catch (e) { console.error('Error renderSocialLinks:', e); }
   try { renderAboutSection(); } catch (e) { console.error('Error renderAboutSection:', e); }
+  try { initAboutSlider(); } catch (e) { console.error('Error initAboutSlider:', e); }
   try { renderContactDetails(); } catch (e) { console.error('Error renderContactDetails:', e); }
   try { initHeroSlider(); } catch (e) { console.error('Error initHeroSlider:', e); }
   try { renderFeaturedSections(); } catch (e) { console.error('Error renderFeaturedSections:', e); }
@@ -117,7 +118,7 @@ function renderAboutSection() {
 
   if (tagElem) tagElem.innerText = about.tag || 'WHO WE ARE';
   if (titleElem) titleElem.innerHTML = about.title || 'A Legacy of <span>Pure Stone Artistry</span>';
-  if (imgElem && about.craftImage) imgElem.src = about.craftImage;
+  if (imgElem && about.craftImage && !aboutSection.querySelector('.about-slider')) imgElem.src = about.craftImage;
   if (expNumElem) expNumElem.innerText = about.expNumber || '25+';
   if (expTextElem) expTextElem.innerHTML = (about.expText || 'Years Sourcing<br>Rare Natural Stone').replace(/\n/g, '<br>');
 
@@ -166,6 +167,93 @@ function renderAboutSection() {
   }
 }
 
+/* ==========================================================================
+   2b. About Section Image Slider Logic
+   ========================================================================== */
+function initAboutSlider() {
+  const sliderContainer = document.querySelector('.about-slider');
+  if (!sliderContainer) return;
+
+  const slides = sliderContainer.querySelectorAll('.about-slide');
+  const dots = sliderContainer.querySelectorAll('.about-dots .slider-dot');
+  const prevBtn = sliderContainer.querySelector('.about-arrows .prev');
+  const nextBtn = sliderContainer.querySelector('.about-arrows .next');
+
+  if (slides.length <= 1) return;
+
+  let currentIndex = 0;
+  let autoTimer = null;
+
+  function goToSlide(index) {
+    if (index === currentIndex) return;
+    const oldIndex = currentIndex;
+
+    slides.forEach(s => s.classList.remove('active', 'prev-slide'));
+    dots.forEach(d => d.classList.remove('active'));
+
+    if (slides[oldIndex]) {
+      slides[oldIndex].classList.add('prev-slide');
+    }
+
+    currentIndex = (index + slides.length) % slides.length;
+
+    if (slides[currentIndex]) {
+      slides[currentIndex].classList.add('active');
+    }
+    if (dots[currentIndex]) {
+      dots[currentIndex].classList.add('active');
+    }
+  }
+
+  function nextSlide() {
+    const newIndex = (currentIndex + 1) % slides.length;
+    goToSlide(newIndex);
+  }
+
+  function prevSlide() {
+    const newIndex = (currentIndex - 1 + slides.length) % slides.length;
+    goToSlide(newIndex);
+  }
+
+  function startAutoPlay() {
+    stopAutoPlay();
+    autoTimer = setInterval(nextSlide, 4500);
+  }
+
+  function stopAutoPlay() {
+    if (autoTimer) clearInterval(autoTimer);
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      nextSlide();
+      startAutoPlay();
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      prevSlide();
+      startAutoPlay();
+    });
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      goToSlide(i);
+      startAutoPlay();
+    });
+  });
+
+  sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+  sliderContainer.addEventListener('mouseleave', startAutoPlay);
+
+  startAutoPlay();
+}
+
 function renderContactDetails() {
   if (typeof TutStonesStore === 'undefined') return;
   const about = TutStonesStore.getAbout();
@@ -210,9 +298,9 @@ function initHeroSlider() {
   const slidesData = TutStonesStore.getHeroSlides();
   const sliderContainer = document.querySelector('.hero-slider');
   const heroContentContainer = document.querySelector('.hero-content');
-  const dotsContainer = document.querySelector('.slider-dots');
-  const prevBtn = document.querySelector('.slider-arrow.prev');
-  const nextBtn = document.querySelector('.slider-arrow.next');
+  const dotsContainer = document.querySelector('#home .slider-dots') || document.querySelector('.hero .slider-dots');
+  const prevBtn = document.querySelector('#home .slider-arrow.prev') || document.querySelector('.hero .slider-arrow.prev');
+  const nextBtn = document.querySelector('#home .slider-arrow.next') || document.querySelector('.hero .slider-arrow.next');
 
   if (!sliderContainer || !slidesData || slidesData.length === 0) return;
 
@@ -230,7 +318,7 @@ function initHeroSlider() {
   });
 
   const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.slider-dot');
+  const dots = dotsContainer ? dotsContainer.querySelectorAll('.slider-dot') : [];
 
   let currentIndex = 0;
   let autoTimer = null;
