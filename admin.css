@@ -513,8 +513,7 @@ textarea.form-control {
 
 /* Image File Picker & Drag-and-Drop Box */
 .image-upload-wrapper {
-  display: grid;
-  grid-template-columns: 100px 1fr;
+  display: flex;
   gap: 1rem;
   align-items: center;
   background: var(--color-bg-card);

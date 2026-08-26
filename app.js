@@ -14,10 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
   try { initThemeSwitcher(); } catch (e) { console.error('Error initThemeSwitcher:', e); }
   try { initNavbar(); } catch (e) { console.error('Error initNavbar:', e); }
   try { renderSocialLinks(); } catch (e) { console.error('Error renderSocialLinks:', e); }
-  try { renderAboutSection(); } catch (e) { console.error('Error renderAboutSection:', e); }
-  try { initAboutSlider(); } catch (e) { console.error('Error initAboutSlider:', e); }
-  try { renderContactDetails(); } catch (e) { console.error('Error renderContactDetails:', e); }
-  try { initHeroSlider(); } catch (e) { console.error('Error initHeroSlider:', e); }
+  try { renderFooterContent(); } catch (e) { console.error('Error renderFooterContent:', e); }
+
+  const page = document.body.dataset.page || 'home';
+  if (page === 'home') {
+    try { renderHomePageContent(); } catch (e) { console.error('Error renderHomePageContent:', e); }
+    try { initHeroSlider(); } catch (e) { console.error('Error initHeroSlider:', e); }
+    try { initAboutSlider(); } catch (e) { console.error('Error initAboutSlider:', e); }
+  } else if (page === 'about') {
+    try { renderAboutPageContent(); } catch (e) { console.error('Error renderAboutPageContent:', e); }
+  } else if (page === 'factory') {
+    try { renderFactoryPageContent(); } catch (e) { console.error('Error renderFactoryPageContent:', e); }
+  } else if (page === 'packaging') {
+    try { renderPackagingPageContent(); } catch (e) { console.error('Error renderPackagingPageContent:', e); }
+  } else if (page === 'contact') {
+    try { renderContactPageContent(); } catch (e) { console.error('Error renderContactPageContent:', e); }
+  }
+
   try { renderFeaturedSections(); } catch (e) { console.error('Error renderFeaturedSections:', e); }
   try { initCatalogue(); } catch (e) { console.error('Error initCatalogue:', e); }
   try { initModal(); } catch (e) { console.error('Error initModal:', e); }
@@ -100,70 +113,401 @@ function renderSocialLinks() {
 }
 
 /* ==========================================================================
-   2. Dynamic About Section & Contact Info Rendering
+   2. Dynamic Page Content Rendering Functions
    ========================================================================== */
-function renderAboutSection() {
+
+// --- 2a. Global Footer Hydration ---
+function renderFooterContent() {
   if (typeof TutStonesStore === 'undefined') return;
-  const about = TutStonesStore.getAbout();
+  const ftr = TutStonesStore.getFooterData();
+  if (!ftr) return;
+
+  const footer = document.querySelector('footer.footer');
+  if (!footer) return;
+
+  // Brand paragraph
+  const brandP = footer.querySelector('.footer-brand p');
+  if (brandP && ftr.brandDesc) brandP.innerText = ftr.brandDesc;
+
+  // Headquarters column
+  const hqCols = footer.querySelectorAll('.footer-col');
+  hqCols.forEach(col => {
+    const h5 = col.querySelector('h5');
+    if (h5 && (h5.textContent.includes('Headquarters') || h5.textContent.includes('Showroom'))) {
+      const ul = col.querySelector('.footer-links');
+      if (ul) {
+        let items = [];
+        if (ftr.address) items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> <a href="${ftr.addressLink || '#'}" target="_blank" rel="noopener noreferrer" style="color: inherit;">${ftr.address}</a></li>`);
+        if (ftr.emailPrimary || ftr.emailSecondary) items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> ${ftr.emailPrimary || ''} ${ftr.emailSecondary ? '| ' + ftr.emailSecondary : ''}</li>`);
+        if (ftr.phonePrimary) items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${ftr.phonePrimary}" style="color: inherit;">${ftr.phonePrimary}</a></li>`);
+        if (ftr.whatsappNumber) items.push(`<li><i class="ri-whatsapp-line" style="color: #25D366;"></i> <a href="https://wa.me/${ftr.whatsappNumber.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener noreferrer" style="color: inherit;">WhatsApp: ${ftr.whatsappNumber}</a></li>`);
+        if (ftr.hours) items.push(`<li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> ${ftr.hours}</li>`);
+        ul.innerHTML = items.join('');
+      }
+    }
+  });
+}
+
+// --- 2b. Homepage Dynamic Hydration ---
+function renderHomePageContent() {
+  if (typeof TutStonesStore === 'undefined') return;
+  const hp = TutStonesStore.getHomePage();
+  if (!hp) return;
+
   const aboutSection = document.getElementById('about');
+  if (aboutSection) {
+    const tagElem = aboutSection.querySelector('.section-tag');
+    const titleElem = aboutSection.querySelector('.section-title');
+    const expNumElem = aboutSection.querySelector('.exp-number');
+    const expTextElem = aboutSection.querySelector('.exp-text');
+    const pContainer = aboutSection.querySelector('.about-paragraphs');
 
-  if (!aboutSection || !about) return;
+    if (tagElem && hp.aboutTag) tagElem.innerText = hp.aboutTag;
+    if (titleElem && hp.aboutTitle) titleElem.innerHTML = hp.aboutTitle;
+    if (expNumElem && hp.aboutExpNumber) expNumElem.innerText = hp.aboutExpNumber;
+    if (expTextElem && hp.aboutExpText) expTextElem.innerHTML = hp.aboutExpText;
 
-  const tagElem = aboutSection.querySelector('.section-tag');
-  const titleElem = aboutSection.querySelector('.section-title');
-  const imgElem = aboutSection.querySelector('.about-image-wrapper img');
-  const expNumElem = aboutSection.querySelector('.exp-number');
-  const expTextElem = aboutSection.querySelector('.exp-text');
-  const textContainer = aboutSection.querySelector('.about-text');
+    if (pContainer) {
+      let pContent = '';
+      if (hp.aboutDesc1) pContent += `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${hp.aboutDesc1}</p>`;
+      if (hp.aboutDesc2) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${hp.aboutDesc2}</p>`;
+      if (hp.aboutDesc3) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${hp.aboutDesc3}</p>`;
+      pContainer.innerHTML = pContent;
+    }
 
-  if (tagElem) tagElem.innerText = about.tag || 'WHO WE ARE';
-  if (titleElem) titleElem.innerHTML = about.title || 'A Legacy of <span>Pure Stone Artistry</span>';
-  if (imgElem && about.craftImage && !aboutSection.querySelector('.about-slider')) imgElem.src = about.craftImage;
-  if (expNumElem) expNumElem.innerText = about.expNumber || '25+';
-  if (expTextElem) expTextElem.innerHTML = (about.expText || 'Years Sourcing<br>Rare Natural Stone').replace(/\n/g, '<br>');
+    const statsGrid = aboutSection.querySelector('.stats-grid');
+    if (statsGrid && hp.aboutStats) {
+      statsGrid.innerHTML = hp.aboutStats.map(s => `
+        <div class="stat-card">
+          <h4>${s.count}</h4>
+          <p>${s.label}</p>
+        </div>
+      `).join('');
+    }
 
-  // Update paragraphs and stats cards
-  const paragraphContainer = textContainer?.querySelector('.about-paragraphs');
-  if (paragraphContainer) {
-    let pContent = `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${about.desc1}</p>`;
-    if (about.desc2) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${about.desc2}</p>`;
-    if (about.desc3) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${about.desc3}</p>`;
-    paragraphContainer.innerHTML = pContent;
-  } else {
-    const paragraphs = textContainer?.querySelectorAll('p');
-    if (paragraphs && paragraphs.length >= 2) {
-      paragraphs[0].innerHTML = about.desc1 || paragraphs[0].innerHTML;
-      paragraphs[1].innerHTML = about.desc2 || paragraphs[1].innerHTML;
-      if (paragraphs[2] && about.desc3) paragraphs[2].innerHTML = about.desc3;
+    // Homepage About Slider Images Hydration
+    const aboutSlider = aboutSection.querySelector('.about-slider');
+    if (aboutSlider && hp.aboutSliderImages && hp.aboutSliderImages.length > 0) {
+      let slidesHTML = hp.aboutSliderImages.map((img, idx) => `
+        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url}');"></div>
+      `).join('');
+
+      let dotsHTML = hp.aboutSliderImages.map((_, idx) => `
+        <div class="slider-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>
+      `).join('');
+
+      aboutSlider.innerHTML = `
+        ${slidesHTML}
+        <div class="about-slider-controls">
+          <div class="slider-dots about-dots">${dotsHTML}</div>
+          <div class="slider-arrows about-arrows">
+            <button class="slider-arrow prev" aria-label="Previous Slide"><i class="ri-arrow-left-s-line"></i></button>
+            <button class="slider-arrow next" aria-label="Next Slide"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+      `;
     }
   }
 
-  const statsGrid = aboutSection.querySelector('.stats-grid');
-  if (statsGrid && about.stats) {
-    statsGrid.innerHTML = about.stats.map(s => `
-      <div class="stat-card">
-        <h4>${s.count}</h4>
-        <p>${s.label}</p>
-      </div>
-    `).join('');
+  // Homepage Bottom 3 Boxes ("OUR EXPORT CAPABILITIES")
+  const boxesSection = document.querySelector('body[data-page="home"] section.section-padding:nth-of-type(3)');
+  if (boxesSection) {
+    const tagElem = boxesSection.querySelector('.section-tag');
+    const titleElem = boxesSection.querySelector('.section-title');
+    const grid = boxesSection.querySelector('.process-grid');
+
+    if (tagElem && hp.boxesTag) tagElem.innerText = hp.boxesTag;
+    if (titleElem && hp.boxesTitle) titleElem.innerHTML = hp.boxesTitle;
+
+    if (grid && hp.boxes) {
+      grid.innerHTML = hp.boxes.map(box => `
+        <div class="feature-card">
+          <div class="feature-image-wrapper">
+            <img src="${box.image}" alt="${box.title}">
+            <div class="feature-icon"><i class="${box.icon || 'ri-settings-4-line'}"></i></div>
+          </div>
+          <div class="feature-card-content">
+            <h3>${box.title}</h3>
+            <p style="color: var(--color-text-muted); margin: 0.75rem 0 1.5rem; font-size: 0.9rem;">${box.desc}</p>
+            <a href="${box.btnLink || 'factory.html'}" class="btn btn-outline" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">
+              ${box.btnText || 'Explore'} <i class="ri-arrow-right-line"></i>
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+// --- 2c. About Us Page Dynamic Hydration ---
+function renderAboutPageContent() {
+  if (typeof TutStonesStore === 'undefined') return;
+  const ab = TutStonesStore.getAboutPage();
+  if (!ab) return;
+
+  // Banner
+  const banner = document.querySelector('.page-header-banner');
+  if (banner) {
+    if (ab.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = ab.bannerTag;
+    if (ab.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = ab.bannerTitle;
+    if (ab.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = ab.bannerDesc;
   }
 
-  // Render contact info pills in About section
-  let contactBar = aboutSection.querySelector('.about-contact-bar');
-  if (!contactBar && textContainer) {
-    contactBar = document.createElement('div');
-    contactBar.className = 'about-contact-bar';
-    contactBar.style.cssText = 'margin-top: 1.5rem; padding: 1rem; background: var(--color-bg-surface); border: 1px solid var(--color-border-gold); border-radius: var(--radius-sm); display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;';
-    textContainer.appendChild(contactBar);
+  // Main story section
+  const aboutSection = document.getElementById('about');
+  if (aboutSection) {
+    const mainImg = aboutSection.querySelector('.about-image-wrapper img');
+    const expNum = aboutSection.querySelector('.exp-number');
+    const expText = aboutSection.querySelector('.exp-text');
+    const tag = aboutSection.querySelector('.about-text .section-tag');
+    const title = aboutSection.querySelector('.about-text .section-title');
+    const pContainer = aboutSection.querySelector('.about-paragraphs');
+    const statsGrid = aboutSection.querySelector('.stats-grid');
+
+    if (mainImg && ab.mainImage) mainImg.src = ab.mainImage;
+    if (expNum && ab.expNumber) expNum.innerText = ab.expNumber;
+    if (expText && ab.expText) expText.innerHTML = ab.expText;
+    if (tag && ab.mainTag) tag.innerText = ab.mainTag;
+    if (title && ab.mainTitle) title.innerHTML = ab.mainTitle;
+
+    if (pContainer) {
+      let pContent = '';
+      if (ab.desc1) pContent += `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${ab.desc1}</p>`;
+      if (ab.desc2) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${ab.desc2}</p>`;
+      if (ab.desc3) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${ab.desc3}</p>`;
+      pContainer.innerHTML = pContent;
+    }
+
+    if (statsGrid && ab.stats) {
+      statsGrid.innerHTML = ab.stats.map(s => `
+        <div class="stat-card">
+          <h4>${s.count}</h4>
+          <p>${s.label}</p>
+        </div>
+      `).join('');
+    }
   }
 
-  if (contactBar) {
-    let pills = [];
-    if (about.phone && about.phoneVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <strong>Phone:</strong> <a href="tel:${about.phone}">${about.phone}</a></span>`);
-    if (about.phoneSecondary && about.phoneSecondaryVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-whatsapp-line" style="color: var(--color-gold-primary);"></i> <strong>Sales:</strong> <a href="tel:${about.phoneSecondary}">${about.phoneSecondary}</a></span>`);
-    if (about.email && about.emailVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <strong>Email:</strong> <a href="mailto:${about.email}">${about.email}</a></span>`);
-    if (about.emailSecondary && about.emailSecondaryVisible !== false) pills.push(`<span style="color: var(--color-gold-light); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;"><i class="ri-mail-send-line" style="color: var(--color-gold-primary);"></i> <strong>Direct:</strong> <a href="mailto:${about.emailSecondary}">${about.emailSecondary}</a></span>`);
-    contactBar.innerHTML = pills.join('');
+  // Bottom 3 Cards ("Our Commitments To Global Clients")
+  const bottomSec = document.querySelector('body[data-page="about"] section.section-padding:nth-of-type(2)');
+  if (bottomSec) {
+    const tag = bottomSec.querySelector('.section-tag');
+    const title = bottomSec.querySelector('.section-title');
+    const grid = bottomSec.querySelector('.process-grid');
+
+    if (tag && ab.bottomTag) tag.innerText = ab.bottomTag;
+    if (title && ab.bottomTitle) title.innerHTML = ab.bottomTitle;
+
+    if (grid && ab.bottomCards) {
+      grid.innerHTML = ab.bottomCards.map(card => `
+        <div class="feature-card">
+          ${card.image ? `<div class="feature-image-wrapper"><img src="${card.image}" alt="${card.title}"><div class="feature-icon"><i class="${card.icon || 'ri-shield-check-line'}"></i></div></div>` : `<div class="feature-icon"><i class="${card.icon || 'ri-shield-check-line'}"></i></div>`}
+          <h3>${card.title}</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">${card.desc}</p>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+// --- 2d. Factory Page Dynamic Hydration ---
+function renderFactoryPageContent() {
+  if (typeof TutStonesStore === 'undefined') return;
+  const fac = TutStonesStore.getFactoryPage();
+  if (!fac) return;
+
+  // Banner
+  const banner = document.querySelector('.page-header-banner');
+  if (banner) {
+    if (fac.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = fac.bannerTag;
+    if (fac.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = fac.bannerTitle;
+    if (fac.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = fac.bannerDesc;
+  }
+
+  // Main Section
+  const mainSec = document.querySelector('body[data-page="factory"] section.section-padding:nth-of-type(1)');
+  if (mainSec) {
+    const img = mainSec.querySelector('.about-image-wrapper img');
+    const expNum = mainSec.querySelector('.exp-number');
+    const expText = mainSec.querySelector('.exp-text');
+    const tag = mainSec.querySelector('.about-text .section-tag');
+    const title = mainSec.querySelector('.about-text .section-title');
+    const paragraphs = mainSec.querySelectorAll('.about-text p');
+    const statsGrid = mainSec.querySelector('.stats-grid');
+
+    if (img && fac.mainImage) img.src = fac.mainImage;
+    if (expNum && fac.expNumber) expNum.innerText = fac.expNumber;
+    if (expText && fac.expText) expText.innerHTML = fac.expText;
+    if (tag && fac.mainTag) tag.innerText = fac.mainTag;
+    if (title && fac.mainTitle) title.innerHTML = fac.mainTitle;
+
+    if (paragraphs && paragraphs.length >= 2) {
+      if (fac.desc1) paragraphs[0].innerText = fac.desc1;
+      if (fac.desc2) paragraphs[1].innerText = fac.desc2;
+    }
+
+    if (statsGrid && fac.stats) {
+      statsGrid.innerHTML = fac.stats.map(s => `
+        <div class="stat-card">
+          <h4>${s.count}</h4>
+          <p>${s.label}</p>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Production Workflow Section
+  const workflowSec = document.querySelector('body[data-page="factory"] section.section-padding:nth-of-type(2)');
+  if (workflowSec) {
+    const tag = workflowSec.querySelector('.section-tag');
+    const title = workflowSec.querySelector('.section-title');
+    const grid = workflowSec.querySelector('.process-grid');
+
+    if (tag && fac.workflowTag) tag.innerText = fac.workflowTag;
+    if (title && fac.workflowTitle) title.innerHTML = fac.workflowTitle;
+
+    if (grid && fac.cards) {
+      grid.innerHTML = fac.cards.map((card, idx) => `
+        <div class="process-card">
+          ${card.image ? `<img src="${card.image}" alt="${card.title}" style="width: 100%; height: 160px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 1rem;">` : ''}
+          <div class="process-icon">${card.step || '0' + (idx + 1)}</div>
+          <h3>${card.title}</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">${card.desc}</p>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+// --- 2e. Packaging Page Dynamic Hydration ---
+function renderPackagingPageContent() {
+  if (typeof TutStonesStore === 'undefined') return;
+  const pkg = TutStonesStore.getPackagingPage();
+  if (!pkg) return;
+
+  // Banner
+  const banner = document.querySelector('.page-header-banner');
+  if (banner) {
+    if (pkg.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = pkg.bannerTag;
+    if (pkg.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = pkg.bannerTitle;
+    if (pkg.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = pkg.bannerDesc;
+  }
+
+  // Main Section
+  const mainSec = document.querySelector('body[data-page="packaging"] section.section-padding:nth-of-type(1)');
+  if (mainSec) {
+    const img = mainSec.querySelector('.about-image-wrapper img');
+    const expNum = mainSec.querySelector('.exp-number');
+    const expText = mainSec.querySelector('.exp-text');
+    const tag = mainSec.querySelector('.about-text .section-tag');
+    const title = mainSec.querySelector('.about-text .section-title');
+    const paragraphs = mainSec.querySelectorAll('.about-text p');
+    const statsGrid = mainSec.querySelector('.stats-grid');
+
+    if (img && pkg.mainImage) img.src = pkg.mainImage;
+    if (expNum && pkg.expNumber) expNum.innerText = pkg.expNumber;
+    if (expText && pkg.expText) expText.innerHTML = pkg.expText;
+    if (tag && pkg.mainTag) tag.innerText = pkg.mainTag;
+    if (title && pkg.mainTitle) title.innerHTML = pkg.mainTitle;
+
+    if (paragraphs && paragraphs.length >= 2) {
+      if (pkg.desc1) paragraphs[0].innerText = pkg.desc1;
+      if (pkg.desc2) paragraphs[1].innerText = pkg.desc2;
+    }
+
+    if (statsGrid && pkg.stats) {
+      statsGrid.innerHTML = pkg.stats.map(s => `
+        <div class="stat-card">
+          <h4>${s.count}</h4>
+          <p>${s.label}</p>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Specifications Section
+  const specsSec = document.querySelector('body[data-page="packaging"] section.section-padding:nth-of-type(2)');
+  if (specsSec) {
+    const tag = specsSec.querySelector('.section-tag');
+    const title = specsSec.querySelector('.section-title');
+    const grid = specsSec.querySelector('.process-grid');
+
+    if (tag && pkg.specsTag) tag.innerText = pkg.specsTag;
+    if (title && pkg.specsTitle) title.innerHTML = pkg.specsTitle;
+
+    if (grid && pkg.cards) {
+      grid.innerHTML = pkg.cards.map(card => `
+        <div class="feature-card">
+          ${card.image ? `<div class="feature-image-wrapper"><img src="${card.image}" alt="${card.title}"><div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div></div>` : `<div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div>`}
+          <h3>${card.title}</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem;">${card.desc}</p>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+// --- 2f. Contact Page Dynamic Hydration ---
+function renderContactPageContent() {
+  if (typeof TutStonesStore === 'undefined') return;
+  const cnt = TutStonesStore.getContactPage();
+  if (!cnt) return;
+
+  // Banner
+  const banner = document.querySelector('.page-header-banner');
+  if (banner) {
+    if (cnt.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = cnt.bannerTag;
+    if (cnt.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = cnt.bannerTitle;
+    if (cnt.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = cnt.bannerDesc;
+  }
+
+  // Main Section Headings
+  const wrapper = document.querySelector('.contact-info-wrapper');
+  if (wrapper) {
+    const tag = wrapper.querySelector('.section-tag');
+    const title = wrapper.querySelector('.section-title');
+    const descP = wrapper.querySelector('p');
+
+    if (tag && cnt.mainTag) tag.innerText = cnt.mainTag;
+    if (title && cnt.mainTitle) title.innerHTML = cnt.mainTitle;
+    if (descP && cnt.mainDesc) descP.innerText = cnt.mainDesc;
+
+    // Contact info cards
+    const cards = wrapper.querySelectorAll('.contact-info-wrapper > div > div');
+    if (cards && cards.length >= 3) {
+      // Address card
+      const addrH5 = cards[0].querySelector('h5');
+      const addrP = cards[0].querySelector('p');
+      const addrMap = cards[0].querySelector('a');
+      if (addrH5 && cnt.addressTitle) addrH5.innerText = cnt.addressTitle;
+      if (addrP && cnt.addressText) addrP.innerText = cnt.addressText;
+      if (addrMap && cnt.addressMapLink) addrMap.href = cnt.addressMapLink;
+
+      // Email card
+      const emailH5 = cards[1].querySelector('h5');
+      const emailP = cards[1].querySelector('p');
+      if (emailH5 && cnt.emailTitle) emailH5.innerText = cnt.emailTitle;
+      if (emailP) {
+        emailP.innerHTML = `<a href="mailto:${cnt.emailPrimary || 'info@tutstones.com'}" style="color: inherit;">${cnt.emailPrimary || 'info@tutstones.com'}</a> ${cnt.emailSecondary ? '| <a href="mailto:' + cnt.emailSecondary + '" style="color: inherit;">' + cnt.emailSecondary + '</a>' : ''}`;
+      }
+
+      // Phone card
+      const phoneH5 = cards[2].querySelector('h5');
+      const phoneP = cards[2].querySelector('p');
+      const waLink = cards[2].querySelector('a[href*="wa.me"]');
+      if (phoneH5 && cnt.phoneTitle) phoneH5.innerText = cnt.phoneTitle;
+      if (phoneP && cnt.phonePrimary) phoneP.innerHTML = `<a href="tel:${cnt.phonePrimary}" style="color: inherit;">${cnt.phonePrimary}</a>`;
+      if (waLink && cnt.whatsappNumber) waLink.href = `https://wa.me/${cnt.whatsappNumber.replace(/[^0-9]/g, '')}`;
+    }
+  }
+
+  // Form Card
+  const formCard = document.querySelector('.contact-form-card');
+  if (formCard) {
+    const h3 = formCard.querySelector('h3');
+    const p = formCard.querySelector('p');
+    if (h3 && cnt.formTitle) h3.innerText = cnt.formTitle;
+    if (p && cnt.formDesc) p.innerText = cnt.formDesc;
   }
 }
 

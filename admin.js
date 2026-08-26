@@ -102,7 +102,12 @@ function refreshAllAdminViews() {
   renderStoneCards();
   renderSliderCards();
   renderParagraphImages();
-  renderAboutForm();
+  renderHomePageForm();
+  renderAboutPageForm();
+  renderFactoryPageForm();
+  renderPackagingPageForm();
+  renderContactPageForm();
+  renderFooterForm();
   renderSocialTable();
   renderUsersTable();
   populateCategoryDropdowns();
@@ -297,81 +302,493 @@ function renderParagraphImages() {
 }
 
 /* ==========================================================================
-   9. TAB 6: ABOUT US FORM EDITOR
+   9. PAGE CONTENT MANAGERS (HOMEPAGE, ABOUT, FACTORY, PACKAGING, CONTACT, FOOTER)
    ========================================================================== */
-function renderAboutForm() {
-  const about = TutStonesStore.getAbout();
-  document.getElementById('about-tag').value = about.tag || '';
-  document.getElementById('about-title').value = about.title || '';
-  document.getElementById('about-desc1').value = about.desc1 || '';
-  document.getElementById('about-desc2').value = about.desc2 || '';
-  document.getElementById('about-craft-url').value = about.craftImage || '';
-  document.getElementById('about-craft-img-preview').src = about.craftImage || '';
-  document.getElementById('about-exp-num').value = about.expNumber || '';
-  document.getElementById('about-exp-text').value = about.expText || '';
+
+// --- 9a. Homepage Manager ---
+function renderHomePageForm() {
+  const hp = TutStonesStore.getHomePage();
+  if (document.getElementById('hp-about-tag')) document.getElementById('hp-about-tag').value = hp.aboutTag || '';
+  if (document.getElementById('hp-about-title')) document.getElementById('hp-about-title').value = hp.aboutTitle || '';
+  if (document.getElementById('hp-about-desc1')) document.getElementById('hp-about-desc1').value = hp.aboutDesc1 || '';
+  if (document.getElementById('hp-about-desc2')) document.getElementById('hp-about-desc2').value = hp.aboutDesc2 || '';
+  if (document.getElementById('hp-about-desc3')) document.getElementById('hp-about-desc3').value = hp.aboutDesc3 || '';
+  if (document.getElementById('hp-about-exp-num')) document.getElementById('hp-about-exp-num').value = hp.aboutExpNumber || '';
+  if (document.getElementById('hp-about-exp-text')) document.getElementById('hp-about-exp-text').value = hp.aboutExpText || '';
   
-  if (document.getElementById('about-phone')) document.getElementById('about-phone').value = about.phone || '';
-  if (document.getElementById('about-phone-visible')) document.getElementById('about-phone-visible').checked = about.phoneVisible !== false;
+  if (document.getElementById('hp-boxes-tag')) document.getElementById('hp-boxes-tag').value = hp.boxesTag || '';
+  if (document.getElementById('hp-boxes-title')) document.getElementById('hp-boxes-title').value = hp.boxesTitle || '';
 
-  if (document.getElementById('about-phone2')) document.getElementById('about-phone2').value = about.phoneSecondary || '';
-  if (document.getElementById('about-phone2-visible')) document.getElementById('about-phone2-visible').checked = about.phoneSecondaryVisible !== false;
+  renderHpAboutSliderImages();
+  renderHpBoxes();
+}
 
-  if (document.getElementById('about-email')) document.getElementById('about-email').value = about.email || '';
-  if (document.getElementById('about-email-visible')) document.getElementById('about-email-visible').checked = about.emailVisible !== false;
+function renderHpAboutSliderImages() {
+  const hp = TutStonesStore.getHomePage();
+  const container = document.getElementById('hp-about-slider-images-container');
+  if (!container) return;
 
-  if (document.getElementById('about-email2')) document.getElementById('about-email2').value = about.emailSecondary || '';
-  if (document.getElementById('about-email2-visible')) document.getElementById('about-email2-visible').checked = about.emailSecondaryVisible !== false;
-
-  if (document.getElementById('about-address')) document.getElementById('about-address').value = about.address || '';
-  if (document.getElementById('about-address-visible')) document.getElementById('about-address-visible').checked = about.addressVisible !== false;
-
-  if (document.getElementById('about-hours')) document.getElementById('about-hours').value = about.hours || '';
-  if (document.getElementById('about-hours-visible')) document.getElementById('about-hours-visible').checked = about.hoursVisible !== false;
-
-  const statsContainer = document.getElementById('about-stats-container');
-  if (statsContainer && about.stats) {
-    statsContainer.innerHTML = about.stats.map((stat, idx) => `
-      <div style="display: grid; grid-template-columns: 100px 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
-        <input type="text" id="about-stat-count-${idx}" class="form-control" value="${stat.count}" placeholder="e.g. 150+">
-        <input type="text" id="about-stat-label-${idx}" class="form-control" value="${stat.label}" placeholder="e.g. Stone Varieties">
+  const images = hp.aboutSliderImages || [];
+  container.innerHTML = images.map((img, idx) => `
+    <div style="display: flex; gap: 1rem; align-items: center; background: var(--color-bg-surface); padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
+      <img id="hp-about-img-prev-${idx}" src="${img.url}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;" onerror="this.src='assets/images/about_craft.png'">
+      <div style="flex: 1; display: flex; gap: 0.5rem; align-items: center;">
+        <input type="text" id="hp-about-img-url-${idx}" class="form-control" value="${img.url}" placeholder="Image URL..." oninput="document.getElementById('hp-about-img-prev-${idx}').src=this.value">
+        <label class="upload-btn-label" style="margin: 0; white-space: nowrap;">
+          <i class="ri-upload-cloud-line"></i> Upload
+          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-about-img-url-${idx}', 'hp-about-img-prev-${idx}')" hidden>
+        </label>
       </div>
-    `).join('');
+      <button type="button" class="btn btn-danger btn-sm" onclick="removeHpAboutSliderImage(${idx})"><i class="ri-delete-bin-line"></i></button>
+    </div>
+  `).join('');
+}
+
+function addHpAboutSliderImage() {
+  const hp = TutStonesStore.getHomePage();
+  if (!hp.aboutSliderImages) hp.aboutSliderImages = [];
+  hp.aboutSliderImages.push({ id: 'h-about-' + Date.now(), url: 'assets/images/Factory/1.jpg' });
+  TutStonesStore.saveHomePage(hp);
+  renderHpAboutSliderImages();
+}
+
+function removeHpAboutSliderImage(idx) {
+  const hp = TutStonesStore.getHomePage();
+  if (hp.aboutSliderImages && hp.aboutSliderImages[idx]) {
+    hp.aboutSliderImages.splice(idx, 1);
+    TutStonesStore.saveHomePage(hp);
+    renderHpAboutSliderImages();
   }
 }
 
-function saveAboutForm() {
-  const currentAbout = TutStonesStore.getAbout();
-  const about = {
-    ...currentAbout,
-    tag: document.getElementById('about-tag').value,
-    title: document.getElementById('about-title').value,
-    desc1: document.getElementById('about-desc1').value,
-    desc2: document.getElementById('about-desc2').value,
-    craftImage: document.getElementById('about-craft-url').value,
-    expNumber: document.getElementById('about-exp-num').value,
-    expText: document.getElementById('about-exp-text').value,
-    phone: document.getElementById('about-phone')?.value || '',
-    phoneVisible: document.getElementById('about-phone-visible')?.checked ?? true,
-    phoneSecondary: document.getElementById('about-phone2')?.value || '',
-    phoneSecondaryVisible: document.getElementById('about-phone2-visible')?.checked ?? true,
-    email: document.getElementById('about-email')?.value || '',
-    emailVisible: document.getElementById('about-email-visible')?.checked ?? true,
-    emailSecondary: document.getElementById('about-email2')?.value || '',
-    emailSecondaryVisible: document.getElementById('about-email2-visible')?.checked ?? true,
-    address: document.getElementById('about-address')?.value || '',
-    addressVisible: document.getElementById('about-address-visible')?.checked ?? true,
-    hours: document.getElementById('about-hours')?.value || '',
-    hoursVisible: document.getElementById('about-hours-visible')?.checked ?? true,
-    stats: [
-      { id: 'stat-1', count: document.getElementById('about-stat-count-0')?.value || '150+', label: document.getElementById('about-stat-label-0')?.value || 'Stone Varieties' },
-      { id: 'stat-2', count: document.getElementById('about-stat-count-1')?.value || '1,200+', label: document.getElementById('about-stat-label-1')?.value || 'Completed Projects' },
-      { id: 'stat-3', count: document.getElementById('about-stat-count-2')?.value || '100%', label: document.getElementById('about-stat-label-2')?.value || 'Natural Origin' }
-    ]
+function renderHpBoxes() {
+  const hp = TutStonesStore.getHomePage();
+  const container = document.getElementById('hp-boxes-container');
+  if (!container) return;
+
+  const boxes = hp.boxes || [];
+  container.innerHTML = boxes.map((box, idx) => `
+    <div style="background: var(--color-bg-surface); padding: 1.25rem; border: 1px solid var(--color-border-gold); border-radius: var(--radius-md);">
+      <h4 style="color: var(--color-gold-primary); font-size: 1rem; margin-bottom: 0.75rem;">Box #${idx + 1}</h4>
+      <div class="form-group">
+        <label>Box Title</label>
+        <input type="text" id="hp-box-title-${idx}" class="form-control" value="${box.title}">
+      </div>
+      <div class="form-group">
+        <label>Box Description</label>
+        <textarea id="hp-box-desc-${idx}" class="form-control" rows="3">${box.desc}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Card Image (Optional)</label>
+        <div class="image-upload-wrapper">
+          <img id="hp-box-img-preview-${idx}" src="${box.image || ''}" class="image-preview-thumb" style="${box.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <div class="upload-actions">
+            <label class="upload-btn-label">
+              <i class="ri-upload-cloud-line"></i> Upload File
+              <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}')" hidden>
+            </label>
+            <input type="text" id="hp-box-img-url-${idx}" class="form-control" value="${box.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('hp-box-img-preview-${idx}', this.value)">
+          </div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+        <div class="form-group">
+          <label>Button Text</label>
+          <input type="text" id="hp-box-btntext-${idx}" class="form-control" value="${box.btnText || 'Explore'}">
+        </div>
+        <div class="form-group">
+          <label>Button Link</label>
+          <input type="text" id="hp-box-btnlink-${idx}" class="form-control" value="${box.btnLink || 'factory.html'}">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function saveHomePageForm() {
+  const hp = TutStonesStore.getHomePage();
+  
+  const aboutSliderImages = [];
+  (hp.aboutSliderImages || []).forEach((img, idx) => {
+    const urlElem = document.getElementById(`hp-about-img-url-${idx}`);
+    if (urlElem) aboutSliderImages.push({ id: img.id || `h-about-${idx}`, url: urlElem.value });
+  });
+
+  const boxes = (hp.boxes || []).map((box, idx) => ({
+    ...box,
+    title: document.getElementById(`hp-box-title-${idx}`)?.value || box.title,
+    desc: document.getElementById(`hp-box-desc-${idx}`)?.value || box.desc,
+    image: document.getElementById(`hp-box-img-url-${idx}`)?.value || box.image,
+    btnText: document.getElementById(`hp-box-btntext-${idx}`)?.value || box.btnText,
+    btnLink: document.getElementById(`hp-box-btnlink-${idx}`)?.value || box.btnLink
+  }));
+
+  const updatedHp = {
+    ...hp,
+    aboutTag: document.getElementById('hp-about-tag')?.value || hp.aboutTag,
+    aboutTitle: document.getElementById('hp-about-title')?.value || hp.aboutTitle,
+    aboutDesc1: document.getElementById('hp-about-desc1')?.value || hp.aboutDesc1,
+    aboutDesc2: document.getElementById('hp-about-desc2')?.value || hp.aboutDesc2,
+    aboutDesc3: document.getElementById('hp-about-desc3')?.value || hp.aboutDesc3,
+    aboutExpNumber: document.getElementById('hp-about-exp-num')?.value || hp.aboutExpNumber,
+    aboutExpText: document.getElementById('hp-about-exp-text')?.value || hp.aboutExpText,
+    aboutSliderImages: aboutSliderImages.length > 0 ? aboutSliderImages : hp.aboutSliderImages,
+    boxesTag: document.getElementById('hp-boxes-tag')?.value || hp.boxesTag,
+    boxesTitle: document.getElementById('hp-boxes-title')?.value || hp.boxesTitle,
+    boxes: boxes
   };
 
-  TutStonesStore.saveAbout(about);
-  showToast('About Us & Contact content saved successfully!');
-  refreshAllAdminViews();
+  TutStonesStore.saveHomePage(updatedHp);
+  showToast('Homepage settings saved successfully!');
+}
+
+// --- 9b. About Us Page Manager ---
+function renderAboutPageForm() {
+  const ab = TutStonesStore.getAboutPage();
+  if (document.getElementById('abp-banner-tag')) document.getElementById('abp-banner-tag').value = ab.bannerTag || '';
+  if (document.getElementById('abp-banner-title')) document.getElementById('abp-banner-title').value = ab.bannerTitle || '';
+  if (document.getElementById('abp-banner-desc')) document.getElementById('abp-banner-desc').value = ab.bannerDesc || '';
+
+  if (document.getElementById('abp-main-tag')) document.getElementById('abp-main-tag').value = ab.mainTag || '';
+  if (document.getElementById('abp-main-title')) document.getElementById('abp-main-title').value = ab.mainTitle || '';
+  if (document.getElementById('abp-main-img-url')) document.getElementById('abp-main-img-url').value = ab.mainImage || '';
+  if (document.getElementById('abp-main-img-preview')) document.getElementById('abp-main-img-preview').src = ab.mainImage || '';
+  if (document.getElementById('abp-desc1')) document.getElementById('abp-desc1').value = ab.desc1 || '';
+  if (document.getElementById('abp-desc2')) document.getElementById('abp-desc2').value = ab.desc2 || '';
+  if (document.getElementById('abp-desc3')) document.getElementById('abp-desc3').value = ab.desc3 || '';
+  if (document.getElementById('abp-exp-num')) document.getElementById('abp-exp-num').value = ab.expNumber || '';
+  if (document.getElementById('abp-exp-text')) document.getElementById('abp-exp-text').value = ab.expText || '';
+
+  if (document.getElementById('abp-bottom-tag')) document.getElementById('abp-bottom-tag').value = ab.bottomTag || '';
+  if (document.getElementById('abp-bottom-title')) document.getElementById('abp-bottom-title').value = ab.bottomTitle || '';
+
+  renderAbpCards();
+}
+
+function renderAbpCards() {
+  const ab = TutStonesStore.getAboutPage();
+  const container = document.getElementById('abp-cards-container');
+  if (!container) return;
+
+  const cards = ab.bottomCards || [];
+  container.innerHTML = cards.map((card, idx) => `
+    <div style="background: var(--color-bg-surface); padding: 1.25rem; border: 1px solid var(--color-border-gold); border-radius: var(--radius-md);">
+      <h4 style="color: var(--color-gold-primary); font-size: 1rem; margin-bottom: 0.75rem;">Paragraph Card #${idx + 1}</h4>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="abp-card-title-${idx}" class="form-control" value="${card.title}">
+      </div>
+      <div class="form-group">
+        <label>Text Description</label>
+        <textarea id="abp-card-desc-${idx}" class="form-control" rows="3">${card.desc}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Card Image (Optional)</label>
+        <div class="image-upload-wrapper">
+          <img id="abp-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <div class="upload-actions">
+            <label class="upload-btn-label">
+              <i class="ri-upload-cloud-line"></i> Upload File
+              <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'abp-card-img-url-${idx}', 'abp-card-img-preview-${idx}')" hidden>
+            </label>
+            <input type="text" id="abp-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('abp-card-img-preview-${idx}', this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function saveAboutPageForm() {
+  const ab = TutStonesStore.getAboutPage();
+
+  const cards = (ab.bottomCards || []).map((card, idx) => ({
+    ...card,
+    title: document.getElementById(`abp-card-title-${idx}`)?.value || card.title,
+    desc: document.getElementById(`abp-card-desc-${idx}`)?.value || card.desc,
+    image: document.getElementById(`abp-card-img-url-${idx}`)?.value || card.image
+  }));
+
+  const updatedAb = {
+    ...ab,
+    bannerTag: document.getElementById('abp-banner-tag')?.value || ab.bannerTag,
+    bannerTitle: document.getElementById('abp-banner-title')?.value || ab.bannerTitle,
+    bannerDesc: document.getElementById('abp-banner-desc')?.value || ab.bannerDesc,
+    mainTag: document.getElementById('abp-main-tag')?.value || ab.mainTag,
+    mainTitle: document.getElementById('abp-main-title')?.value || ab.mainTitle,
+    mainImage: document.getElementById('abp-main-img-url')?.value || ab.mainImage,
+    desc1: document.getElementById('abp-desc1')?.value || ab.desc1,
+    desc2: document.getElementById('abp-desc2')?.value || ab.desc2,
+    desc3: document.getElementById('abp-desc3')?.value || ab.desc3,
+    expNumber: document.getElementById('abp-exp-num')?.value || ab.expNumber,
+    expText: document.getElementById('abp-exp-text')?.value || ab.expText,
+    bottomTag: document.getElementById('abp-bottom-tag')?.value || ab.bottomTag,
+    bottomTitle: document.getElementById('abp-bottom-title')?.value || ab.bottomTitle,
+    bottomCards: cards
+  };
+
+  TutStonesStore.saveAboutPage(updatedAb);
+  showToast('About Us Page settings saved successfully!');
+}
+
+// --- 9c. Factory Page Manager ---
+function renderFactoryPageForm() {
+  const fac = TutStonesStore.getFactoryPage();
+  if (document.getElementById('fac-banner-tag')) document.getElementById('fac-banner-tag').value = fac.bannerTag || '';
+  if (document.getElementById('fac-banner-title')) document.getElementById('fac-banner-title').value = fac.bannerTitle || '';
+  if (document.getElementById('fac-banner-desc')) document.getElementById('fac-banner-desc').value = fac.bannerDesc || '';
+
+  if (document.getElementById('fac-main-tag')) document.getElementById('fac-main-tag').value = fac.mainTag || '';
+  if (document.getElementById('fac-main-title')) document.getElementById('fac-main-title').value = fac.mainTitle || '';
+  if (document.getElementById('fac-main-img-url')) document.getElementById('fac-main-img-url').value = fac.mainImage || '';
+  if (document.getElementById('fac-main-img-preview')) document.getElementById('fac-main-img-preview').src = fac.mainImage || '';
+  if (document.getElementById('fac-desc1')) document.getElementById('fac-desc1').value = fac.desc1 || '';
+  if (document.getElementById('fac-desc2')) document.getElementById('fac-desc2').value = fac.desc2 || '';
+  if (document.getElementById('fac-exp-num')) document.getElementById('fac-exp-num').value = fac.expNumber || '';
+  if (document.getElementById('fac-exp-text')) document.getElementById('fac-exp-text').value = fac.expText || '';
+
+  if (document.getElementById('fac-workflow-tag')) document.getElementById('fac-workflow-tag').value = fac.workflowTag || '';
+  if (document.getElementById('fac-workflow-title')) document.getElementById('fac-workflow-title').value = fac.workflowTitle || '';
+
+  renderFacCards();
+}
+
+function renderFacCards() {
+  const fac = TutStonesStore.getFactoryPage();
+  const container = document.getElementById('fac-cards-container');
+  if (!container) return;
+
+  const cards = fac.cards || [];
+  container.innerHTML = cards.map((card, idx) => `
+    <div style="background: var(--color-bg-surface); padding: 1.25rem; border: 1px solid var(--color-border-gold); border-radius: var(--radius-md);">
+      <h4 style="color: var(--color-gold-primary); font-size: 1rem; margin-bottom: 0.75rem;">Process Step #${card.step || (idx + 1)}</h4>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="fac-card-title-${idx}" class="form-control" value="${card.title}">
+      </div>
+      <div class="form-group">
+        <label>Text Description</label>
+        <textarea id="fac-card-desc-${idx}" class="form-control" rows="3">${card.desc}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Card Image (Optional)</label>
+        <div class="image-upload-wrapper">
+          <img id="fac-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <div class="upload-actions">
+            <label class="upload-btn-label">
+              <i class="ri-upload-cloud-line"></i> Upload File
+              <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-card-img-url-${idx}', 'fac-card-img-preview-${idx}')" hidden>
+            </label>
+            <input type="text" id="fac-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('fac-card-img-preview-${idx}', this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function saveFactoryPageForm() {
+  const fac = TutStonesStore.getFactoryPage();
+
+  const cards = (fac.cards || []).map((card, idx) => ({
+    ...card,
+    title: document.getElementById(`fac-card-title-${idx}`)?.value || card.title,
+    desc: document.getElementById(`fac-card-desc-${idx}`)?.value || card.desc,
+    image: document.getElementById(`fac-card-img-url-${idx}`)?.value || card.image
+  }));
+
+  const updatedFac = {
+    ...fac,
+    bannerTag: document.getElementById('fac-banner-tag')?.value || fac.bannerTag,
+    bannerTitle: document.getElementById('fac-banner-title')?.value || fac.bannerTitle,
+    bannerDesc: document.getElementById('fac-banner-desc')?.value || fac.bannerDesc,
+    mainTag: document.getElementById('fac-main-tag')?.value || fac.mainTag,
+    mainTitle: document.getElementById('fac-main-title')?.value || fac.mainTitle,
+    mainImage: document.getElementById('fac-main-img-url')?.value || fac.mainImage,
+    desc1: document.getElementById('fac-desc1')?.value || fac.desc1,
+    desc2: document.getElementById('fac-desc2')?.value || fac.desc2,
+    expNumber: document.getElementById('fac-exp-num')?.value || fac.expNumber,
+    expText: document.getElementById('fac-exp-text')?.value || fac.expText,
+    workflowTag: document.getElementById('fac-workflow-tag')?.value || fac.workflowTag,
+    workflowTitle: document.getElementById('fac-workflow-title')?.value || fac.workflowTitle,
+    cards: cards
+  };
+
+  TutStonesStore.saveFactoryPage(updatedFac);
+  showToast('Factory Page settings saved successfully!');
+}
+
+// --- 9d. Packaging Page Manager ---
+function renderPackagingPageForm() {
+  const pkg = TutStonesStore.getPackagingPage();
+  if (document.getElementById('pkg-banner-tag')) document.getElementById('pkg-banner-tag').value = pkg.bannerTag || '';
+  if (document.getElementById('pkg-banner-title')) document.getElementById('pkg-banner-title').value = pkg.bannerTitle || '';
+  if (document.getElementById('pkg-banner-desc')) document.getElementById('pkg-banner-desc').value = pkg.bannerDesc || '';
+
+  if (document.getElementById('pkg-main-tag')) document.getElementById('pkg-main-tag').value = pkg.mainTag || '';
+  if (document.getElementById('pkg-main-title')) document.getElementById('pkg-main-title').value = pkg.mainTitle || '';
+  if (document.getElementById('pkg-main-img-url')) document.getElementById('pkg-main-img-url').value = pkg.mainImage || '';
+  if (document.getElementById('pkg-main-img-preview')) document.getElementById('pkg-main-img-preview').src = pkg.mainImage || '';
+  if (document.getElementById('pkg-desc1')) document.getElementById('pkg-desc1').value = pkg.desc1 || '';
+  if (document.getElementById('pkg-desc2')) document.getElementById('pkg-desc2').value = pkg.desc2 || '';
+  if (document.getElementById('pkg-exp-num')) document.getElementById('pkg-exp-num').value = pkg.expNumber || '';
+  if (document.getElementById('pkg-exp-text')) document.getElementById('pkg-exp-text').value = pkg.expText || '';
+
+  if (document.getElementById('pkg-specs-tag')) document.getElementById('pkg-specs-tag').value = pkg.specsTag || '';
+  if (document.getElementById('pkg-specs-title')) document.getElementById('pkg-specs-title').value = pkg.specsTitle || '';
+
+  renderPkgCards();
+}
+
+function renderPkgCards() {
+  const pkg = TutStonesStore.getPackagingPage();
+  const container = document.getElementById('pkg-cards-container');
+  if (!container) return;
+
+  const cards = pkg.cards || [];
+  container.innerHTML = cards.map((card, idx) => `
+    <div style="background: var(--color-bg-surface); padding: 1.25rem; border: 1px solid var(--color-border-gold); border-radius: var(--radius-md);">
+      <h4 style="color: var(--color-gold-primary); font-size: 1rem; margin-bottom: 0.75rem;">Spec Card #${idx + 1}</h4>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="pkg-card-title-${idx}" class="form-control" value="${card.title}">
+      </div>
+      <div class="form-group">
+        <label>Text Description</label>
+        <textarea id="pkg-card-desc-${idx}" class="form-control" rows="3">${card.desc}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Card Image (Optional)</label>
+        <div class="image-upload-wrapper">
+          <img id="pkg-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <div class="upload-actions">
+            <label class="upload-btn-label">
+              <i class="ri-upload-cloud-line"></i> Upload File
+              <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-card-img-url-${idx}', 'pkg-card-img-preview-${idx}')" hidden>
+            </label>
+            <input type="text" id="pkg-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('pkg-card-img-preview-${idx}', this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function savePackagingPageForm() {
+  const pkg = TutStonesStore.getPackagingPage();
+
+  const cards = (pkg.cards || []).map((card, idx) => ({
+    ...card,
+    title: document.getElementById(`pkg-card-title-${idx}`)?.value || card.title,
+    desc: document.getElementById(`pkg-card-desc-${idx}`)?.value || card.desc,
+    image: document.getElementById(`pkg-card-img-url-${idx}`)?.value || card.image
+  }));
+
+  const updatedPkg = {
+    ...pkg,
+    bannerTag: document.getElementById('pkg-banner-tag')?.value || pkg.bannerTag,
+    bannerTitle: document.getElementById('pkg-banner-title')?.value || pkg.bannerTitle,
+    bannerDesc: document.getElementById('pkg-banner-desc')?.value || pkg.bannerDesc,
+    mainTag: document.getElementById('pkg-main-tag')?.value || pkg.mainTag,
+    mainTitle: document.getElementById('pkg-main-title')?.value || pkg.mainTitle,
+    mainImage: document.getElementById('pkg-main-img-url')?.value || pkg.mainImage,
+    desc1: document.getElementById('pkg-desc1')?.value || pkg.desc1,
+    desc2: document.getElementById('pkg-desc2')?.value || pkg.desc2,
+    expNumber: document.getElementById('pkg-exp-num')?.value || pkg.expNumber,
+    expText: document.getElementById('pkg-exp-text')?.value || pkg.expText,
+    specsTag: document.getElementById('pkg-specs-tag')?.value || pkg.specsTag,
+    specsTitle: document.getElementById('pkg-specs-title')?.value || pkg.specsTitle,
+    cards: cards
+  };
+
+  TutStonesStore.savePackagingPage(updatedPkg);
+  showToast('Packaging Page settings saved successfully!');
+}
+
+// --- 9e. Contact Page Manager ---
+function renderContactPageForm() {
+  const cnt = TutStonesStore.getContactPage();
+  if (document.getElementById('cnt-banner-tag')) document.getElementById('cnt-banner-tag').value = cnt.bannerTag || '';
+  if (document.getElementById('cnt-banner-title')) document.getElementById('cnt-banner-title').value = cnt.bannerTitle || '';
+  if (document.getElementById('cnt-banner-desc')) document.getElementById('cnt-banner-desc').value = cnt.bannerDesc || '';
+
+  if (document.getElementById('cnt-main-tag')) document.getElementById('cnt-main-tag').value = cnt.mainTag || '';
+  if (document.getElementById('cnt-main-title')) document.getElementById('cnt-main-title').value = cnt.mainTitle || '';
+  if (document.getElementById('cnt-main-desc')) document.getElementById('cnt-main-desc').value = cnt.mainDesc || '';
+  if (document.getElementById('cnt-form-title')) document.getElementById('cnt-form-title').value = cnt.formTitle || '';
+  if (document.getElementById('cnt-form-desc')) document.getElementById('cnt-form-desc').value = cnt.formDesc || '';
+
+  if (document.getElementById('cnt-address-title')) document.getElementById('cnt-address-title').value = cnt.addressTitle || '';
+  if (document.getElementById('cnt-address-text')) document.getElementById('cnt-address-text').value = cnt.addressText || '';
+  if (document.getElementById('cnt-address-map-link')) document.getElementById('cnt-address-map-link').value = cnt.addressMapLink || '';
+
+  if (document.getElementById('cnt-email-title')) document.getElementById('cnt-email-title').value = cnt.emailTitle || '';
+  if (document.getElementById('cnt-email-primary')) document.getElementById('cnt-email-primary').value = cnt.emailPrimary || '';
+  if (document.getElementById('cnt-email-secondary')) document.getElementById('cnt-email-secondary').value = cnt.emailSecondary || '';
+
+  if (document.getElementById('cnt-phone-title')) document.getElementById('cnt-phone-title').value = cnt.phoneTitle || '';
+  if (document.getElementById('cnt-phone-primary')) document.getElementById('cnt-phone-primary').value = cnt.phonePrimary || '';
+  if (document.getElementById('cnt-whatsapp-num')) document.getElementById('cnt-whatsapp-num').value = cnt.whatsappNumber || '';
+}
+
+function saveContactPageForm() {
+  const cnt = TutStonesStore.getContactPage();
+
+  const updatedCnt = {
+    ...cnt,
+    bannerTag: document.getElementById('cnt-banner-tag')?.value || cnt.bannerTag,
+    bannerTitle: document.getElementById('cnt-banner-title')?.value || cnt.bannerTitle,
+    bannerDesc: document.getElementById('cnt-banner-desc')?.value || cnt.bannerDesc,
+    mainTag: document.getElementById('cnt-main-tag')?.value || cnt.mainTag,
+    mainTitle: document.getElementById('cnt-main-title')?.value || cnt.mainTitle,
+    mainDesc: document.getElementById('cnt-main-desc')?.value || cnt.mainDesc,
+    formTitle: document.getElementById('cnt-form-title')?.value || cnt.formTitle,
+    formDesc: document.getElementById('cnt-form-desc')?.value || cnt.formDesc,
+    addressTitle: document.getElementById('cnt-address-title')?.value || cnt.addressTitle,
+    addressText: document.getElementById('cnt-address-text')?.value || cnt.addressText,
+    addressMapLink: document.getElementById('cnt-address-map-link')?.value || cnt.addressMapLink,
+    emailTitle: document.getElementById('cnt-email-title')?.value || cnt.emailTitle,
+    emailPrimary: document.getElementById('cnt-email-primary')?.value || cnt.emailPrimary,
+    emailSecondary: document.getElementById('cnt-email-secondary')?.value || cnt.emailSecondary,
+    phoneTitle: document.getElementById('cnt-phone-title')?.value || cnt.phoneTitle,
+    phonePrimary: document.getElementById('cnt-phone-primary')?.value || cnt.phonePrimary,
+    whatsappNumber: document.getElementById('cnt-whatsapp-num')?.value || cnt.whatsappNumber
+  };
+
+  TutStonesStore.saveContactPage(updatedCnt);
+  showToast('Contact Page settings saved successfully!');
+}
+
+// --- 9f. Footer Manager ---
+function renderFooterForm() {
+  const ftr = TutStonesStore.getFooterData();
+  if (document.getElementById('ftr-brand-desc')) document.getElementById('ftr-brand-desc').value = ftr.brandDesc || '';
+  if (document.getElementById('ftr-address')) document.getElementById('ftr-address').value = ftr.address || '';
+  if (document.getElementById('ftr-address-link')) document.getElementById('ftr-address-link').value = ftr.addressLink || '';
+  if (document.getElementById('ftr-email-primary')) document.getElementById('ftr-email-primary').value = ftr.emailPrimary || '';
+  if (document.getElementById('ftr-email-secondary')) document.getElementById('ftr-email-secondary').value = ftr.emailSecondary || '';
+  if (document.getElementById('ftr-phone-primary')) document.getElementById('ftr-phone-primary').value = ftr.phonePrimary || '';
+  if (document.getElementById('ftr-whatsapp-num')) document.getElementById('ftr-whatsapp-num').value = ftr.whatsappNumber || '';
+  if (document.getElementById('ftr-hours')) document.getElementById('ftr-hours').value = ftr.hours || '';
+}
+
+function saveFooterForm() {
+  const ftr = TutStonesStore.getFooterData();
+
+  const updatedFtr = {
+    ...ftr,
+    brandDesc: document.getElementById('ftr-brand-desc')?.value || ftr.brandDesc,
+    address: document.getElementById('ftr-address')?.value || ftr.address,
+    addressLink: document.getElementById('ftr-address-link')?.value || ftr.addressLink,
+    emailPrimary: document.getElementById('ftr-email-primary')?.value || ftr.emailPrimary,
+    emailSecondary: document.getElementById('ftr-email-secondary')?.value || ftr.emailSecondary,
+    phonePrimary: document.getElementById('ftr-phone-primary')?.value || ftr.phonePrimary,
+    whatsappNumber: document.getElementById('ftr-whatsapp-num')?.value || ftr.whatsappNumber,
+    hours: document.getElementById('ftr-hours')?.value || ftr.hours
+  };
+
+  TutStonesStore.saveFooterData(updatedFtr);
+  showToast('Footer settings saved successfully!');
 }
 
 /* ==========================================================================
@@ -470,8 +887,21 @@ function populateCategoryDropdowns() {
 }
 
 /* ==========================================================================
-   12. IMAGE FILE UPLOADER (BASE64 CONVERTER)
+   12. IMAGE FILE UPLOADER & PREVIEW HELPER
    ========================================================================== */
+function updateImagePreview(previewImgId, value) {
+  const imgElem = document.getElementById(previewImgId);
+  if (!imgElem) return;
+  const val = (value || '').trim();
+  if (val) {
+    imgElem.src = val;
+    imgElem.style.display = 'block';
+  } else {
+    imgElem.src = '';
+    imgElem.style.display = 'none';
+  }
+}
+
 function handleImageFileUpload(event, targetInputId, previewImgId) {
   const file = event.target.files[0];
   if (!file) return;
@@ -479,9 +909,15 @@ function handleImageFileUpload(event, targetInputId, previewImgId) {
   const reader = new FileReader();
   reader.onload = function(e) {
     const dataUrl = e.target.result;
-    document.getElementById(targetInputId).value = dataUrl;
+    const inputElem = document.getElementById(targetInputId);
+    if (inputElem) inputElem.value = dataUrl;
+    
     if (previewImgId) {
-      document.getElementById(previewImgId).src = dataUrl;
+      const imgElem = document.getElementById(previewImgId);
+      if (imgElem) {
+        imgElem.src = dataUrl;
+        imgElem.style.display = 'block';
+      }
     }
     showToast('Image uploaded and converted successfully!');
   };

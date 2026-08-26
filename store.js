@@ -240,7 +240,194 @@ const DEFAULT_DATA = {
       role: 'editor',
       passwordHash: 'tutstones123'
     }
-  ]
+  ],
+
+  // 9. Homepage Custom Content & Bottom 3 Boxes
+  homePage: {
+    aboutTag: 'ABOUT TUT STONES',
+    aboutTitle: 'Delivering The Timeless Beauty of <span>Egyptian Stone</span>',
+    aboutDesc1: "Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.",
+    aboutDesc2: "At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
+    aboutDesc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.",
+    aboutExpNumber: '24+',
+    aboutExpText: 'Years Exporting<br>Egyptian Natural Stone',
+    aboutSliderImages: [
+      { id: 'h-about-1', url: 'assets/images/Factory/1.jpg' },
+      { id: 'h-about-2', url: 'assets/images/Factory/2.JPG' }
+    ],
+    aboutStats: [
+      { id: 'h-stat-1', count: '24+', label: 'Years of Excellence' },
+      { id: 'h-stat-2', count: '50+', label: 'Export Destinations' },
+      { id: 'h-stat-3', count: '100%', label: 'Egyptian Origin' }
+    ],
+    boxesTag: 'OUR EXPORT CAPABILITIES',
+    boxesTitle: 'State-of-the-Art <span>Factory & Packaging</span>',
+    boxes: [
+      {
+        id: 'box-1',
+        title: 'Advanced Factory Processing',
+        desc: 'Equipped with modern gangsaws, block cutters, and automated polishing lines ensuring precise thickness calibration and mirror finishes.',
+        image: 'assets/images/Factory/4.JPG',
+        icon: 'ri-settings-4-line',
+        btnText: 'Explore Factory',
+        btnLink: 'factory.html'
+      },
+      {
+        id: 'box-2',
+        title: 'Secure Packaging & Loading',
+        desc: 'Heavy-duty ISPM-15 heat-treated wooden crates and lashing protocols guarantee zero breakage during sea container transport.',
+        image: 'assets/images/packaging/2.JPG',
+        icon: 'ri-box-3-line',
+        btnText: 'Explore Packaging',
+        btnLink: 'packaging.html'
+      },
+      {
+        id: 'box-3',
+        title: 'Marble & Granite Selection',
+        desc: 'Explore Galala, Sunny Yellow, Silvia, Sinai Pearl, Triesta, Rosa Hudi, Gandolla, and Aswan Black in slabs, tiles, and cut-to-size.',
+        image: 'assets/images/Factory/6.JPG',
+        icon: 'ri-grid-fill',
+        btnText: 'View Materials',
+        btnLink: 'materials.html'
+      }
+    ]
+  },
+
+  // 10. About Us Page Data
+  aboutPage: {
+    bannerTag: 'HERITAGE & CRAFTSMANSHIP',
+    bannerTitle: 'About <span>TUT Stones</span>',
+    bannerDesc: 'Delivering the finest Egyptian marble and granite to international markets with passion, precision, and global logistics expertise.',
+    mainTag: 'HERITAGE & CRAFTSMANSHIP',
+    mainTitle: 'Delivering The Timeless Beauty of <span>Egyptian Stone</span>',
+    mainImage: 'assets/images/about_craft.png',
+    desc1: "Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.",
+    desc2: "At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
+    desc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to custom cutting, quality control, packaging, and logistics, our experienced team ensures a seamless export experience tailored to your exact specifications.",
+    expNumber: '24+',
+    expText: 'Years Exporting<br>Egyptian Natural Stone',
+    stats: [
+      { id: 'ab-stat-1', count: '24+', label: 'Years Sourcing Rare Stone' },
+      { id: 'ab-stat-2', count: '50+', label: 'Global Export Markets' },
+      { id: 'ab-stat-3', count: '100%', label: 'Authentic Egyptian Granite & Marble' }
+    ],
+    bottomTag: 'WHY WORK WITH US',
+    bottomTitle: 'Our Commitments <span>To Global Clients</span>',
+    bottomCards: [
+      {
+        id: 'ab-card-1',
+        title: 'Uncompromising Quality',
+        desc: 'Every slab and cut-to-size order is strictly inspected for color consistency, grain uniformity, surface polish, and dimensional accuracy prior to loading.',
+        image: '',
+        icon: 'ri-shield-check-line'
+      },
+      {
+        id: 'ab-card-2',
+        title: 'Competitive Direct Quarry Pricing',
+        desc: 'By controlling processing directly in Egypt, we offer competitive factory-direct prices without unnecessary intermediary costs.',
+        image: '',
+        icon: 'ri-price-tag-3-line'
+      },
+      {
+        id: 'ab-card-3',
+        title: 'Complete Export & Logistics',
+        desc: 'Full container lashing, customs clearance documentation, certificate of origin, and sea freight handling to ports worldwide.',
+        image: '',
+        icon: 'ri-global-line'
+      }
+    ]
+  },
+
+  // 11. Factory Page Data
+  factoryPage: {
+    bannerTag: 'PRECISION MANUFACTURING',
+    bannerTitle: 'Factory & <span>Stone Processing</span>',
+    bannerDesc: 'Equipped with state-of-the-art Italian machinery for gangsaw block cutting, automated slab polishing, edge profiling, and micro-calibrated tile production.',
+    mainTag: 'FACTORY & INFRASTRUCTURE',
+    mainTitle: 'Transforming Raw Blocks Into <span>Architectural Masterpieces</span>',
+    mainImage: 'assets/images/Factory/2.JPG',
+    desc1: 'Our factory in Egypt operates under strict international quality control systems. We source premier quarry blocks of Egyptian Marble (such as Galala, Sunny, Silvia, Sinai Pearl) and Egyptian Granite (such as Rosa Hudi, Gandolla, Aswan Black).',
+    desc2: 'From raw block squaring to diamond gangsaw slicing, resin treatment, surface finishing, and waterjet cut-to-size orders, our factory is engineered for large-scale international commercial projects and luxury residential developments.',
+    expNumber: '100%',
+    expText: 'Calibrated Precision<br>& Quality Assurance',
+    stats: [
+      { id: 'fac-stat-1', count: '12+', label: 'Gangsaws & Cutters' },
+      { id: 'fac-stat-2', count: '50,000 m²', label: 'Monthly Capacity' },
+      { id: 'fac-stat-3', count: '± 0.5 mm', label: 'Thickness Accuracy' }
+    ],
+    workflowTag: 'PRODUCTION WORKFLOW',
+    workflowTitle: 'Our Step-by-Step <span>Manufacturing Process</span>',
+    cards: [
+      { id: 'f-card-1', step: '01', title: 'Quarry Block Selection', desc: 'Hand-selecting sound, fissure-free marble and granite blocks directly from top Egyptian quarries.', image: '', icon: 'ri-building-line' },
+      { id: 'f-card-2', step: '02', title: 'Diamond Gangsaw Slicing', desc: 'Precision multi-blade diamond gang saws cut blocks into calibrated 2cm, 3cm, or custom thickness slabs.', image: '', icon: 'ri-scissors-cut-line' },
+      { id: 'f-card-3', step: '03', title: 'Surface Finishing & Resin', desc: 'Automated multi-head polishing lines produce high-gloss mirror finishes, honed, brushed, or bushhammered textures.', image: '', icon: 'ri-sparkles-line' },
+      { id: 'f-card-4', step: '04', title: 'Cut-to-Size & Edge Profiling', desc: 'Bridge saws and CNC waterjets cut tiles, treads, risers, and countertops to exact project blueprints.', image: '', icon: 'ri-layout-grid-line' },
+      { id: 'f-card-5', step: '05', title: 'Rigorous Quality Control', desc: 'Piece-by-piece inspection for color tone matching, surface flatness, beveling, and absence of micro-fractures.', image: '', icon: 'ri-checkbox-circle-line' },
+      { id: 'f-card-6', step: '06', title: 'Crate Bundling & Labeling', desc: 'Carefully numbered and packed into heavy-duty wooden crates ready for export dispatch.', image: '', icon: 'ri-box-3-line' }
+    ]
+  },
+
+  // 12. Packaging & Loading Page Data
+  packagingPage: {
+    bannerTag: 'EXPORT SAFETY & LOGISTICS',
+    bannerTitle: 'Packaging & <span>Container Loading</span>',
+    bannerDesc: 'Ensuring total protection during long sea voyages with fumigated wooden crates, slab A-frames, anti-scratch foam separation, and heavy-duty container lashing.',
+    mainTag: 'SAFE TRANSPORTATION',
+    mainTitle: 'Zero-Damage <span>International Delivery</span>',
+    mainImage: 'assets/images/packaging_loading.png',
+    desc1: 'At TUT Stones, we take packaging as seriously as stone craftsmanship. Shipping natural stone across ocean waters requires robust outer protection and careful weight distribution inside 20-foot heavy-duty containers.',
+    desc2: 'Every bundle of slabs and crate of tiles is reinforced with interior polyethylene foam, corner protectors, and steel lashing straps to ensure your order arrives in flawless condition at your port or warehouse.',
+    expNumber: 'ISPM-15',
+    expText: 'Heat-Treated Wood<br>& Certified Fumigation',
+    stats: [
+      { id: 'pkg-stat-1', count: '100%', label: 'ISPM-15 Fumigation' },
+      { id: 'pkg-stat-2', count: '27 Tons', label: 'Max Container Capacity' },
+      { id: 'pkg-stat-3', count: '0%', label: 'Breakage Target' }
+    ],
+    specsTag: 'EXPORT PACKAGING SPECIFICATIONS',
+    specsTitle: 'Standard <span>Packaging Methods</span>',
+    cards: [
+      { id: 'p-card-1', title: 'Cut-to-Size & Tile Crates', desc: 'Strong wooden crates constructed from solid heat-treated timber. Lined with polyethylene sheet & styrofoam padding on all 6 inner sides.', image: '', icon: 'ri-box-3-line' },
+      { id: 'p-card-2', title: 'Gang Saws Slab Bundles', desc: 'Random and jumbo slabs are secured into wooden A-frame bundles with polished faces turned inwards, separated by plastic film sheets.', image: '', icon: 'ri-stack-line' },
+      { id: 'p-card-3', title: 'Container Lashing & Bracing', desc: 'Crates and bundles are anchored to container walls using heavy steel cables, wooden chocks, and tension belts to prevent shifts at sea.', image: '', icon: 'ri-anchor-line' },
+      { id: 'p-card-4', title: 'Moisture & Rust Prevention', desc: 'Desiccant bags inside containers absorb moisture, protecting polished marble surfaces from condensation dulling during sea transit.', image: '', icon: 'ri-water-percent-line' },
+      { id: 'p-card-5', title: 'Clear Barcode & Piece Marking', desc: 'Each crate features clear waterproof stenciling detailing project name, stone type, dimensions, slab count, gross weight, and crate ID.', image: '', icon: 'ri-barcode-box-line' },
+      { id: 'p-card-6', title: 'Fumigation Certificate', desc: 'Official Phytosanitary and Fumigation certificates supplied with every export shipment meeting all international import customs requirements.', image: '', icon: 'ri-file-shield-line' }
+    ]
+  },
+
+  // 13. Contact Us Page Data
+  contactPage: {
+    bannerTag: 'GET IN TOUCH',
+    bannerTitle: 'Contact <span>TUT Stones</span>',
+    bannerDesc: 'Have questions about stone varieties, slab availability, cut-to-size specifications, or container pricing? Our team is ready to assist you.',
+    mainTag: 'GLOBAL EXPORT HEADQUARTERS',
+    mainTitle: 'Let’s Build <span>Long-Term Partnerships</span>',
+    mainDesc: 'From material selection to packaging and ocean logistics, TUT Stones delivers professional service at every step. Reach out to request a price quotation or stone sample box.',
+    formTitle: 'Request Export Quotation',
+    formDesc: 'Fill out the form below and our export specialists will respond within 24 business hours.',
+    addressTitle: 'Factory Address',
+    addressText: 'Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
+    addressMapLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
+    emailTitle: 'Email Inquiries',
+    emailPrimary: 'info@tutstones.com',
+    emailSecondary: 'sales@tutstones.com',
+    phoneTitle: 'Phone & WhatsApp',
+    phonePrimary: '+201104539397',
+    whatsappNumber: '+201104539397'
+  },
+
+  // 14. Global Footer Data
+  footerData: {
+    brandDesc: 'Distinguished Egyptian exporter of premium marble and granite. Delivering timeless natural stone from Egypt to global markets.',
+    address: 'Shak El Thoaban, Cairo, Egypt',
+    addressLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
+    emailPrimary: 'info@tutstones.com',
+    emailSecondary: 'sales@tutstones.com',
+    phonePrimary: '+201104539397',
+    whatsappNumber: '+201104539397',
+    hours: 'Mon - Sat: 8:00 AM - 6:00 PM'
+  }
 };
 
 class Store {
@@ -682,6 +869,66 @@ class Store {
 
   deleteSocialLink(id) {
     this.data.socialLinks = this.data.socialLinks.filter(l => l.id !== id);
+    this.save();
+  }
+
+  // --- Homepage Data ---
+  getHomePage() {
+    return this.data.homePage || DEFAULT_DATA.homePage;
+  }
+
+  saveHomePage(data) {
+    this.data.homePage = { ...this.getHomePage(), ...data };
+    this.save();
+  }
+
+  // --- About Us Page Data ---
+  getAboutPage() {
+    return this.data.aboutPage || DEFAULT_DATA.aboutPage;
+  }
+
+  saveAboutPage(data) {
+    this.data.aboutPage = { ...this.getAboutPage(), ...data };
+    this.save();
+  }
+
+  // --- Factory Page Data ---
+  getFactoryPage() {
+    return this.data.factoryPage || DEFAULT_DATA.factoryPage;
+  }
+
+  saveFactoryPage(data) {
+    this.data.factoryPage = { ...this.getFactoryPage(), ...data };
+    this.save();
+  }
+
+  // --- Packaging Page Data ---
+  getPackagingPage() {
+    return this.data.packagingPage || DEFAULT_DATA.packagingPage;
+  }
+
+  savePackagingPage(data) {
+    this.data.packagingPage = { ...this.getPackagingPage(), ...data };
+    this.save();
+  }
+
+  // --- Contact Page Data ---
+  getContactPage() {
+    return this.data.contactPage || DEFAULT_DATA.contactPage;
+  }
+
+  saveContactPage(data) {
+    this.data.contactPage = { ...this.getContactPage(), ...data };
+    this.save();
+  }
+
+  // --- Footer Data ---
+  getFooterData() {
+    return this.data.footerData || DEFAULT_DATA.footerData;
+  }
+
+  saveFooterData(data) {
+    this.data.footerData = { ...this.getFooterData(), ...data };
     this.save();
   }
 }
