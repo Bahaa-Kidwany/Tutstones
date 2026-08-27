@@ -226,7 +226,7 @@ function renderHomePageContent() {
       grid.innerHTML = hp.boxes.map(box => `
         <div class="feature-card">
           <div class="feature-image-wrapper">
-            <img src="${box.image}" alt="${box.title}">
+            <img src="${box.image}" alt="${box.title}" style="width: 100%; height: 100%; object-fit: cover !important; object-position: top center !important;">
             <div class="feature-icon"><i class="${box.icon || 'ri-settings-4-line'}"></i></div>
           </div>
           <div class="feature-card-content">
@@ -304,7 +304,7 @@ function renderAboutPageContent() {
     if (grid && ab.bottomCards) {
       grid.innerHTML = ab.bottomCards.map(card => `
         <div class="feature-card">
-          ${card.image ? `<div class="feature-image-wrapper"><img src="${card.image}" alt="${card.title}"><div class="feature-icon"><i class="${card.icon || 'ri-shield-check-line'}"></i></div></div>` : `<div class="feature-icon"><i class="${card.icon || 'ri-shield-check-line'}"></i></div>`}
+          ${card.image ? `<div class="feature-image-wrapper"><img src="${card.image}" alt="${card.title}" style="width: 100%; height: 100%; object-fit: cover !important; object-position: top center !important;"><div class="feature-icon"><i class="${card.icon || 'ri-shield-check-line'}"></i></div></div>` : `<div class="feature-icon"><i class="${card.icon || 'ri-shield-check-line'}"></i></div>`}
           <h3>${card.title}</h3>
           <p style="color: var(--color-text-muted); font-size: 0.9rem;">${card.desc}</p>
         </div>
@@ -441,7 +441,7 @@ function renderPackagingPageContent() {
     if (grid && pkg.cards) {
       grid.innerHTML = pkg.cards.map(card => `
         <div class="feature-card">
-          ${card.image ? `<div class="feature-image-wrapper"><img src="${card.image}" alt="${card.title}"><div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div></div>` : `<div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div>`}
+          ${card.image ? `<div class="feature-image-wrapper"><img src="${card.image}" alt="${card.title}" style="width: 100%; height: 100%; object-fit: cover !important; object-position: top center !important;"><div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div></div>` : `<div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div>`}
           <h3>${card.title}</h3>
           <p style="color: var(--color-text-muted); font-size: 0.9rem;">${card.desc}</p>
         </div>
