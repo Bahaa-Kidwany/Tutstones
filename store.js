@@ -999,18 +999,27 @@ class Store {
     this.save();
   }
 
-  deleteHeroSlide(id) {
-    this.data.heroSlides = this.data.heroSlides.filter(s => s.id !== id);
+      this.data.heroSlides = this.data.heroSlides.filter(s => s.id !== id);
     this.save();
   }
 
   // --- Stone Catalogue ---
   getStones() {
-    return this.data.stones || [];
+    const list = this.data.stones || [];
+    return list.map(s => {
+      if (s && s.desc) {
+        s.desc = s.desc.replace(/\s*Features full slab veining \(A\) and precision edge view \(B\)\./gi, '').trim();
+      }
+      return s;
+    });
   }
 
   getStone(id) {
-    return this.data.stones.find(s => s.id === id);
+    const stone = (this.data.stones || []).find(s => s.id === id);
+    if (stone && stone.desc) {
+      stone.desc = stone.desc.replace(/\s*Features full slab veining \(A\) and precision edge view \(B\)\./gi, '').trim();
+    }
+    return stone;
   }
 
   saveStone(stone) {
