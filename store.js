@@ -2,7 +2,7 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const STORAGE_KEY = 'tut_stones_data_v8';
+const STORAGE_KEY = 'tut_stones_data_v9';
 
 const DEFAULT_DATA = {
   // 1. Categories
@@ -157,7 +157,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/1 Acid Finish/Grey Teriesta ( B ).JPG",
         "featured": true,
         "tag": "Acid Finish",
-        "desc": "Egyptian Grey Teriesta Marble crafted with a premium Acid Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Grey Teriesta Marble crafted with a premium Acid Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -176,7 +176,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/1 Acid Finish/Melly Grey ( B ).JPG",
         "featured": true,
         "tag": "Acid Finish",
-        "desc": "Egyptian Melly Grey Marble crafted with a premium Acid Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Melly Grey Marble crafted with a premium Acid Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -195,7 +195,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/1 Acid Finish/Sunny ( B ).JPG",
         "featured": true,
         "tag": "Acid Finish",
-        "desc": "Egyptian Sunny Marble crafted with a premium Acid Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Sunny Marble crafted with a premium Acid Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -233,7 +233,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/2 Brushed Finish/Gallala ( B ).JPG",
         "featured": true,
         "tag": "Brushed Finish",
-        "desc": "Egyptian Gallala Marble crafted with a premium Brushed Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Gallala Marble crafted with a premium Brushed Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -252,7 +252,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/2 Brushed Finish/Grey Teriesta ( B ).JPG",
         "featured": true,
         "tag": "Brushed Finish",
-        "desc": "Egyptian Grey Teriesta Marble crafted with a premium Brushed Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Grey Teriesta Marble crafted with a premium Brushed Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -271,7 +271,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/2 Brushed Finish/Teriesta ( B ).JPG",
         "featured": true,
         "tag": "Brushed Finish",
-        "desc": "Egyptian Teriesta Marble crafted with a premium Brushed Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Teriesta Marble crafted with a premium Brushed Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -290,7 +290,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/3 Tumbled Finish/Black Teriesta ( B ).JPG",
         "featured": true,
         "tag": "Tumbled Finish",
-        "desc": "Egyptian Black Teriesta Marble crafted with a premium Tumbled Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Black Teriesta Marble crafted with a premium Tumbled Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -309,7 +309,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/3 Tumbled Finish/Crystal Bronze ( B ).JPG",
         "featured": true,
         "tag": "Tumbled Finish",
-        "desc": "Egyptian Crystal Bronze Marble crafted with a premium Tumbled Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Crystal Bronze Marble crafted with a premium Tumbled Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -328,7 +328,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/3 Tumbled Finish/Gallala ( B ).JPG",
         "featured": true,
         "tag": "Tumbled Finish",
-        "desc": "Egyptian Gallala Marble crafted with a premium Tumbled Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Gallala Marble crafted with a premium Tumbled Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -347,7 +347,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/3 Tumbled Finish/Sunny ( B ).JPG",
         "featured": true,
         "tag": "Tumbled Finish",
-        "desc": "Egyptian Sunny Marble crafted with a premium Tumbled Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Sunny Marble crafted with a premium Tumbled Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -366,7 +366,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/4 Split Face Finish/Split Face ( B ).JPG",
         "featured": true,
         "tag": "Split Face Finish",
-        "desc": "Egyptian Split Face Marble crafted with a premium Split Face Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Split Face Marble crafted with a premium Split Face Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -385,7 +385,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/5 Bush Hummered Finish/Teriesta ( B ).JPG",
         "featured": true,
         "tag": "Bush Hummered Finish",
-        "desc": "Egyptian Teriesta Marble crafted with a premium Bush Hummered Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Teriesta Marble crafted with a premium Bush Hummered Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -404,7 +404,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/6 Acid Brushed Finish/Sunny ( B ).JPG",
         "featured": true,
         "tag": "Acid Brushed Finish",
-        "desc": "Egyptian Sunny Marble crafted with a premium Acid Brushed Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Sunny Marble crafted with a premium Acid Brushed Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -423,7 +423,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/6 Acid Brushed Finish/Teriesta ( B ).JPG",
         "featured": true,
         "tag": "Acid Brushed Finish",
-        "desc": "Egyptian Teriesta Marble crafted with a premium Acid Brushed Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Teriesta Marble crafted with a premium Acid Brushed Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -442,7 +442,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/7 Acid Tumbled Finish/Black Teriesta ( B ).JPG",
         "featured": true,
         "tag": "Acid Tumbled Finish",
-        "desc": "Egyptian Black Teriesta Marble crafted with a premium Acid Tumbled Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Black Teriesta Marble crafted with a premium Acid Tumbled Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -461,7 +461,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/7 Acid Tumbled Finish/Catrina ( B ).JPG",
         "featured": true,
         "tag": "Acid Tumbled Finish",
-        "desc": "Egyptian Catrina Marble crafted with a premium Acid Tumbled Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Catrina Marble crafted with a premium Acid Tumbled Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
@@ -480,7 +480,7 @@ const DEFAULT_DATA = {
         "imageEdge": "assets/images/Materials - Marble/8 Brushed Sand Blasted Finish/Sunny ( B ).JPG",
         "featured": true,
         "tag": "Brushed Sand Blasted Finish",
-        "desc": "Egyptian Sunny Marble crafted with a premium Brushed Sand Blasted Finish. Features full slab veining (A) and precision edge view (B).",
+        "desc": "Egyptian Sunny Marble crafted with a premium Brushed Sand Blasted Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
     },
     {
