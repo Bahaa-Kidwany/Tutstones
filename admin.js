@@ -1725,16 +1725,17 @@ function onCropZoomSliderChange(percentage) {
   cropBox.style.top = `${newTop}px`;
 }
 
+let activeResizeHandle = null;
+
 function setupCropBoxDragListeners() {
   const cropBox = document.getElementById('crop-box');
-  const resizeHandle = document.getElementById('crop-resize-handle');
   const stageWrapper = document.getElementById('crop-stage-wrapper');
   const stageImg = document.getElementById('crop-stage-img');
 
-  if (!cropBox || !resizeHandle || !stageWrapper || !stageImg) return;
+  if (!cropBox || !stageWrapper || !stageImg) return;
 
   function onPointerDown(e) {
-    if (e.target === resizeHandle) return;
+    if (e.target.classList.contains('crop-handle')) return;
     isDraggingCropBox = true;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -1789,14 +1790,24 @@ function setupCropBoxDragListeners() {
   cropBox.onmousedown = onPointerDown;
   cropBox.ontouchstart = onPointerDown;
 
-  function onResizeDown(e) {
+  const handles = cropBox.querySelectorAll('.crop-handle');
+  handles.forEach(handle => {
+    handle.onmousedown = function(e) { startResize(e, handle.dataset.handle); };
+    handle.ontouchstart = function(e) { startResize(e, handle.dataset.handle); };
+  });
+
+  function startResize(e, dir) {
     e.stopPropagation();
     isResizingCropBox = true;
+    activeResizeHandle = dir;
+
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
     dragStartX = clientX;
     dragStartY = clientY;
+    cropBoxStartLeft = cropBox.offsetLeft;
+    cropBoxStartTop = cropBox.offsetTop;
     cropBoxStartWidth = cropBox.offsetWidth;
     cropBoxStartHeight = cropBox.offsetHeight;
 
@@ -1807,7 +1818,7 @@ function setupCropBoxDragListeners() {
   }
 
   function onResizeMove(e) {
-    if (!isResizingCropBox) return;
+    if (!isResizingCropBox || !activeResizeHandle) return;
     if (e.preventDefault) e.preventDefault();
 
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -1823,27 +1834,51 @@ function setupCropBoxDragListeners() {
     const imgTop = imgRect.top - wrapperRect.top;
     const imgWidth = imgRect.width;
     const imgHeight = imgRect.height;
+    const imgRight = imgLeft + imgWidth;
+    const imgBottom = imgTop + imgHeight;
 
-    let newW = Math.max(60, cropBoxStartWidth + deltaX);
-    let newH = Math.max(40, cropBoxStartHeight + deltaY);
+    let newLeft = cropBoxStartLeft;
+    let newTop = cropBoxStartTop;
+    let newW = cropBoxStartWidth;
+    let newH = cropBoxStartHeight;
 
-    newW = Math.min(imgLeft + imgWidth - cropBox.offsetLeft, newW);
-    newH = Math.min(imgTop + imgHeight - cropBox.offsetTop, newH);
+    const MIN_W = 40;
+    const MIN_H = 30;
 
+    const dir = activeResizeHandle;
+
+    if (dir.includes('e')) {
+      newW = Math.max(MIN_W, Math.min(imgRight - cropBoxStartLeft, cropBoxStartWidth + deltaX));
+    } else if (dir.includes('w')) {
+      const maxDeltaX = cropBoxStartWidth - MIN_W;
+      const actualDeltaX = Math.min(maxDeltaX, Math.max(imgLeft - cropBoxStartLeft, deltaX));
+      newLeft = cropBoxStartLeft + actualDeltaX;
+      newW = cropBoxStartWidth - actualDeltaX;
+    }
+
+    if (dir.includes('s')) {
+      newH = Math.max(MIN_H, Math.min(imgBottom - cropBoxStartTop, cropBoxStartHeight + deltaY));
+    } else if (dir.includes('n')) {
+      const maxDeltaY = cropBoxStartHeight - MIN_H;
+      const actualDeltaY = Math.min(maxDeltaY, Math.max(imgTop - cropBoxStartTop, deltaY));
+      newTop = cropBoxStartTop + actualDeltaY;
+      newH = cropBoxStartHeight - actualDeltaY;
+    }
+
+    cropBox.style.left = `${newLeft}px`;
+    cropBox.style.top = `${newTop}px`;
     cropBox.style.width = `${newW}px`;
     cropBox.style.height = `${newH}px`;
   }
 
   function onResizeUp() {
     isResizingCropBox = false;
+    activeResizeHandle = null;
     document.removeEventListener('mousemove', onResizeMove);
     document.removeEventListener('mouseup', onResizeUp);
     document.removeEventListener('touchmove', onResizeMove);
     document.removeEventListener('touchend', onResizeUp);
   }
-
-  resizeHandle.onmousedown = onResizeDown;
-  resizeHandle.ontouchstart = onResizeDown;
 }
 
 function applyCropAndSave() {

@@ -1648,8 +1648,15 @@
             <div style="position: absolute; top: 6px; left: 8px; background: rgba(0,0,0,0.75); color: #DFB77D; padding: 2px 6px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; pointer-events: none; text-transform: uppercase;">
               Visible Window
             </div>
-            <!-- Corner Resize Handle -->
-            <div id="crop-resize-handle" style="position: absolute; bottom: -7px; right: -7px; width: 16px; height: 16px; background: #DFB77D; border: 2px solid #000; border-radius: 50%; cursor: se-resize; z-index: 10;"></div>
+            <!-- 8 Resizing Handles (4 Corners + 4 Edges) -->
+            <div class="crop-handle handle-nw" data-handle="nw"></div>
+            <div class="crop-handle handle-ne" data-handle="ne"></div>
+            <div class="crop-handle handle-sw" data-handle="sw"></div>
+            <div class="crop-handle handle-se" data-handle="se"></div>
+            <div class="crop-handle handle-n" data-handle="n"></div>
+            <div class="crop-handle handle-s" data-handle="s"></div>
+            <div class="crop-handle handle-w" data-handle="w"></div>
+            <div class="crop-handle handle-e" data-handle="e"></div>
           </div>
         </div>
 

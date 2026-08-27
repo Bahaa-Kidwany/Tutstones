@@ -578,6 +578,28 @@ textarea.form-control {
   color: #000;
 }
 
+/* Interactive Image Cropper Handles */
+.crop-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #DFB77D;
+  border: 2px solid #000;
+  border-radius: 50%;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.crop-handle.handle-nw { top: -7px; left: -7px; cursor: nwse-resize; }
+.crop-handle.handle-ne { top: -7px; right: -7px; cursor: nesw-resize; }
+.crop-handle.handle-sw { bottom: -7px; left: -7px; cursor: nesw-resize; }
+.crop-handle.handle-se { bottom: -7px; right: -7px; cursor: nwse-resize; }
+
+.crop-handle.handle-n { top: -7px; left: 50%; transform: translateX(-50%); cursor: ns-resize; border-radius: 3px; width: 24px; height: 10px; }
+.crop-handle.handle-s { bottom: -7px; left: 50%; transform: translateX(-50%); cursor: ns-resize; border-radius: 3px; width: 24px; height: 10px; }
+.crop-handle.handle-w { top: 50%; left: -7px; transform: translateY(-50%); cursor: ew-resize; border-radius: 3px; width: 10px; height: 24px; }
+.crop-handle.handle-e { top: 50%; right: -7px; transform: translateY(-50%); cursor: ew-resize; border-radius: 3px; width: 10px; height: 24px; }
+
 /* ==========================================================================
    CATEGORY THUMBNAIL GALLERY & PREVIEWER
    ========================================================================== */
