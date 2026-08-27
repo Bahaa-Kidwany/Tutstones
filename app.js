@@ -772,16 +772,42 @@ function renderFeaturedSections() {
 }
 
 function createStoneCardHTML(stone) {
-  return `
-    <div class="stone-card">
+  const hasSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
+  
+  let thumbHTML = '';
+  if (hasSplit) {
+    thumbHTML = `
+      <div class="stone-thumb">
+        <div class="stone-diag-split">
+          <div class="diag-half diag-left" title="${stone.name} - Full Slab (A)">
+            <img src="${stone.imageSlab}" alt="${stone.name} Full Slab" loading="lazy" onerror="this.src='${stone.image}'">
+            <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab</span>
+          </div>
+          <div class="diag-half diag-right" title="${stone.name} - Edge View (B)">
+            <img src="${stone.imageEdge}" alt="${stone.name} Edge View" loading="lazy" onerror="this.src='${stone.image}'">
+            <span class="diag-label"><i class="ri-stack-line"></i> Edge View</span>
+          </div>
+          <div class="diag-split-line"></div>
+        </div>
+        <span class="stone-badge">${stone.tag || stone.finish || 'Natural Stone'}</span>
+      </div>
+    `;
+  } else {
+    thumbHTML = `
       <div class="stone-thumb">
         <img src="${stone.image}" alt="${stone.name}" loading="lazy" onerror="this.src='assets/images/marble_calacatta.png'">
         <span class="stone-badge">${stone.tag || 'Natural Stone'}</span>
       </div>
+    `;
+  }
+
+  return `
+    <div class="stone-card">
+      ${thumbHTML}
       <div class="stone-body">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem;">
           <h3 class="stone-name">${stone.name}</h3>
-          <span style="font-size: 0.75rem; color: var(--color-gold-primary); text-transform: uppercase; font-weight: 600;">${(stone.category || '').toUpperCase()}</span>
+          <span style="font-size: 0.75rem; color: var(--color-gold-primary); text-transform: uppercase; font-weight: 600;">${(stone.finish || stone.category || '').toUpperCase()}</span>
         </div>
         
         <p class="stone-desc" style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">${stone.desc || ''}</p>
@@ -790,27 +816,27 @@ function createStoneCardHTML(stone) {
         <table class="card-spec-table">
           <tr>
             <td><i class="ri-map-pin-line"></i> Origin</td>
-            <td>${stone.origin || 'N/A'}</td>
+            <td>${stone.origin || 'Egypt'}</td>
           </tr>
           <tr>
-            <td><i class="ri-sparkling-line"></i> Finishes</td>
+            <td><i class="ri-sparkling-line"></i> Surface Finish</td>
             <td>${stone.finish || 'Polished'}</td>
           </tr>
           <tr>
             <td><i class="ri-ruler-2-line"></i> Density</td>
-            <td>${stone.density || '2.70 g/cm³'}</td>
+            <td>${stone.density || '2.71 g/cm³'}</td>
           </tr>
           <tr>
             <td><i class="ri-drop-line"></i> Water Abs.</td>
-            <td>${stone.waterAbs || '0.15%'}</td>
+            <td>${stone.waterAbs || '0.14%'}</td>
           </tr>
           <tr>
             <td><i class="ri-shield-flash-line"></i> Flexural Str.</td>
-            <td>${stone.flexural || '14.8 MPa'}</td>
+            <td>${stone.flexural || '15.2 MPa'}</td>
           </tr>
           <tr>
-            <td><i class="ri-layout-grid-line"></i> Uses</td>
-            <td>${stone.applications || 'Flooring, Countertops'}</td>
+            <td><i class="ri-layout-grid-line"></i> Applications</td>
+            <td>${stone.applications || 'Flooring, Cladding, Countertops'}</td>
           </tr>
         </table>
 
@@ -848,27 +874,83 @@ function initCatalogue() {
   function renderFilterPills() {
     if (!filterPillsContainer) return;
     const categories = TutStonesStore.getCategories();
-    let pillsHTML = `<button class="filter-pill ${currentCategory === 'all' ? 'active' : ''}" data-filter="all">All Stone Types</button>`;
-    categories.forEach(cat => {
+    
+    // Split into Primary collections vs Sub-categories
+    const primaryCats = categories.filter(c => !c.parent || c.isParent);
+    const subCats = categories.filter(c => c.parent);
+
+    // Primary Pills HTML
+    let pillsHTML = `<button class="filter-pill ${currentCategory === 'all' ? 'active' : ''}" data-filter="all"><i class="ri-apps-2-line"></i> All Stone Materials</button>`;
+    primaryCats.forEach(cat => {
       const isActive = currentCategory.toLowerCase() === cat.id.toLowerCase() || currentCategory.toLowerCase() === (cat.slug || '').toLowerCase();
-      pillsHTML += `<button class="filter-pill ${isActive ? 'active' : ''}" data-filter="${cat.id}">${cat.name}</button>`;
+      const subCount = subCats.filter(s => s.parent === cat.id).length;
+      const badgeHTML = subCount > 0 ? `<span class="pill-badge">${subCount} Sub-Categories</span>` : '';
+      pillsHTML += `<button class="filter-pill ${isActive ? 'active' : ''}" data-filter="${cat.id}">${cat.icon ? `<i class="${cat.icon}"></i> ` : ''}${cat.name} ${badgeHTML}</button>`;
     });
     filterPillsContainer.innerHTML = pillsHTML;
+
+    // Sub-category filter bar container
+    let subBar = document.getElementById('sub-category-filter-bar');
+    if (!subBar) {
+      subBar = document.createElement('div');
+      subBar.id = 'sub-category-filter-bar';
+      subBar.className = 'sub-category-filter-bar';
+      filterPillsContainer.parentNode.insertBefore(subBar, filterPillsContainer.nextSibling);
+    }
+
+    // Determine active parent for sub-bar display (e.g. 'marble')
+    const activeSubCat = subCats.find(s => s.id.toLowerCase() === currentCategory.toLowerCase() || (s.slug && s.slug.toLowerCase() === currentCategory.toLowerCase()));
+    const activePrimary = primaryCats.find(p => p.id.toLowerCase() === currentCategory.toLowerCase());
+    
+    const showSubBarForParent = activePrimary ? activePrimary.id : (activeSubCat ? activeSubCat.parent : 'marble');
+
+    if (showSubBarForParent) {
+      const parentObj = primaryCats.find(p => p.id === showSubBarForParent);
+      const relevantSubCats = subCats.filter(s => s.parent === showSubBarForParent);
+
+      if (relevantSubCats.length > 0) {
+        let subHTML = `
+          <div class="sub-filter-header">
+            <i class="ri-git-merge-line" style="color: #8D4F4E;"></i>
+            <span>${parentObj ? parentObj.name : 'Marble'} Sub-Categories & Surface Finishes:</span>
+          </div>
+          <div class="sub-filter-pills">
+            <button class="sub-filter-pill ${currentCategory === showSubBarForParent ? 'active' : ''}" data-filter="${showSubBarForParent}">
+              All ${parentObj ? parentObj.name : 'Marble'}
+            </button>
+        `;
+
+        relevantSubCats.forEach(s => {
+          const isSubActive = currentCategory.toLowerCase() === s.id.toLowerCase() || currentCategory.toLowerCase() === (s.slug || '').toLowerCase();
+          subHTML += `
+            <button class="sub-filter-pill ${isSubActive ? 'active' : ''}" data-filter="${s.id}">
+              ${s.icon ? `<i class="${s.icon}"></i> ` : ''}${s.name}
+            </button>
+          `;
+        });
+
+        subHTML += `</div>`;
+        subBar.innerHTML = subHTML;
+        subBar.style.display = 'block';
+      } else {
+        subBar.style.display = 'none';
+      }
+    } else {
+      subBar.style.display = 'none';
+    }
   }
 
   renderFilterPills();
 
-  // Event Delegation for Filter Pills (Handles dynamic pills gracefully)
-  if (filterPillsContainer) {
-    filterPillsContainer.addEventListener('click', (e) => {
-      const pill = e.target.closest('.filter-pill');
+  // Event Delegation for Primary and Sub-Category Filter Pills
+  const catalogueControls = filterPillsContainer?.parentNode;
+  if (catalogueControls) {
+    catalogueControls.addEventListener('click', (e) => {
+      const pill = e.target.closest('.filter-pill, .sub-filter-pill');
       if (!pill) return;
       
-      const allPills = filterPillsContainer.querySelectorAll('.filter-pill');
-      allPills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      
       currentCategory = pill.dataset.filter || 'all';
+      renderFilterPills();
       filterAndRender();
     });
   }
@@ -907,23 +989,19 @@ function initCatalogue() {
       c.name.toLowerCase().includes(catId.toLowerCase())
     );
 
-    if (cat && cat.desc) {
+    if (cat) {
+      const parentCat = cat.parent ? currentCats.find(p => p.id === cat.parent) : null;
+      const breadcrumbHTML = parentCat 
+        ? `<div style="font-size: 0.78rem; font-weight: 700; color: #8D4F4E; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;"><i class="ri-node-tree"></i> ${parentCat.name}  &rsaquo;  ${cat.name} (Sub-Category)</div>` 
+        : `<div style="font-size: 0.78rem; font-weight: 700; color: #8D4F4E; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;"><i class="ri-vip-diamond-line"></i> Primary Stone Collection</div>`;
+
       banner.innerHTML = `
         <div class="category-desc-card">
           <div class="category-desc-icon"><i class="${cat.icon || 'ri-price-tag-3-line'}"></i></div>
           <div class="category-desc-content">
+            ${breadcrumbHTML}
             <h4 class="category-desc-title">${cat.name}</h4>
-            <p class="category-desc-text">${cat.desc}</p>
-          </div>
-        </div>
-      `;
-    } else if (cat) {
-      banner.innerHTML = `
-        <div class="category-desc-card">
-          <div class="category-desc-icon"><i class="${cat.icon || 'ri-price-tag-3-line'}"></i></div>
-          <div class="category-desc-content">
-            <h4 class="category-desc-title">${cat.name}</h4>
-            <p class="category-desc-text">Explore our curated selection of ${cat.name} slabs.</p>
+            <p class="category-desc-text">${cat.desc || `Explore our curated selection of ${cat.name} slabs.`}</p>
           </div>
         </div>
       `;
@@ -940,7 +1018,8 @@ function initCatalogue() {
       const targetCat = currentCategory.toLowerCase();
       filtered = filtered.filter(s => {
         const stoneCat = (s.category || '').toLowerCase();
-        return stoneCat === targetCat;
+        const parentCat = (s.parentCategory || '').toLowerCase();
+        return stoneCat === targetCat || parentCat === targetCat;
       });
     }
 
@@ -995,11 +1074,39 @@ function openStoneModal(stoneId) {
   const overlay = document.getElementById('spec-modal');
   const modalContent = document.getElementById('modal-content-body');
 
-  modalContent.innerHTML = `
-    <div class="modal-grid">
+  const hasSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
+
+  let imageBlock = '';
+  if (hasSplit) {
+    imageBlock = `
+      <div class="modal-image">
+        <div class="stone-diag-split modal-diag-split">
+          <div class="diag-half diag-left" title="${stone.name} - Full Slab (A)">
+            <img src="${stone.imageSlab}" alt="${stone.name} Full Slab" onerror="this.src='${stone.image}'">
+            <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab (A)</span>
+          </div>
+          <div class="diag-half diag-right" title="${stone.name} - Edge View (B)">
+            <img src="${stone.imageEdge}" alt="${stone.name} Edge View" onerror="this.src='${stone.image}'">
+            <span class="diag-label"><i class="ri-stack-line"></i> Edge View (B)</span>
+          </div>
+          <div class="diag-split-line"></div>
+        </div>
+        <p style="text-align: center; font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.6rem;">
+          <i class="ri-cursor-line"></i> Hover left or right to expand Full Slab (A) or Edge View (B)
+        </p>
+      </div>
+    `;
+  } else {
+    imageBlock = `
       <div class="modal-image">
         <img src="${stone.image}" alt="${stone.name}" onerror="this.src='assets/images/marble_calacatta.png'">
       </div>
+    `;
+  }
+
+  modalContent.innerHTML = `
+    <div class="modal-grid">
+      ${imageBlock}
       <div class="modal-details">
         <span class="section-tag">${(stone.category || 'STONE').toUpperCase()}</span>
         <h3>${stone.name}</h3>
@@ -1070,3 +1177,29 @@ function handleInquirySubmit(e, stoneName) {
   alert(`Thank you for your interest in ${stoneName}! Our stone specialists will email you the official technical specification sheet and available slab inventory shortly.`);
   closeModal();
 }
+
+/* ==========================================================================
+   Interactive Diagonal Split Event Handlers (Full Slab A / Edge View B)
+   ========================================================================== */
+document.addEventListener('mouseover', (e) => {
+  const left = e.target.closest('.diag-left');
+  const right = e.target.closest('.diag-right');
+  const container = e.target.closest('.stone-diag-split');
+  if (!container) return;
+
+  if (left) {
+    container.classList.add('hover-left');
+    container.classList.remove('hover-right');
+  } else if (right) {
+    container.classList.add('hover-right');
+    container.classList.remove('hover-left');
+  }
+});
+
+document.addEventListener('mouseout', (e) => {
+  const container = e.target.closest('.stone-diag-split');
+  if (container && !container.contains(e.relatedTarget)) {
+    container.classList.remove('hover-left', 'hover-right');
+  }
+});
+

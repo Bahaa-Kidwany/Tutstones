@@ -901,8 +901,11 @@ button {
 
 .stone-thumb {
   position: relative;
-  height: 140px;
+  height: 260px;
   overflow: hidden;
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  background: #14161A;
 }
 
 .stone-thumb img {
@@ -912,8 +915,157 @@ button {
   transition: transform 0.5s ease;
 }
 
-.stone-card:hover .stone-thumb img {
-  transform: scale(1.08);
+/* ==========================================================================
+   INTERACTIVE DIAGONAL SPLIT IMAGE COMPONENT (SLAB A / EDGE B)
+   ========================================================================== */
+.stone-diag-split {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.modal-diag-split {
+  height: 340px;
+  border-radius: var(--radius-md);
+}
+
+.diag-half {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: clip-path 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.diag-half img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease, filter 0.3s ease;
+  display: block;
+}
+
+/* Default State: Full Slab (left) takes MORE space than Edge View (right) with 3D drop shadow */
+.diag-left {
+  z-index: 2;
+  clip-path: polygon(0 0, 68% 0, 52% 100%, 0 100%);
+  filter: drop-shadow(7px 0 14px rgba(0, 0, 0, 0.7)) drop-shadow(2px 0 4px rgba(0, 0, 0, 0.5));
+  transition: clip-path 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
+}
+
+.diag-right {
+  z-index: 1;
+  clip-path: polygon(68% 0, 100% 0, 100% 100%, 52% 100%);
+}
+
+/* Ultra-Thin 1px Hairline Gold Split Seam matching exact 3D split line & animating on hover */
+.diag-split-line {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: linear-gradient(180deg, #FFF9E6 0%, #F5D77F 40%, #D4AF37 70%, #FFF9E6 100%);
+  filter: drop-shadow(0 0 1.5px rgba(212, 175, 55, 0.95));
+  clip-path: polygon(67.7% 0, 68.3% 0, 52.3% 100%, 51.7% 100%);
+  transition: clip-path 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Badge labels for Full Slab (A) and Edge View (B) */
+.diag-label {
+  position: absolute;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  transition: all 0.35s ease;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.diag-left .diag-label {
+  bottom: 12px;
+  left: 12px;
+  background: rgba(14, 18, 26, 0.85);
+  color: #F3F4F6;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.diag-right .diag-label {
+  top: 12px;
+  right: 12px;
+  background: rgba(14, 18, 26, 0.85);
+  color: #F3F4F6;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Hover Interaction: Hovering Left (Full Slab A) expands Left side & moves Hairline Golden Line */
+.stone-diag-split:has(.diag-left:hover) .diag-left,
+.stone-diag-split.hover-left .diag-left {
+  clip-path: polygon(0 0, 88% 0, 74% 100%, 0 100%);
+  z-index: 3;
+  filter: drop-shadow(9px 0 18px rgba(0, 0, 0, 0.8)) drop-shadow(3px 0 6px rgba(0, 0, 0, 0.55));
+}
+
+.stone-diag-split:has(.diag-left:hover) .diag-right,
+.stone-diag-split.hover-left .diag-right {
+  clip-path: polygon(88% 0, 100% 0, 100% 100%, 74% 100%);
+}
+
+.stone-diag-split:has(.diag-left:hover) .diag-split-line,
+.stone-diag-split.hover-left .diag-split-line {
+  clip-path: polygon(87.7% 0, 88.3% 0, 74.3% 100%, 73.7% 100%);
+}
+
+.stone-diag-split:has(.diag-left:hover) .diag-left img,
+.stone-diag-split.hover-left .diag-left img {
+  transform: scale(1.06);
+}
+
+.stone-diag-split:has(.diag-left:hover) .diag-left .diag-label,
+.stone-diag-split.hover-left .diag-left .diag-label {
+  background: #8D4F4E;
+  color: #FFFFFF;
+  border-color: #8D4F4E;
+  transform: translateY(-2px);
+}
+
+/* Hover Interaction: Hovering Right (Edge View B) expands Right side & moves Hairline Golden Line */
+.stone-diag-split:has(.diag-right:hover) .diag-left,
+.stone-diag-split.hover-right .diag-left {
+  clip-path: polygon(0 0, 36% 0, 20% 100%, 0 100%);
+  filter: drop-shadow(5px 0 10px rgba(0, 0, 0, 0.7));
+}
+
+.stone-diag-split:has(.diag-right:hover) .diag-right,
+.stone-diag-split.hover-right .diag-right {
+  clip-path: polygon(36% 0, 100% 0, 100% 100%, 20% 100%);
+  z-index: 3;
+}
+
+.stone-diag-split:has(.diag-right:hover) .diag-split-line,
+.stone-diag-split.hover-right .diag-split-line {
+  clip-path: polygon(35.7% 0, 36.3% 0, 20.3% 100%, 19.7% 100%);
+}
+
+.stone-diag-split:has(.diag-right:hover) .diag-right img,
+.stone-diag-split.hover-right .diag-right img {
+  transform: scale(1.06);
+}
+
+.stone-diag-split:has(.diag-right:hover) .diag-right .diag-label,
+.stone-diag-split.hover-right .diag-right .diag-label {
+  background: #8D4F4E;
+  color: #FFFFFF;
+  border-color: #8D4F4E;
+  transform: translateY(-2px);
 }
 
 .stone-badge {
@@ -1045,29 +1197,29 @@ button {
 .category-desc-card {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  background: linear-gradient(135deg, rgba(26, 29, 35, 0.95) 0%, rgba(18, 20, 24, 0.95) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  border-left: 4px solid var(--color-gold-primary);
+  gap: 1.5rem;
+  background: linear-gradient(135deg, #FFFDF7 0%, #F8EEDC 100%);
+  border: 1.5px solid #DFB77D;
+  border-left: 5px solid #8D4F4E;
   border-radius: var(--radius-md);
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 1.75rem;
   margin-bottom: 2rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(36, 28, 24, 0.08);
   animation: fadeIn 0.3s ease-in-out;
 }
 
 .category-desc-icon {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: rgba(212, 175, 55, 0.12);
-  color: var(--color-gold-primary);
+  background: rgba(141, 79, 78, 0.12);
+  color: #8D4F4E;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   flex-shrink: 0;
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  border: 1.5px solid rgba(141, 79, 78, 0.28);
 }
 
 .category-desc-content {
@@ -1075,18 +1227,19 @@ button {
 }
 
 .category-desc-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.1rem;
-  color: var(--color-gold-primary);
-  margin-bottom: 0.25rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-family: var(--font-heading), 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: #8D4F4E;
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 
 .category-desc-text {
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  color: #241C18;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -1888,12 +2041,26 @@ button {
 [data-theme="eastern-light"] .process-card,
 [data-theme="eastern-light"] .stone-card,
 [data-theme="eastern-light"] .catalogue-card,
-[data-theme="eastern-light"] .stat-card {
-  background: #FFFFFF;
-  border: 1px solid #E0D5C5;
-  border-top: 4px solid;
-  border-image: linear-gradient(90deg, #B36633 0%, #323659 25%, #5474A1 50%, #5B1F11 75%, #E7BA80 100%) 1;
-  box-shadow: 0 8px 24px rgba(50, 54, 89, 0.07);
+[data-theme="eastern-light"] .stat-card,
+[data-theme="eastern-light"] .category-desc-card {
+  background: #FFFFFF !important;
+  border: 1px solid #E0D5C5 !important;
+  border-left: 5px solid #B36633 !important;
+  box-shadow: 0 8px 24px rgba(50, 54, 89, 0.07) !important;
+}
+
+[data-theme="eastern-light"] .category-desc-icon {
+  background: #B36633 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+}
+
+[data-theme="eastern-light"] .category-desc-title {
+  color: #B36633 !important;
+}
+
+[data-theme="eastern-light"] .category-desc-text {
+  color: #323659 !important;
 }
 
 [data-theme="eastern-light"] .feature-card:hover,
@@ -2492,12 +2659,39 @@ html[data-theme="pharaonic"] .page-header-banner,
 [data-theme="pharaonic"] .process-card,
 [data-theme="pharaonic"] .stone-card,
 [data-theme="pharaonic"] .catalogue-card,
-[data-theme="pharaonic"] .stat-card {
+[data-theme="pharaonic"] .stat-card,
+[data-theme="pharaonic"] .category-desc-card {
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
   border-radius: 10px;
   box-shadow: 0 8px 25px rgba(36, 28, 24, 0.10) !important;
   transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+[data-theme="pharaonic"] .category-desc-card {
+  background: linear-gradient(135deg, #FFFDF7 0%, #F8EEDC 100%) !important;
+  border: 1.5px solid #DFB77D !important;
+  border-left: 5px solid #8D4F4E !important;
+}
+
+[data-theme="pharaonic"] .category-desc-icon {
+  background: rgba(141, 79, 78, 0.14) !important;
+  color: #8D4F4E !important;
+  border: 1.5px solid rgba(141, 79, 78, 0.32) !important;
+}
+
+[data-theme="pharaonic"] .category-desc-title {
+  color: #8D4F4E !important;
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+}
+
+[data-theme="pharaonic"] .category-desc-text {
+  color: #241C18 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.6 !important;
+  font-weight: 500 !important;
 }
 
 /* Multi-Colored Card Variations */
@@ -2848,6 +3042,70 @@ html[data-theme="pharaonic"] .page-header-banner,
 [data-theme="pharaonic"] .footer-bottom p {
   color: #BEADA1 !important;
 }
+
+/* Sub-Category Filter Bar for Marble Finishes */
+.sub-category-filter-bar {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, rgba(255, 253, 247, 0.95) 0%, rgba(248, 238, 220, 0.95) 100%);
+  border: 1px solid var(--color-sandstone-border, #DFB77D);
+  border-left: 4px solid #8D4F4E;
+  border-radius: 10px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 0 4px 15px rgba(36, 28, 24, 0.06);
+}
+
+.sub-filter-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #8D4F4E;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.65rem;
+}
+
+.sub-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sub-filter-pill {
+  padding: 0.35rem 0.85rem;
+  background: #FFFFFF;
+  border: 1px solid rgba(223, 183, 125, 0.6);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #241C18;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.sub-filter-pill:hover {
+  border-color: #8D4F4E;
+  color: #8D4F4E;
+  transform: translateY(-1px);
+}
+
+.sub-filter-pill.active {
+  background: #8D4F4E;
+  color: #FFFFFF;
+  border-color: #8D4F4E;
+  box-shadow: 0 2px 8px rgba(141, 79, 78, 0.3);
+}
+
+.pill-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  background: rgba(141, 79, 78, 0.15);
+  color: #8D4F4E;
+  border-radius: 4px;
+  margin-left: 0.4rem;
+}
+
 
 
 

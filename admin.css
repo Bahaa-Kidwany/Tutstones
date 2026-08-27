@@ -1163,3 +1163,72 @@ textarea.form-control {
   border-color: #EF4444;
   color: #FFF;
 }
+
+/* Fixed Corner Unsaved Changes Translucent Warning Toast */
+.unsaved-changes-badge {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: auto;
+  z-index: 9999;
+  background: rgba(22, 16, 12, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-left: 3.5px solid #F59E0B;
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.95rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(245, 158, 11, 0.15);
+  animation: slideUpBadge 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 320px;
+  pointer-events: none;
+}
+
+@keyframes slideUpBadge {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.badge-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.badge-icon {
+  font-size: 1.15rem;
+  color: #F59E0B;
+  animation: pulseWarning 2s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes pulseWarning {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.95); }
+}
+
+.badge-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.badge-info strong {
+  color: #FFF;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.badge-info span {
+  color: rgba(245, 245, 247, 0.75);
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+

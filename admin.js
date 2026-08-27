@@ -4,24 +4,209 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initAuthSession();
-  initRoleState();
   initTabNavigation();
+  restoreDraftStateFromClient();
   refreshAllAdminViews();
 });
 
 /* ==========================================================================
-   1. ROLE SWITCHER & PERMISSION ENFORCEMENT
+   UNSAVED CHANGES & DRAFT STATE CONTROLLER
    ========================================================================== */
-function initRoleState() {
-  const currentRole = TutStonesStore.getRole();
-  applyRoleUI(currentRole);
+let hasUnsavedChanges = false;
+
+function setUnsavedChanges(state) {
+  hasUnsavedChanges = Boolean(state);
+  const badge = document.getElementById('unsaved-changes-badge');
+  if (badge) {
+    badge.style.display = hasUnsavedChanges ? 'block' : 'none';
+  }
+  if (hasUnsavedChanges) {
+    saveDraftStateToClient();
+  }
 }
 
-function switchActiveRole(role) {
-  TutStonesStore.setRole(role);
-  applyRoleUI(role);
-  showToast(`Switched active role to: ${role === 'admin' ? 'Developer / Super Admin' : 'Content Editor'}`);
+function saveDraftStateToClient() {
+  try {
+    sessionStorage.setItem('tut_stones_draft_backup', JSON.stringify(TutStonesStore.data));
+  } catch (e) {
+    console.error('Draft save failed:', e);
+  }
 }
+
+function restoreDraftStateFromClient() {
+  try {
+    const raw = sessionStorage.getItem('tut_stones_draft_backup');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      TutStonesStore.data = { ...TutStonesStore.data, ...parsed };
+      setUnsavedChanges(true);
+    }
+  } catch (e) {
+    console.error('Draft restore failed:', e);
+  }
+}
+
+function collectAllPageFormsToStoreData() {
+  if (document.getElementById('hp-about-tag')) {
+    TutStonesStore.saveHomePage({
+      aboutTag: document.getElementById('hp-about-tag').value,
+      aboutTitle: document.getElementById('hp-about-title').value,
+      aboutDesc1: document.getElementById('hp-about-desc1').value,
+      aboutDesc2: document.getElementById('hp-about-desc2').value,
+      aboutDesc3: document.getElementById('hp-about-desc3').value,
+      aboutExpNumber: document.getElementById('hp-about-exp-num').value,
+      aboutExpText: document.getElementById('hp-about-exp-text').value,
+      boxesTag: document.getElementById('hp-boxes-tag').value,
+      boxesTitle: document.getElementById('hp-boxes-title').value
+    });
+  }
+
+  if (document.getElementById('abp-banner-tag')) {
+    TutStonesStore.saveAboutPage({
+      bannerTag: document.getElementById('abp-banner-tag').value,
+      bannerTitle: document.getElementById('abp-banner-title').value,
+      bannerDesc: document.getElementById('abp-banner-desc').value,
+      mainTag: document.getElementById('abp-main-tag').value,
+      mainTitle: document.getElementById('abp-main-title').value,
+      desc1: document.getElementById('abp-desc1').value,
+      desc2: document.getElementById('abp-desc2').value,
+      desc3: document.getElementById('abp-desc3').value,
+      mainImgUrl: document.getElementById('abp-main-img-url').value,
+      expNumber: document.getElementById('abp-exp-num').value,
+      expText: document.getElementById('abp-exp-text').value,
+      bottomTag: document.getElementById('abp-bottom-tag').value,
+      bottomTitle: document.getElementById('abp-bottom-title').value
+    });
+  }
+
+  if (document.getElementById('fac-banner-tag')) {
+    TutStonesStore.saveFactoryPage({
+      bannerTag: document.getElementById('fac-banner-tag').value,
+      bannerTitle: document.getElementById('fac-banner-title').value,
+      bannerDesc: document.getElementById('fac-banner-desc').value,
+      mainTag: document.getElementById('fac-main-tag').value,
+      mainTitle: document.getElementById('fac-main-title').value,
+      desc1: document.getElementById('fac-desc1').value,
+      desc2: document.getElementById('fac-desc2').value,
+      mainImgUrl: document.getElementById('fac-main-img-url').value,
+      expNumber: document.getElementById('fac-exp-num').value,
+      expText: document.getElementById('fac-exp-text').value,
+      workflowTag: document.getElementById('fac-workflow-tag').value,
+      workflowTitle: document.getElementById('fac-workflow-title').value
+    });
+  }
+
+  if (document.getElementById('pkg-banner-tag')) {
+    TutStonesStore.savePackagingPage({
+      bannerTag: document.getElementById('pkg-banner-tag').value,
+      bannerTitle: document.getElementById('pkg-banner-title').value,
+      bannerDesc: document.getElementById('pkg-banner-desc').value,
+      mainTag: document.getElementById('pkg-main-tag').value,
+      mainTitle: document.getElementById('pkg-main-title').value,
+      desc1: document.getElementById('pkg-desc1').value,
+      desc2: document.getElementById('pkg-desc2').value,
+      mainImgUrl: document.getElementById('pkg-main-img-url').value,
+      expNumber: document.getElementById('pkg-exp-num').value,
+      expText: document.getElementById('pkg-exp-text').value,
+      specsTag: document.getElementById('pkg-specs-tag').value,
+      specsTitle: document.getElementById('pkg-specs-title').value
+    });
+  }
+
+  if (document.getElementById('cnt-banner-tag')) {
+    TutStonesStore.saveContactPage({
+      bannerTag: document.getElementById('cnt-banner-tag').value,
+      bannerTitle: document.getElementById('cnt-banner-title').value,
+      bannerDesc: document.getElementById('cnt-banner-desc').value,
+      mainTag: document.getElementById('cnt-main-tag').value,
+      mainTitle: document.getElementById('cnt-main-title').value,
+      mainDesc: document.getElementById('cnt-main-desc').value,
+      formTitle: document.getElementById('cnt-form-title').value,
+      formDesc: document.getElementById('cnt-form-desc').value,
+      addressTitle: document.getElementById('cnt-address-title').value,
+      addressText: document.getElementById('cnt-address-text').value,
+      addressMapLink: document.getElementById('cnt-address-map-link').value,
+      emailTitle: document.getElementById('cnt-email-title').value,
+      emailPrimary: document.getElementById('cnt-email-primary').value,
+      emailSecondary: document.getElementById('cnt-email-secondary').value,
+      phoneTitle: document.getElementById('cnt-phone-title').value,
+      phonePrimary: document.getElementById('cnt-phone-primary').value,
+      whatsappNum: document.getElementById('cnt-whatsapp-num').value
+    });
+  }
+
+  if (document.getElementById('ftr-brand-desc')) {
+    TutStonesStore.saveFooter({
+      brandDesc: document.getElementById('ftr-brand-desc').value,
+      address: document.getElementById('ftr-address').value,
+      phone: document.getElementById('ftr-phone').value,
+      whatsapp: document.getElementById('ftr-whatsapp').value,
+      email: document.getElementById('ftr-email').value,
+      hours: document.getElementById('ftr-hours').value,
+      copyright: document.getElementById('ftr-copyright').value
+    });
+  }
+}
+
+function saveAllGlobalChanges() {
+  collectAllPageFormsToStoreData();
+  TutStonesStore.saveData();
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  setUnsavedChanges(false);
+  refreshAllAdminViews();
+  showToast('All modifications across all pages saved successfully!');
+}
+
+function undoCurrentPageEdits(pageKey) {
+  const pageNamesMap = {
+    stones: 'Stone Catalogue',
+    categories: 'Categories',
+    heroSlides: 'Hero Slider',
+    paragraphImages: 'Paragraph Images',
+    homePage: 'Homepage',
+    aboutPage: 'About Us Page',
+    factoryPage: 'Factory Page',
+    packagingPage: 'Packaging Page',
+    contactPage: 'Contact Us Page',
+    footer: 'Footer & Contact Info'
+  };
+
+  const pageName = pageNamesMap[pageKey] || pageKey;
+
+  if (confirm(`Are you sure you want to undo unsaved edits for ${pageName} only?`)) {
+    const originalSavedData = TutStonesStore.loadData();
+    if (originalSavedData && originalSavedData[pageKey] !== undefined) {
+      TutStonesStore.data[pageKey] = JSON.parse(JSON.stringify(originalSavedData[pageKey]));
+      saveDraftStateToClient();
+      refreshAllAdminViews();
+      showToast(`Reverted unsaved edits for ${pageName}.`);
+    } else {
+      showToast(`No saved reference found for ${pageName}.`);
+    }
+  }
+}
+
+function openGlobalUndoWarningModal() {
+  const modal = document.getElementById('global-undo-modal');
+  if (modal) modal.classList.add('active');
+}
+
+function confirmGlobalUndoAllPages() {
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  TutStonesStore.data = TutStonesStore.loadData();
+  setUnsavedChanges(false);
+  closeAdminModal('global-undo-modal');
+  refreshAllAdminViews();
+  showToast('All unsaved modifications across all pages have been discarded.');
+}
+
+window.addEventListener('beforeunload', (e) => {
+  if (hasUnsavedChanges) {
+    e.preventDefault();
+    e.returnValue = 'You have unsaved changes! Are you sure you want to leave or refresh the page?';
+    return e.returnValue;
+  }
+});
 
 function applyRoleUI(role) {
   const body = document.body;
@@ -136,18 +321,80 @@ function renderCategoriesTable() {
   const tableBody = document.getElementById('categories-table-body');
   if (!tableBody) return;
 
-  tableBody.innerHTML = categories.map(cat => `
-    <tr>
-      <td><i class="${cat.icon || 'ri-folder-line'}" style="font-size: 1.2rem; color: var(--color-gold-primary);"></i></td>
-      <td><strong>${cat.name}</strong></td>
-      <td><code>${cat.slug || cat.id}</code></td>
-      <td>${cat.desc || 'No description'}</td>
-      <td style="text-align: right;">
-        <button class="btn btn-outline btn-sm" onclick="openCategoryModal('${cat.id}')"><i class="ri-edit-line"></i> Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteCategoryConfirm('${cat.id}')"><i class="ri-delete-bin-line"></i></button>
-      </td>
-    </tr>
-  `).join('');
+  tableBody.innerHTML = categories.map(cat => {
+    const parentObj = cat.parent ? categories.find(p => p.id === cat.parent) : null;
+    const hierarchyBadge = cat.parent 
+      ? `<span class="badge-tag" style="background: rgba(141, 79, 78, 0.2); color: #E8A5A5; border: 1px solid rgba(141, 79, 78, 0.5);"><i class="ri-git-merge-line"></i> Sub-Category (${parentObj ? parentObj.name : cat.parent})</span>`
+      : `<span class="badge-tag" style="background: rgba(212, 175, 55, 0.2); color: #D4AF37; border: 1px solid rgba(212, 175, 55, 0.4);"><i class="ri-vip-diamond-line"></i> Primary Collection</span>`;
+
+    return `
+      <tr>
+        <td><i class="${cat.icon || 'ri-folder-line'}" style="font-size: 1.2rem; color: var(--color-gold-primary);"></i></td>
+        <td>
+          <strong>${cat.name}</strong>
+          <div style="margin-top: 0.25rem;">${hierarchyBadge}</div>
+        </td>
+        <td><code>${cat.slug || cat.id}</code></td>
+        <td style="max-width: 320px; font-size: 0.85rem; color: var(--color-text-muted);">${cat.desc || 'No description'}</td>
+        <td style="text-align: right;">
+          <button class="btn btn-outline btn-sm" onclick="openCategoryModal('${cat.id}')"><i class="ri-edit-line"></i> Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCategoryConfirm('${cat.id}')"><i class="ri-delete-bin-line"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// --- Category Modal ---
+function openCategoryModal(catId = null) {
+  const modal = document.getElementById('category-modal');
+  populateCategoryDropdowns();
+
+  if (catId) {
+    const categories = TutStonesStore.getCategories();
+    const cat = categories.find(c => c.id === catId);
+    if (!cat) return;
+    document.getElementById('cat-id').value = cat.id;
+    document.getElementById('cat-name').value = cat.name;
+    document.getElementById('cat-parent').value = cat.parent || '';
+    document.getElementById('cat-icon').value = cat.icon || 'ri-vip-diamond-line';
+    document.getElementById('cat-desc').value = cat.desc || '';
+  } else {
+    document.getElementById('cat-id').value = '';
+    document.getElementById('cat-name').value = '';
+    document.getElementById('cat-parent').value = '';
+    document.getElementById('cat-icon').value = 'ri-vip-diamond-line';
+    document.getElementById('cat-desc').value = '';
+  }
+  modal.classList.add('active');
+}
+
+function saveCategoryForm() {
+  const id = document.getElementById('cat-id').value;
+  const name = document.getElementById('cat-name').value;
+  const parentVal = document.getElementById('cat-parent').value || null;
+  const icon = document.getElementById('cat-icon').value;
+  const desc = document.getElementById('cat-desc').value;
+
+  const categoryData = {
+    name,
+    parent: parentVal,
+    isParent: !parentVal,
+    icon,
+    desc
+  };
+
+  if (id) {
+    TutStonesStore.updateCategory(id, categoryData);
+  } else {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    TutStonesStore.addCategory({ id: slug, slug, ...categoryData });
+  }
+
+  setUnsavedChanges(true);
+  closeAdminModal('category-modal');
+  showToast(`Category "${name}" saved!`);
+  refreshAllAdminViews();
 }
 
 /* ==========================================================================
@@ -917,17 +1164,53 @@ function populateCategoryDropdowns() {
   const categories = TutStonesStore.getCategories();
   const stoneSelect = document.getElementById('stone-category');
   const catFilter = document.getElementById('stone-cat-filter');
+  const catParentSelect = document.getElementById('cat-parent');
+
+  const primaryCats = categories.filter(c => !c.parent || c.isParent);
+  const subCats = categories.filter(c => c.parent);
 
   if (stoneSelect) {
-    stoneSelect.innerHTML = categories.map(c => `
-      <option value="${c.id}">${c.name}</option>
-    `).join('');
+    let html = `<optgroup label="Primary Stone Collections">`;
+    primaryCats.forEach(c => {
+      html += `<option value="${c.id}">${c.name}</option>`;
+    });
+    html += `</optgroup>`;
+
+    if (subCats.length > 0) {
+      html += `<optgroup label="Sub-Categories & Surface Finishes">`;
+      subCats.forEach(c => {
+        const pObj = primaryCats.find(p => p.id === c.parent);
+        html += `<option value="${c.id}">${c.name} (${pObj ? pObj.name : 'Sub-Category'})</option>`;
+      });
+      html += `</optgroup>`;
+    }
+    stoneSelect.innerHTML = html;
   }
 
   if (catFilter) {
-    catFilter.innerHTML = '<option value="all">All Categories</option>' + categories.map(c => `
-      <option value="${c.id}">${c.name}</option>
-    `).join('');
+    let html = '<option value="all">All Categories & Finishes</option>';
+    html += `<optgroup label="Primary Collections">`;
+    primaryCats.forEach(c => {
+      html += `<option value="${c.id}">${c.name}</option>`;
+    });
+    html += `</optgroup>`;
+
+    if (subCats.length > 0) {
+      html += `<optgroup label="Sub-Categories & Surface Finishes">`;
+      subCats.forEach(c => {
+        html += `<option value="${c.id}">${c.name}</option>`;
+      });
+      html += `</optgroup>`;
+    }
+    catFilter.innerHTML = html;
+  }
+
+  if (catParentSelect) {
+    let html = '<option value="">Top-Level Category (Primary Collection)</option>';
+    primaryCats.forEach(c => {
+      html += `<option value="${c.id}">Sub-Category under ${c.name}</option>`;
+    });
+    catParentSelect.innerHTML = html;
   }
 }
 
@@ -1030,6 +1313,20 @@ function closeAdminModal(modalId) {
   document.getElementById(modalId)?.classList.remove('active');
 }
 
+function toggleStoneSplitModeFields(mode) {
+  const singleGroup = document.getElementById('stone-single-image-group');
+  const splitGroup = document.getElementById('stone-split-image-group');
+  if (!singleGroup || !splitGroup) return;
+
+  if (mode === 'split') {
+    singleGroup.style.display = 'block';
+    splitGroup.style.display = 'grid';
+  } else {
+    singleGroup.style.display = 'block';
+    splitGroup.style.display = 'none';
+  }
+}
+
 function openStoneModal(stoneId = null) {
   const modal = document.getElementById('stone-modal');
   const title = document.getElementById('stone-modal-title');
@@ -1042,8 +1339,23 @@ function openStoneModal(stoneId = null) {
     document.getElementById('stone-id').value = stone.id;
     document.getElementById('stone-name').value = stone.name;
     document.getElementById('stone-category').value = stone.category;
-    document.getElementById('stone-image-url').value = stone.image;
-    document.getElementById('stone-img-preview').src = stone.image;
+    document.getElementById('stone-image-url').value = stone.image || '';
+    document.getElementById('stone-img-preview').src = stone.image || '';
+
+    document.getElementById('stone-image-slab').value = stone.imageSlab || '';
+    document.getElementById('stone-img-slab-preview').src = stone.imageSlab || '';
+    document.getElementById('stone-image-edge').value = stone.imageEdge || '';
+    document.getElementById('stone-img-edge-preview').src = stone.imageEdge || '';
+
+    const isSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
+    if (isSplit) {
+      document.getElementById('split-mode-split').checked = true;
+      toggleStoneSplitModeFields('split');
+    } else {
+      document.getElementById('split-mode-single').checked = true;
+      toggleStoneSplitModeFields('single');
+    }
+
     document.getElementById('stone-origin').value = stone.origin || '';
     document.getElementById('stone-tag').value = stone.tag || '';
     document.getElementById('stone-finish').value = stone.finish || '';
@@ -1058,6 +1370,14 @@ function openStoneModal(stoneId = null) {
     document.getElementById('stone-name').value = '';
     document.getElementById('stone-image-url').value = '';
     document.getElementById('stone-img-preview').src = '';
+    document.getElementById('stone-image-slab').value = '';
+    document.getElementById('stone-img-slab-preview').src = '';
+    document.getElementById('stone-image-edge').value = '';
+    document.getElementById('stone-img-edge-preview').src = '';
+
+    document.getElementById('split-mode-single').checked = true;
+    toggleStoneSplitModeFields('single');
+
     document.getElementById('stone-origin').value = '';
     document.getElementById('stone-tag').value = '';
     document.getElementById('stone-finish').value = 'Polished';
@@ -1072,11 +1392,34 @@ function openStoneModal(stoneId = null) {
 }
 
 function saveStoneForm() {
+  const splitModeRadio = document.querySelector('input[name="stone-split-mode"]:checked');
+  const splitMode = splitModeRadio ? splitModeRadio.value : 'single';
+
+  const singleImg = document.getElementById('stone-image-url').value.trim();
+  const slabImg = document.getElementById('stone-image-slab').value.trim();
+  const edgeImg = document.getElementById('stone-image-edge').value.trim();
+
+  let finalImage = singleImg;
+  let finalSlab = null;
+  let finalEdge = null;
+
+  if (splitMode === 'split' && slabImg && edgeImg && slabImg !== edgeImg) {
+    finalSlab = slabImg;
+    finalEdge = edgeImg;
+    finalImage = slabImg || singleImg;
+  } else {
+    finalImage = singleImg || slabImg || edgeImg;
+    finalSlab = null;
+    finalEdge = null;
+  }
+
   const stone = {
     id: document.getElementById('stone-id').value,
     name: document.getElementById('stone-name').value,
     category: document.getElementById('stone-category').value,
-    image: document.getElementById('stone-image-url').value,
+    image: finalImage,
+    imageSlab: finalSlab,
+    imageEdge: finalEdge,
     origin: document.getElementById('stone-origin').value,
     tag: document.getElementById('stone-tag').value,
     finish: document.getElementById('stone-finish').value,
@@ -1089,14 +1432,16 @@ function saveStoneForm() {
   };
 
   TutStonesStore.saveStone(stone);
+  setUnsavedChanges(true);
   closeAdminModal('stone-modal');
-  showToast(`Stone "${stone.name}" saved successfully!`);
+  showToast(`Stone "${stone.name}" updated successfully!`);
   refreshAllAdminViews();
 }
 
 function deleteStoneConfirm(id) {
   if (confirm('Are you sure you want to delete this stone item?')) {
     TutStonesStore.deleteStone(id);
+    setUnsavedChanges(true);
     showToast('Stone item deleted.');
     refreshAllAdminViews();
   }
@@ -1134,6 +1479,7 @@ function saveCategoryForm() {
     TutStonesStore.addCategory({ name, icon, desc });
   }
 
+  setUnsavedChanges(true);
   closeAdminModal('category-modal');
   showToast(`Category "${name}" saved!`);
   refreshAllAdminViews();
@@ -1142,6 +1488,7 @@ function saveCategoryForm() {
 function deleteCategoryConfirm(id) {
   if (confirm('Are you sure you want to delete this category?')) {
     TutStonesStore.deleteCategory(id);
+    setUnsavedChanges(true);
     showToast('Category deleted.');
     refreshAllAdminViews();
   }
