@@ -384,18 +384,19 @@ function renderHpBoxes() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="hp-box-img-preview-${idx}" src="${box.image || ''}" class="image-preview-thumb" style="${box.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <img id="hp-box-img-preview-${idx}" src="${box.image || ''}" class="image-preview-thumb" style="${box.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${box.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}')">
-                <i class="ri-crop-2-line"></i> Crop / Frame
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}', 'hp-box-img-pos-${idx}')">
+                <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="hp-box-img-url-${idx}" class="form-control" value="${box.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('hp-box-img-preview-${idx}', this.value)">
+            <input type="hidden" id="hp-box-img-pos-${idx}" value="${box.imagePosition || '50% 10%'}">
           </div>
         </div>
       </div>
@@ -427,6 +428,7 @@ function saveHomePageForm() {
     title: document.getElementById(`hp-box-title-${idx}`)?.value || box.title,
     desc: document.getElementById(`hp-box-desc-${idx}`)?.value || box.desc,
     image: document.getElementById(`hp-box-img-url-${idx}`)?.value || box.image,
+    imagePosition: document.getElementById(`hp-box-img-pos-${idx}`)?.value || box.imagePosition || '50% 10%',
     btnText: document.getElementById(`hp-box-btntext-${idx}`)?.value || box.btnText,
     btnLink: document.getElementById(`hp-box-btnlink-${idx}`)?.value || box.btnLink
   }));
@@ -495,18 +497,19 @@ function renderAbpCards() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="abp-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <img id="abp-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${card.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'abp-card-img-url-${idx}', 'abp-card-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('abp-card-img-url-${idx}', 'abp-card-img-preview-${idx}')">
-                <i class="ri-crop-2-line"></i> Crop / Frame
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('abp-card-img-url-${idx}', 'abp-card-img-preview-${idx}', 'abp-card-img-pos-${idx}')">
+                <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="abp-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('abp-card-img-preview-${idx}', this.value)">
+            <input type="hidden" id="abp-card-img-pos-${idx}" value="${card.imagePosition || '50% 10%'}">
           </div>
         </div>
       </div>
@@ -590,18 +593,19 @@ function renderFacCards() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="fac-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <img id="fac-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${card.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-card-img-url-${idx}', 'fac-card-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-card-img-url-${idx}', 'fac-card-img-preview-${idx}')">
-                <i class="ri-crop-2-line"></i> Crop / Frame
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-card-img-url-${idx}', 'fac-card-img-preview-${idx}', 'fac-card-img-pos-${idx}')">
+                <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="fac-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('fac-card-img-preview-${idx}', this.value)">
+            <input type="hidden" id="fac-card-img-pos-${idx}" value="${card.imagePosition || '50% 10%'}">
           </div>
         </div>
       </div>
@@ -684,18 +688,19 @@ function renderPkgCards() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="pkg-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
+          <img id="pkg-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${card.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-card-img-url-${idx}', 'pkg-card-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('pkg-card-img-url-${idx}', 'pkg-card-img-preview-${idx}')">
-                <i class="ri-crop-2-line"></i> Crop / Frame
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('pkg-card-img-url-${idx}', 'pkg-card-img-preview-${idx}', 'pkg-card-img-pos-${idx}')">
+                <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="pkg-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('pkg-card-img-preview-${idx}', this.value)">
+            <input type="hidden" id="pkg-card-img-pos-${idx}" value="${card.imagePosition || '50% 10%'}">
           </div>
         </div>
       </div>
@@ -1600,9 +1605,10 @@ let isResizingCropBox = false;
 let dragStartX = 0, dragStartY = 0;
 let cropBoxStartLeft = 0, cropBoxStartTop = 0, cropBoxStartWidth = 0, cropBoxStartHeight = 0;
 
-function openImageCropModal(targetInputId, previewImgId) {
+function openImageCropModal(targetInputId, previewImgId, posInputId) {
   const inputElem = document.getElementById(targetInputId);
   const previewElem = document.getElementById(previewImgId);
+  const posElem = posInputId ? document.getElementById(posInputId) : null;
   
   let imageUrl = inputElem?.value || previewElem?.src || '';
   if (!imageUrl || imageUrl.includes('undefined') || imageUrl.trim() === '') {
@@ -1610,7 +1616,7 @@ function openImageCropModal(targetInputId, previewImgId) {
     return;
   }
 
-  activeCropTarget = { inputId: targetInputId, previewId: previewImgId, rawUrl: imageUrl };
+  activeCropTarget = { inputId: targetInputId, previewId: previewImgId, posInputId: posInputId, rawUrl: imageUrl };
 
   const stageImg = document.getElementById('crop-stage-img');
   const cropBox = document.getElementById('crop-box');
@@ -1626,7 +1632,7 @@ function openImageCropModal(targetInputId, previewImgId) {
     modal.classList.add('active');
 
     setTimeout(() => {
-      initCropBoxPosition();
+      initCropBoxPosition(posElem?.value);
       setupCropBoxDragListeners();
     }, 100);
   };
@@ -1638,7 +1644,7 @@ function openImageCropModal(targetInputId, previewImgId) {
   tempImg.src = imageUrl;
 }
 
-function initCropBoxPosition() {
+function initCropBoxPosition(savedPos) {
   const stageWrapper = document.getElementById('crop-stage-wrapper');
   const stageImg = document.getElementById('crop-stage-img');
   const cropBox = document.getElementById('crop-box');
@@ -1657,15 +1663,75 @@ function initCropBoxPosition() {
   const defaultW = Math.round(imgWidth * 0.85);
   const defaultH = Math.round(imgHeight * 0.65);
 
-  const initialLeft = imgLeft + Math.round((imgWidth - defaultW) / 2);
-  const initialTop = imgTop + Math.round((imgHeight - defaultH) / 2);
+  let focalX = 50;
+  let focalY = 30;
 
-  cropBox.style.left = `${initialLeft}px`;
-  cropBox.style.top = `${initialTop}px`;
+  if (savedPos && savedPos.includes('%')) {
+    const parts = savedPos.split(' ');
+    if (parts.length >= 2) {
+      focalX = parseInt(parts[0]) || 50;
+      focalY = parseInt(parts[1]) || 30;
+    }
+  }
+
+  const initialLeft = imgLeft + Math.round((imgWidth * focalX / 100) - defaultW / 2);
+  const initialTop = imgTop + Math.round((imgHeight * focalY / 100) - defaultH / 2);
+
+  const clampedLeft = Math.max(imgLeft, Math.min(imgLeft + imgWidth - defaultW, initialLeft));
+  const clampedTop = Math.max(imgTop, Math.min(imgTop + imgHeight - defaultH, initialTop));
+
+  cropBox.style.left = `${clampedLeft}px`;
+  cropBox.style.top = `${clampedTop}px`;
   cropBox.style.width = `${defaultW}px`;
   cropBox.style.height = `${defaultH}px`;
 
   if (zoomSlider) zoomSlider.value = 85;
+}
+
+function applyCropAndSave() {
+  if (!cropStageNaturalImg || !activeCropTarget) return;
+
+  const stageWrapper = document.getElementById('crop-stage-wrapper');
+  const stageImg = document.getElementById('crop-stage-img');
+  const cropBox = document.getElementById('crop-box');
+
+  if (!stageWrapper || !stageImg || !cropBox) return;
+
+  const imgRect = stageImg.getBoundingClientRect();
+  const wrapperRect = stageWrapper.getBoundingClientRect();
+
+  const imgLeft = imgRect.left - wrapperRect.left;
+  const imgTop = imgRect.top - wrapperRect.top;
+  const imgWidth = imgRect.width;
+  const imgHeight = imgRect.height;
+
+  const cropCenterX = cropBox.offsetLeft + cropBox.offsetWidth / 2;
+  const cropCenterY = cropBox.offsetTop + cropBox.offsetHeight / 2;
+
+  let focalX = Math.round(((cropCenterX - imgLeft) / imgWidth) * 100);
+  let focalY = Math.round(((cropCenterY - imgTop) / imgHeight) * 100);
+
+  focalX = Math.max(0, Math.min(100, focalX));
+  focalY = Math.max(0, Math.min(100, focalY));
+
+  const objectPosStr = `${focalX}% ${focalY}%`;
+
+  const targetInput = document.getElementById(activeCropTarget.inputId);
+  const targetPreview = document.getElementById(activeCropTarget.previewId);
+  const posInput = activeCropTarget.posInputId ? document.getElementById(activeCropTarget.posInputId) : null;
+
+  if (targetInput) targetInput.value = activeCropTarget.rawUrl;
+  if (posInput) posInput.value = objectPosStr;
+
+  if (targetPreview) {
+    targetPreview.src = activeCropTarget.rawUrl;
+    targetPreview.style.objectFit = 'cover';
+    targetPreview.style.objectPosition = objectPosStr;
+    targetPreview.style.display = 'block';
+  }
+
+  closeAdminModal('image-crop-modal');
+  showToast(`Focal view set to (${objectPosStr})! Original image preserved. Remember to click Save Page.`);
 }
 
 function alignCropWindow(align) {
@@ -1879,69 +1945,4 @@ function setupCropBoxDragListeners() {
     document.removeEventListener('touchmove', onResizeMove);
     document.removeEventListener('touchend', onResizeUp);
   }
-}
-
-function applyCropAndSave() {
-  if (!cropStageNaturalImg || !activeCropTarget) return;
-
-  const stageWrapper = document.getElementById('crop-stage-wrapper');
-  const stageImg = document.getElementById('crop-stage-img');
-  const cropBox = document.getElementById('crop-box');
-
-  if (!stageWrapper || !stageImg || !cropBox) return;
-
-  const imgRect = stageImg.getBoundingClientRect();
-  const wrapperRect = stageWrapper.getBoundingClientRect();
-
-  const imgLeft = imgRect.left - wrapperRect.left;
-  const imgTop = imgRect.top - wrapperRect.top;
-  const imgWidth = imgRect.width;
-  const imgHeight = imgRect.height;
-
-  const scaleX = cropStageNaturalImg.naturalWidth / imgWidth;
-  const scaleY = cropStageNaturalImg.naturalHeight / imgHeight;
-
-  const relLeft = cropBox.offsetLeft - imgLeft;
-  const relTop = cropBox.offsetTop - imgTop;
-  const relWidth = cropBox.offsetWidth;
-  const relHeight = cropBox.offsetHeight;
-
-  let sx = Math.max(0, Math.round(relLeft * scaleX));
-  let sy = Math.max(0, Math.round(relTop * scaleY));
-  let sw = Math.min(cropStageNaturalImg.naturalWidth - sx, Math.round(relWidth * scaleX));
-  let sh = Math.min(cropStageNaturalImg.naturalHeight - sy, Math.round(relHeight * scaleY));
-
-  if (sw <= 0 || sh <= 0) {
-    showToast('Invalid crop window selection.', 'error');
-    return;
-  }
-
-  const canvas = document.createElement('canvas');
-  const MAX_TARGET_W = 1200;
-  let targetW = sw;
-  let targetH = sh;
-
-  if (targetW > MAX_TARGET_W) {
-    targetH = Math.round((targetH * MAX_TARGET_W) / targetW);
-    targetW = MAX_TARGET_W;
-  }
-
-  canvas.width = targetW;
-  canvas.height = targetH;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
-
-  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-
-  const targetInput = document.getElementById(activeCropTarget.inputId);
-  const targetPreview = document.getElementById(activeCropTarget.previewId);
-
-  if (targetInput) targetInput.value = croppedDataUrl;
-  if (targetPreview) {
-    targetPreview.src = croppedDataUrl;
-    targetPreview.style.display = 'block';
-  }
-
-  closeAdminModal('image-crop-modal');
-  showToast('Image framed and cropped successfully! Remember to save changes.');
 }
