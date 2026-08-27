@@ -372,7 +372,7 @@ function renderFactoryPageContent() {
     if (grid && fac.cards) {
       grid.innerHTML = fac.cards.map((card, idx) => `
         <div class="process-card">
-          ${card.image ? `<img src="${card.image}" alt="${card.title}" style="width: 100%; height: 160px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 1rem;">` : ''}
+          ${card.image ? `<img src="${card.image}" alt="${card.title}" style="width: 100%; height: 160px; object-fit: cover; object-position: top; border-radius: var(--radius-sm); margin-bottom: 1rem;">` : ''}
           <div class="process-icon">${card.step || '0' + (idx + 1)}</div>
           <h3>${card.title}</h3>
           <p style="color: var(--color-text-muted); font-size: 0.9rem;">${card.desc}</p>
