@@ -544,10 +544,15 @@
                   <div class="image-upload-wrapper">
                     <img id="abp-main-img-preview" src="" alt="Main Image Preview" class="image-preview-thumb">
                     <div class="upload-actions">
-                      <label class="upload-btn-label">
-                        <i class="ri-upload-cloud-2-line"></i> Upload Image File
-                        <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'abp-main-img-url', 'abp-main-img-preview')" hidden>
-                      </label>
+                      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <label class="upload-btn-label">
+                          <i class="ri-upload-cloud-2-line"></i> Upload Image File
+                          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'abp-main-img-url', 'abp-main-img-preview')" hidden>
+                        </label>
+                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('abp-main-img-url', 'abp-main-img-preview')">
+                          <i class="ri-crop-2-line"></i> Crop / Frame
+                        </button>
+                      </div>
                       <input type="text" id="abp-main-img-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('abp-main-img-preview').src=this.value">
                     </div>
                   </div>
@@ -658,10 +663,15 @@
                   <div class="image-upload-wrapper">
                     <img id="fac-main-img-preview" src="" alt="Factory Image Preview" class="image-preview-thumb">
                     <div class="upload-actions">
-                      <label class="upload-btn-label">
-                        <i class="ri-upload-cloud-2-line"></i> Upload Image File
-                        <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-main-img-url', 'fac-main-img-preview')" hidden>
-                      </label>
+                      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <label class="upload-btn-label">
+                          <i class="ri-upload-cloud-2-line"></i> Upload Image File
+                          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-main-img-url', 'fac-main-img-preview')" hidden>
+                        </label>
+                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-main-img-url', 'fac-main-img-preview')">
+                          <i class="ri-crop-2-line"></i> Crop / Frame
+                        </button>
+                      </div>
                       <input type="text" id="fac-main-img-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('fac-main-img-preview').src=this.value">
                     </div>
                   </div>
@@ -771,10 +781,15 @@
                   <div class="image-upload-wrapper">
                     <img id="pkg-main-img-preview" src="" alt="Packaging Image Preview" class="image-preview-thumb">
                     <div class="upload-actions">
-                      <label class="upload-btn-label">
-                        <i class="ri-upload-cloud-2-line"></i> Upload Image File
-                        <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-main-img-url', 'pkg-main-img-preview')" hidden>
-                      </label>
+                      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <label class="upload-btn-label">
+                          <i class="ri-upload-cloud-2-line"></i> Upload Image File
+                          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-main-img-url', 'pkg-main-img-preview')" hidden>
+                        </label>
+                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('pkg-main-img-url', 'pkg-main-img-preview')">
+                          <i class="ri-crop-2-line"></i> Crop / Frame
+                        </button>
+                      </div>
                       <input type="text" id="pkg-main-img-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('pkg-main-img-preview').src=this.value">
                     </div>
                   </div>
@@ -1607,6 +1622,57 @@
           <button type="submit" class="btn btn-primary"><i class="ri-save-line"></i> Save User Account</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: INTERACTIVE IMAGE CROPPER & SLIDING WINDOW FRAMING TOOL
+       ========================================================================== -->
+  <div id="image-crop-modal" class="admin-modal-overlay">
+    <div class="admin-modal-dialog" style="max-width: 850px; width: 95%;">
+      <div class="admin-modal-header">
+        <h3><i class="ri-crop-2-line"></i> Image Framing & Sliding Focus Window</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('image-crop-modal')">&times;</button>
+      </div>
+      <div class="admin-modal-body" style="padding: 1.25rem;">
+        <p style="color: var(--color-text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+          Drag the sliding focus window to choose the exact visible portion of your image. Drag the corner handle or slider to adjust frame size.
+        </p>
+
+        <!-- Canvas Stage with Movable Sliding Crop Box -->
+        <div id="crop-stage-wrapper" style="position: relative; width: 100%; height: 380px; background: #0b0d12; border-radius: var(--radius-md); overflow: hidden; display: flex; align-items: center; justify-content: center; user-select: none;">
+          <img id="crop-stage-img" src="" alt="Crop Stage" style="max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; display: block; margin: 0 auto;">
+          
+          <!-- Translucent Dark Mask Outside Crop Box -->
+          <div id="crop-box" style="position: absolute; border: 2px dashed #DFB77D; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65); cursor: move; border-radius: 4px; box-sizing: border-box;">
+            <div style="position: absolute; top: 6px; left: 8px; background: rgba(0,0,0,0.75); color: #DFB77D; padding: 2px 6px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; pointer-events: none; text-transform: uppercase;">
+              Visible Window
+            </div>
+            <!-- Corner Resize Handle -->
+            <div id="crop-resize-handle" style="position: absolute; bottom: -7px; right: -7px; width: 16px; height: 16px; background: #DFB77D; border: 2px solid #000; border-radius: 50%; cursor: se-resize; z-index: 10;"></div>
+          </div>
+        </div>
+
+        <!-- Controls Bar Below Stage -->
+        <div style="margin-top: 1.25rem; background: var(--color-bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--color-border); display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <label style="font-weight: 600; font-size: 0.85rem; color: var(--color-gold-primary); margin: 0;">Window Size:</label>
+            <input type="range" id="crop-zoom-slider" min="20" max="100" value="80" style="width: 140px; cursor: pointer;" oninput="onCropZoomSliderChange(this.value)">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-weight: 600; font-size: 0.85rem; color: var(--color-gold-primary);">Quick Align:</span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="alignCropWindow('top')" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;"><i class="ri-align-top"></i> Top</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="alignCropWindow('center')" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;"><i class="ri-align-vertically"></i> Center</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="alignCropWindow('bottom')" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;"><i class="ri-align-bottom"></i> Bottom</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeAdminModal('image-crop-modal')">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="applyCropAndSave()"><i class="ri-crop-2-line"></i> Crop & Apply Window</button>
+      </div>
     </div>
   </div>
 
