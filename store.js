@@ -2,7 +2,7 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const STORAGE_KEY = 'tut_stones_data_v6';
+const STORAGE_KEY = 'tut_stones_data_v8';
 
 const DEFAULT_DATA = {
   // 1. Categories
@@ -818,6 +818,14 @@ class Store {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return DEFAULT_DATA;
       const parsed = JSON.parse(raw);
+      
+      // Auto-reconcile categories and stones if sub-categories are missing in stored state
+      const hasSubCats = Array.isArray(parsed.categories) && parsed.categories.some(c => c.parent);
+      if (!hasSubCats) {
+        parsed.categories = DEFAULT_DATA.categories;
+        parsed.stones = DEFAULT_DATA.stones;
+      }
+
       return { ...DEFAULT_DATA, ...parsed };
     } catch (e) {
       console.error('Failed to load store from localStorage', e);
