@@ -1679,32 +1679,42 @@ function initCropBoxPosition(savedPos) {
   const imgWidth = imgRect.width;
   const imgHeight = imgRect.height;
 
-  const defaultW = Math.round(imgWidth * 0.85);
-  const defaultH = Math.round(imgHeight * 0.65);
-
-  let focalX = 50;
-  let focalY = 30;
+  let lPct = 7.5;
+  let tPct = 17.5;
+  let wPct = 85;
+  let hPct = 65;
 
   if (savedPos && savedPos.includes('%')) {
     const parts = savedPos.split(' ');
-    if (parts.length >= 2) {
-      focalX = parseInt(parts[0]) || 50;
-      focalY = parseInt(parts[1]) || 30;
+    if (parts.length >= 4) {
+      lPct = parseFloat(parts[0]) || 0;
+      tPct = parseFloat(parts[1]) || 0;
+      wPct = parseFloat(parts[2]) || 85;
+      hPct = parseFloat(parts[3]) || 65;
+    } else if (parts.length >= 2) {
+      const focalX = parseFloat(parts[0]) || 50;
+      const focalY = parseFloat(parts[1]) || 30;
+      lPct = Math.max(0, focalX - 42.5);
+      tPct = Math.max(0, focalY - 32.5);
     }
   }
 
-  const initialLeft = imgLeft + Math.round((imgWidth * focalX / 100) - defaultW / 2);
-  const initialTop = imgTop + Math.round((imgHeight * focalY / 100) - defaultH / 2);
+  const boxW = Math.round((imgWidth * wPct) / 100);
+  const boxH = Math.round((imgHeight * hPct) / 100);
+  const boxL = imgLeft + Math.round((imgWidth * lPct) / 100);
+  const boxT = imgTop + Math.round((imgHeight * tPct) / 100);
 
-  const clampedLeft = Math.max(imgLeft, Math.min(imgLeft + imgWidth - defaultW, initialLeft));
-  const clampedTop = Math.max(imgTop, Math.min(imgTop + imgHeight - defaultH, initialTop));
+  const clampW = Math.min(imgWidth, Math.max(40, boxW));
+  const clampH = Math.min(imgHeight, Math.max(30, boxH));
+  const clampL = Math.max(imgLeft, Math.min(imgLeft + imgWidth - clampW, boxL));
+  const clampT = Math.max(imgTop, Math.min(imgTop + imgHeight - clampH, boxT));
 
-  cropBox.style.left = `${clampedLeft}px`;
-  cropBox.style.top = `${clampedTop}px`;
-  cropBox.style.width = `${defaultW}px`;
-  cropBox.style.height = `${defaultH}px`;
+  cropBox.style.width = `${clampW}px`;
+  cropBox.style.height = `${clampH}px`;
+  cropBox.style.left = `${clampL}px`;
+  cropBox.style.top = `${clampT}px`;
 
-  if (zoomSlider) zoomSlider.value = 85;
+  if (zoomSlider) zoomSlider.value = Math.round(wPct);
 }
 
 function applyCropAndSave() {
@@ -1742,23 +1752,34 @@ function applyCropAndSave() {
     return;
   }
 
-  // Create canvas to extract & scale the exact crop window region
-  // Decreasing crop window size -> sw, sh are smaller -> canvas scales up (ENLARGED / ZOOMED IN)
-  // Increasing crop window size -> sw, sh are larger -> canvas scales down (SHRUNK / ZOOMED OUT)
-  const canvas = document.createElement('canvas');
-  const MAX_TARGET_W = 1000;
-  let targetW = MAX_TARGET_W;
-  let targetH = Math.round(MAX_TARGET_W * (sh / sw));
+  // Calculate crop box position & size percentages relative to displayed image
+  const lPct = Math.round((relLeft / imgWidth) * 100);
+  const tPct = Math.round((relTop / imgHeight) * 100);
+  const wPct = Math.round((relWidth / imgWidth) * 100);
+  const hPct = Math.round((relHeight / imgHeight) * 100);
 
-  if (targetH > 1000) {
-    targetW = Math.round(1000 * (sw / sh));
-    targetH = 1000;
-  }
+  const cropStateStr = `${lPct}% ${tPct}% ${wPct}% ${hPct}%`;
+
+  // Draw crop box selection onto Canvas fitting standard feature card aspect ratio (1.727)
+  const canvas = document.createElement('canvas');
+  const CARD_ASPECT = 1.727;
+  const targetW = 880;
+  const targetH = Math.round(880 / CARD_ASPECT);
 
   canvas.width = targetW;
   canvas.height = targetH;
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
+
+  ctx.fillStyle = '#14161A';
+  ctx.fillRect(0, 0, targetW, targetH);
+
+  const fitScale = Math.min(targetW / sw, targetH / sh);
+  const fitW = Math.round(sw * fitScale);
+  const fitH = Math.round(sh * fitScale);
+  const offsetX = Math.round((targetW - fitW) / 2);
+  const offsetY = Math.round((targetH - fitH) / 2);
+
+  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, offsetX, offsetY, fitW, fitH);
 
   const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
@@ -1771,6 +1792,9 @@ function applyCropAndSave() {
     targetInput.value = croppedDataUrl;
     targetInput.dataset.rawUrl = activeCropTarget.rawUrl;
   }
+  if (posInput) {
+    posInput.value = cropStateStr;
+  }
   if (rawInput) {
     rawInput.value = activeCropTarget.rawUrl;
   }
@@ -1782,7 +1806,7 @@ function applyCropAndSave() {
   }
 
   closeAdminModal('image-crop-modal');
-  showToast('Image view scaled and framed successfully! Remember to click Save Page.');
+  showToast('Image view framed and saved successfully! Remember to click Save Page.');
 }
 
 function alignCropWindow(align) {
