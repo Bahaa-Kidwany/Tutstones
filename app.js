@@ -187,9 +187,17 @@ function renderHomePageContent() {
 
     // Homepage About Slider Images Hydration
     const aboutSlider = aboutSection.querySelector('.about-slider');
-    if (aboutSlider && hp.aboutSliderImages && hp.aboutSliderImages.length > 0) {
-      let slidesHTML = hp.aboutSliderImages.map((img, idx) => `
-        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url}');"></div>
+    if (aboutSlider) {
+      const defaultImages = [
+        { id: 'h-about-1', url: 'assets/images/Factory/1.jpg' },
+        { id: 'h-about-2', url: 'assets/images/Factory/2.JPG' }
+      ];
+      const sliderImages = (hp.aboutSliderImages && hp.aboutSliderImages.length > 0)
+        ? hp.aboutSliderImages
+        : defaultImages;
+
+      let slidesHTML = sliderImages.map((img, idx) => `
+        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/Factory/1.jpg'}');"></div>
       `).join('');
 
       aboutSlider.innerHTML = `

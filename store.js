@@ -293,12 +293,6 @@ const DEFAULT_DATA = {
     ]
   },
 
-  // 9b. Hero Slider Data
-  heroSlides: [
-    { id: 'slide-1', image: 'assets/images/pharaonic_hero_bg.png', title: 'Premium Natural Stone <span>from Egypt to Your Market.</span>', slogan: 'We specialize in importing high quality Egyptian marble and granite with a wide selection of colors and finishes cut to size with competitive prices.', badge: 'Egyptian Heritage & Excellence', btnText: 'Explore Materials', btnLink: 'materials.html' },
-    { id: 'slide-2', image: 'assets/images/eastern_mosaic_hero_bg.png', title: 'A Legacy of <span>Pure Stone Artistry</span>', slogan: 'Sourcing rare natural Egyptian marble and granite for international projects worldwide.', badge: 'Export Quality Control', btnText: 'View Factory', btnLink: 'factory.html' }
-  ],
-
   // 10. About Us Page Data
   aboutPage: {
     bannerTag: 'HERITAGE & CRAFTSMANSHIP',
@@ -935,16 +929,6 @@ class Store {
 
   saveFooterData(data) {
     this.data.footerData = { ...this.getFooterData(), ...data };
-    this.save();
-  }
-
-  // --- Hero Slides Data ---
-  getHeroSlides() {
-    return this.data.heroSlides || DEFAULT_DATA.heroSlides;
-  }
-
-  saveHeroSlides(slides) {
-    this.data.heroSlides = slides;
     this.save();
   }
 }
