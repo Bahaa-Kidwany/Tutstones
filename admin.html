@@ -549,12 +549,13 @@
                           <i class="ri-upload-cloud-2-line"></i> Upload Image File
                           <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'abp-main-img-url', 'abp-main-img-preview')" hidden>
                         </label>
-                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('abp-main-img-url', 'abp-main-img-preview', 'abp-main-img-pos')">
+                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('abp-main-img-url', 'abp-main-img-preview', 'abp-main-img-pos', 'abp-main-raw-url')">
                           <i class="ri-crop-2-line"></i> Crop / Frame View
                         </button>
                       </div>
                       <input type="text" id="abp-main-img-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('abp-main-img-preview').src=this.value">
                       <input type="hidden" id="abp-main-img-pos" value="50% 10%">
+                      <input type="hidden" id="abp-main-raw-url" value="">
                     </div>
                   </div>
                 </div>
@@ -669,12 +670,13 @@
                           <i class="ri-upload-cloud-2-line"></i> Upload Image File
                           <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-main-img-url', 'fac-main-img-preview')" hidden>
                         </label>
-                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-main-img-url', 'fac-main-img-preview', 'fac-main-img-pos')">
+                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-main-img-url', 'fac-main-img-preview', 'fac-main-img-pos', 'fac-main-raw-url')">
                           <i class="ri-crop-2-line"></i> Crop / Frame View
                         </button>
                       </div>
                       <input type="text" id="fac-main-img-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('fac-main-img-preview').src=this.value">
                       <input type="hidden" id="fac-main-img-pos" value="50% 10%">
+                      <input type="hidden" id="fac-main-raw-url" value="">
                     </div>
                   </div>
                 </div>
@@ -788,12 +790,13 @@
                           <i class="ri-upload-cloud-2-line"></i> Upload Image File
                           <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-main-img-url', 'pkg-main-img-preview')" hidden>
                         </label>
-                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('pkg-main-img-url', 'pkg-main-img-preview', 'pkg-main-img-pos')">
+                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('pkg-main-img-url', 'pkg-main-img-preview', 'pkg-main-img-pos', 'pkg-main-raw-url')">
                           <i class="ri-crop-2-line"></i> Crop / Frame View
                         </button>
                       </div>
                       <input type="text" id="pkg-main-img-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('pkg-main-img-preview').src=this.value">
                       <input type="hidden" id="pkg-main-img-pos" value="50% 10%">
+                      <input type="hidden" id="pkg-main-raw-url" value="">
                     </div>
                   </div>
                 </div>

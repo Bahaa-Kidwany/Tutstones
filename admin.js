@@ -384,19 +384,20 @@ function renderHpBoxes() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="hp-box-img-preview-${idx}" src="${box.image || ''}" class="image-preview-thumb" style="${box.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${box.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
+          <img id="hp-box-img-preview-${idx}" src="${box.image || ''}" class="image-preview-thumb" style="${box.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}', 'hp-box-img-pos-${idx}')">
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}', 'hp-box-img-pos-${idx}', 'hp-box-raw-url-${idx}')">
                 <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="hp-box-img-url-${idx}" class="form-control" value="${box.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('hp-box-img-preview-${idx}', this.value)">
             <input type="hidden" id="hp-box-img-pos-${idx}" value="${box.imagePosition || '50% 10%'}">
+            <input type="hidden" id="hp-box-raw-url-${idx}" value="${box.rawImage || box.image || ''}">
           </div>
         </div>
       </div>
@@ -428,6 +429,7 @@ function saveHomePageForm() {
     title: document.getElementById(`hp-box-title-${idx}`)?.value || box.title,
     desc: document.getElementById(`hp-box-desc-${idx}`)?.value || box.desc,
     image: document.getElementById(`hp-box-img-url-${idx}`)?.value || box.image,
+    rawImage: document.getElementById(`hp-box-raw-url-${idx}`)?.value || box.rawImage || box.image,
     imagePosition: document.getElementById(`hp-box-img-pos-${idx}`)?.value || box.imagePosition || '50% 10%',
     btnText: document.getElementById(`hp-box-btntext-${idx}`)?.value || box.btnText,
     btnLink: document.getElementById(`hp-box-btnlink-${idx}`)?.value || box.btnLink
@@ -497,19 +499,20 @@ function renderAbpCards() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="abp-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${card.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
+          <img id="abp-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'abp-card-img-url-${idx}', 'abp-card-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('abp-card-img-url-${idx}', 'abp-card-img-preview-${idx}', 'abp-card-img-pos-${idx}')">
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('abp-card-img-url-${idx}', 'abp-card-img-preview-${idx}', 'abp-card-img-pos-${idx}', 'abp-card-raw-url-${idx}')">
                 <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="abp-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('abp-card-img-preview-${idx}', this.value)">
             <input type="hidden" id="abp-card-img-pos-${idx}" value="${card.imagePosition || '50% 10%'}">
+            <input type="hidden" id="abp-card-raw-url-${idx}" value="${card.rawImage || card.image || ''}">
           </div>
         </div>
       </div>
@@ -593,19 +596,20 @@ function renderFacCards() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="fac-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${card.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
+          <img id="fac-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-card-img-url-${idx}', 'fac-card-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-card-img-url-${idx}', 'fac-card-img-preview-${idx}', 'fac-card-img-pos-${idx}')">
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-card-img-url-${idx}', 'fac-card-img-preview-${idx}', 'fac-card-img-pos-${idx}', 'fac-card-raw-url-${idx}')">
                 <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="fac-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('fac-card-img-preview-${idx}', this.value)">
             <input type="hidden" id="fac-card-img-pos-${idx}" value="${card.imagePosition || '50% 10%'}">
+            <input type="hidden" id="fac-card-raw-url-${idx}" value="${card.rawImage || card.image || ''}">
           </div>
         </div>
       </div>
@@ -688,19 +692,20 @@ function renderPkgCards() {
       <div class="form-group">
         <label>Card Image (Optional)</label>
         <div class="image-upload-wrapper">
-          <img id="pkg-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'} object-fit: cover; object-position: ${card.imagePosition || '50% 10%'};" onerror="this.style.display='none'">
+          <img id="pkg-card-img-preview-${idx}" src="${card.image || ''}" class="image-preview-thumb" style="${card.image ? 'display: block;' : 'display: none;'}" onerror="this.style.display='none'">
           <div class="upload-actions">
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
                 <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-card-img-url-${idx}', 'pkg-card-img-preview-${idx}')" hidden>
               </label>
-              <button type="button" class="crop-btn-label" onclick="openImageCropModal('pkg-card-img-url-${idx}', 'pkg-card-img-preview-${idx}', 'pkg-card-img-pos-${idx}')">
+              <button type="button" class="crop-btn-label" onclick="openImageCropModal('pkg-card-img-url-${idx}', 'pkg-card-img-preview-${idx}', 'pkg-card-img-pos-${idx}', 'pkg-card-raw-url-${idx}')">
                 <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
             <input type="text" id="pkg-card-img-url-${idx}" class="form-control" value="${card.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('pkg-card-img-preview-${idx}', this.value)">
             <input type="hidden" id="pkg-card-img-pos-${idx}" value="${card.imagePosition || '50% 10%'}">
+            <input type="hidden" id="pkg-card-raw-url-${idx}" value="${card.rawImage || card.image || ''}">
           </div>
         </div>
       </div>
@@ -980,7 +985,14 @@ function handleImageFileUpload(event, targetInputId, previewImgId) {
       const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
 
       const inputElem = document.getElementById(targetInputId);
-      if (inputElem) inputElem.value = compressedDataUrl;
+      if (inputElem) {
+        inputElem.value = compressedDataUrl;
+        inputElem.dataset.rawUrl = compressedDataUrl;
+      }
+
+      const rawInputId = targetInputId.replace('img-url', 'raw-url');
+      const rawInputElem = document.getElementById(rawInputId);
+      if (rawInputElem) rawInputElem.value = compressedDataUrl;
       
       if (previewImgId) {
         const imgElem = document.getElementById(previewImgId);
@@ -1605,18 +1617,25 @@ let isResizingCropBox = false;
 let dragStartX = 0, dragStartY = 0;
 let cropBoxStartLeft = 0, cropBoxStartTop = 0, cropBoxStartWidth = 0, cropBoxStartHeight = 0;
 
-function openImageCropModal(targetInputId, previewImgId, posInputId) {
+function openImageCropModal(targetInputId, previewImgId, posInputId, rawInputId) {
   const inputElem = document.getElementById(targetInputId);
   const previewElem = document.getElementById(previewImgId);
   const posElem = posInputId ? document.getElementById(posInputId) : null;
+  const rawInputElem = rawInputId ? document.getElementById(rawInputId) : null;
   
-  let imageUrl = inputElem?.value || previewElem?.src || '';
+  let imageUrl = rawInputElem?.value || inputElem?.dataset?.rawUrl || inputElem?.value || previewElem?.src || '';
   if (!imageUrl || imageUrl.includes('undefined') || imageUrl.trim() === '') {
     alert('Please enter an Image URL or Upload an image file first to frame/crop it.');
     return;
   }
 
-  activeCropTarget = { inputId: targetInputId, previewId: previewImgId, posInputId: posInputId, rawUrl: imageUrl };
+  activeCropTarget = { 
+    inputId: targetInputId, 
+    previewId: previewImgId, 
+    posInputId: posInputId,
+    rawInputId: rawInputId,
+    rawUrl: imageUrl 
+  };
 
   const stageImg = document.getElementById('crop-stage-img');
   const cropBox = document.getElementById('crop-box');
@@ -1705,33 +1724,65 @@ function applyCropAndSave() {
   const imgWidth = imgRect.width;
   const imgHeight = imgRect.height;
 
-  const cropCenterX = cropBox.offsetLeft + cropBox.offsetWidth / 2;
-  const cropCenterY = cropBox.offsetTop + cropBox.offsetHeight / 2;
+  const scaleX = cropStageNaturalImg.naturalWidth / imgWidth;
+  const scaleY = cropStageNaturalImg.naturalHeight / imgHeight;
 
-  let focalX = Math.round(((cropCenterX - imgLeft) / imgWidth) * 100);
-  let focalY = Math.round(((cropCenterY - imgTop) / imgHeight) * 100);
+  const relLeft = cropBox.offsetLeft - imgLeft;
+  const relTop = cropBox.offsetTop - imgTop;
+  const relWidth = cropBox.offsetWidth;
+  const relHeight = cropBox.offsetHeight;
 
-  focalX = Math.max(0, Math.min(100, focalX));
-  focalY = Math.max(0, Math.min(100, focalY));
+  let sx = Math.max(0, Math.round(relLeft * scaleX));
+  let sy = Math.max(0, Math.round(relTop * scaleY));
+  let sw = Math.min(cropStageNaturalImg.naturalWidth - sx, Math.round(relWidth * scaleX));
+  let sh = Math.min(cropStageNaturalImg.naturalHeight - sy, Math.round(relHeight * scaleY));
 
-  const objectPosStr = `${focalX}% ${focalY}%`;
+  if (sw <= 0 || sh <= 0) {
+    showToast('Invalid crop window selection.', 'error');
+    return;
+  }
+
+  // Create canvas to extract & scale the exact crop window region
+  // Decreasing crop window size -> sw, sh are smaller -> canvas scales up (ENLARGED / ZOOMED IN)
+  // Increasing crop window size -> sw, sh are larger -> canvas scales down (SHRUNK / ZOOMED OUT)
+  const canvas = document.createElement('canvas');
+  const MAX_TARGET_W = 1000;
+  let targetW = MAX_TARGET_W;
+  let targetH = Math.round(MAX_TARGET_W * (sh / sw));
+
+  if (targetH > 1000) {
+    targetW = Math.round(1000 * (sw / sh));
+    targetH = 1000;
+  }
+
+  canvas.width = targetW;
+  canvas.height = targetH;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
+
+  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
   const targetInput = document.getElementById(activeCropTarget.inputId);
   const targetPreview = document.getElementById(activeCropTarget.previewId);
   const posInput = activeCropTarget.posInputId ? document.getElementById(activeCropTarget.posInputId) : null;
+  const rawInput = activeCropTarget.rawInputId ? document.getElementById(activeCropTarget.rawInputId) : null;
 
-  if (targetInput) targetInput.value = activeCropTarget.rawUrl;
-  if (posInput) posInput.value = objectPosStr;
+  if (targetInput) {
+    targetInput.value = croppedDataUrl;
+    targetInput.dataset.rawUrl = activeCropTarget.rawUrl;
+  }
+  if (rawInput) {
+    rawInput.value = activeCropTarget.rawUrl;
+  }
 
   if (targetPreview) {
-    targetPreview.src = activeCropTarget.rawUrl;
+    targetPreview.src = croppedDataUrl;
     targetPreview.style.objectFit = 'cover';
-    targetPreview.style.objectPosition = objectPosStr;
     targetPreview.style.display = 'block';
   }
 
   closeAdminModal('image-crop-modal');
-  showToast(`Focal view set to (${objectPosStr})! Original image preserved. Remember to click Save Page.`);
+  showToast('Image view scaled and framed successfully! Remember to click Save Page.');
 }
 
 function alignCropWindow(align) {
