@@ -192,14 +192,9 @@ function renderHomePageContent() {
         <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url}');"></div>
       `).join('');
 
-      let dotsHTML = hp.aboutSliderImages.map((_, idx) => `
-        <div class="slider-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>
-      `).join('');
-
       aboutSlider.innerHTML = `
         ${slidesHTML}
         <div class="about-slider-controls">
-          <div class="slider-dots about-dots">${dotsHTML}</div>
           <div class="slider-arrows about-arrows">
             <button class="slider-arrow prev" aria-label="Previous Slide"><i class="ri-arrow-left-s-line"></i></button>
             <button class="slider-arrow next" aria-label="Next Slide"><i class="ri-arrow-right-s-line"></i></button>
