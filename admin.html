@@ -1673,8 +1673,9 @@
             <input type="range" id="crop-zoom-slider" min="20" max="100" value="80" style="width: 140px; cursor: pointer;" oninput="onCropZoomSliderChange(this.value)">
           </div>
 
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-weight: 600; font-size: 0.85rem; color: var(--color-gold-primary);">Quick Align:</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="autoFitCropWindow()" style="padding: 0.3rem 0.65rem; font-size: 0.8rem; color: #DFB77D; border-color: #DFB77D;"><i class="ri-aspect-ratio-line"></i> Auto Fit Full Image</button>
+            <span style="font-weight: 600; font-size: 0.85rem; color: var(--color-gold-primary); margin-left: 0.5rem;">Align:</span>
             <button type="button" class="btn btn-outline btn-sm" onclick="alignCropWindow('top')" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;"><i class="ri-align-top"></i> Top</button>
             <button type="button" class="btn btn-outline btn-sm" onclick="alignCropWindow('center')" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;"><i class="ri-align-vertically"></i> Center</button>
             <button type="button" class="btn btn-outline btn-sm" onclick="alignCropWindow('bottom')" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;"><i class="ri-align-bottom"></i> Bottom</button>

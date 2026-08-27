@@ -1717,6 +1717,31 @@ function initCropBoxPosition(savedPos) {
   if (zoomSlider) zoomSlider.value = Math.round(wPct);
 }
 
+function autoFitCropWindow() {
+  const stageWrapper = document.getElementById('crop-stage-wrapper');
+  const stageImg = document.getElementById('crop-stage-img');
+  const cropBox = document.getElementById('crop-box');
+  const zoomSlider = document.getElementById('crop-zoom-slider');
+
+  if (!stageWrapper || !stageImg || !cropBox) return;
+
+  const imgRect = stageImg.getBoundingClientRect();
+  const wrapperRect = stageWrapper.getBoundingClientRect();
+
+  const imgLeft = imgRect.left - wrapperRect.left;
+  const imgTop = imgRect.top - wrapperRect.top;
+  const imgWidth = imgRect.width;
+  const imgHeight = imgRect.height;
+
+  cropBox.style.left = `${imgLeft}px`;
+  cropBox.style.top = `${imgTop}px`;
+  cropBox.style.width = `${imgWidth}px`;
+  cropBox.style.height = `${imgHeight}px`;
+
+  if (zoomSlider) zoomSlider.value = 100;
+  showToast('Crop window auto-fitted to full image bounds.');
+}
+
 function applyCropAndSave() {
   if (!cropStageNaturalImg || !activeCropTarget) return;
 
