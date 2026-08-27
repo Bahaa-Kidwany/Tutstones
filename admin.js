@@ -1733,13 +1733,34 @@ function autoFitCropWindow() {
   const imgWidth = imgRect.width;
   const imgHeight = imgRect.height;
 
-  cropBox.style.left = `${imgLeft}px`;
-  cropBox.style.top = `${imgTop}px`;
-  cropBox.style.width = `${imgWidth}px`;
-  cropBox.style.height = `${imgHeight}px`;
+  const CARD_ASPECT = 1.727; // Card aspect ratio (380 / 220)
+  const imgAspect = imgWidth / imgHeight;
 
-  if (zoomSlider) zoomSlider.value = 100;
-  showToast('Crop window auto-fitted to full image bounds.');
+  let boxW, boxH, boxL, boxT;
+
+  if (imgAspect > CARD_ASPECT) {
+    boxH = imgHeight;
+    boxW = Math.round(imgHeight * CARD_ASPECT);
+    boxT = imgTop;
+    boxL = imgLeft + Math.round((imgWidth - boxW) / 2);
+  } else {
+    boxW = imgWidth;
+    boxH = Math.round(imgWidth / CARD_ASPECT);
+    boxL = imgLeft;
+    boxT = imgTop + Math.round((imgHeight - boxH) / 2);
+  }
+
+  cropBox.style.left = `${boxL}px`;
+  cropBox.style.top = `${boxT}px`;
+  cropBox.style.width = `${boxW}px`;
+  cropBox.style.height = `${boxH}px`;
+
+  if (zoomSlider) {
+    const wPct = Math.round((boxW / imgWidth) * 100);
+    zoomSlider.value = wPct;
+  }
+
+  showToast('Crop window auto-fitted to card aspect ratio (No gaps).');
 }
 
 function applyCropAndSave() {
@@ -1785,7 +1806,7 @@ function applyCropAndSave() {
 
   const cropStateStr = `${lPct}% ${tPct}% ${wPct}% ${hPct}%`;
 
-  // Draw crop box selection onto Canvas fitting standard feature card aspect ratio (1.727)
+  // Draw crop box selection onto Canvas filling card window completely (Cover fill - zero gaps)
   const canvas = document.createElement('canvas');
   const CARD_ASPECT = 1.727;
   const targetW = 880;
@@ -1795,16 +1816,8 @@ function applyCropAndSave() {
   canvas.height = targetH;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#14161A';
-  ctx.fillRect(0, 0, targetW, targetH);
-
-  const fitScale = Math.min(targetW / sw, targetH / sh);
-  const fitW = Math.round(sw * fitScale);
-  const fitH = Math.round(sh * fitScale);
-  const offsetX = Math.round((targetW - fitW) / 2);
-  const offsetY = Math.round((targetH - fitH) / 2);
-
-  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, offsetX, offsetY, fitW, fitH);
+  // Fill canvas completely with selected image region (cover fill - no gaps or black spaces)
+  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
 
   const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
