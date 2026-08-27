@@ -438,8 +438,10 @@ function saveHomePageForm() {
     boxes: boxes
   };
 
-  TutStonesStore.saveHomePage(updatedHp);
-  showToast('Homepage settings saved successfully!');
+  const res = TutStonesStore.saveHomePage(updatedHp);
+  if (res !== false) {
+    showToast('Homepage settings saved successfully!');
+  }
 }
 
 // --- 9b. About Us Page Manager ---
@@ -527,8 +529,10 @@ function saveAboutPageForm() {
     bottomCards: cards
   };
 
-  TutStonesStore.saveAboutPage(updatedAb);
-  showToast('About Us Page settings saved successfully!');
+  const res = TutStonesStore.saveAboutPage(updatedAb);
+  if (res !== false) {
+    showToast('About Us Page settings saved successfully!');
+  }
 }
 
 // --- 9c. Factory Page Manager ---
@@ -614,8 +618,10 @@ function saveFactoryPageForm() {
     cards: cards
   };
 
-  TutStonesStore.saveFactoryPage(updatedFac);
-  showToast('Factory Page settings saved successfully!');
+  const res = TutStonesStore.saveFactoryPage(updatedFac);
+  if (res !== false) {
+    showToast('Factory Page settings saved successfully!');
+  }
 }
 
 // --- 9d. Packaging Page Manager ---
@@ -701,8 +707,10 @@ function savePackagingPageForm() {
     cards: cards
   };
 
-  TutStonesStore.savePackagingPage(updatedPkg);
-  showToast('Packaging Page settings saved successfully!');
+  const res = TutStonesStore.savePackagingPage(updatedPkg);
+  if (res !== false) {
+    showToast('Packaging Page settings saved successfully!');
+  }
 }
 
 // --- 9e. Contact Page Manager ---
@@ -755,8 +763,10 @@ function saveContactPageForm() {
     whatsappNumber: document.getElementById('cnt-whatsapp-num')?.value || cnt.whatsappNumber
   };
 
-  TutStonesStore.saveContactPage(updatedCnt);
-  showToast('Contact Page settings saved successfully!');
+  const res = TutStonesStore.saveContactPage(updatedCnt);
+  if (res !== false) {
+    showToast('Contact Page settings saved successfully!');
+  }
 }
 
 // --- 9f. Footer Manager ---
@@ -787,8 +797,10 @@ function saveFooterForm() {
     hours: document.getElementById('ftr-hours')?.value || ftr.hours
   };
 
-  TutStonesStore.saveFooterData(updatedFtr);
-  showToast('Footer settings saved successfully!');
+  const res = TutStonesStore.saveFooterData(updatedFtr);
+  if (res !== false) {
+    showToast('Footer settings saved successfully!');
+  }
 }
 
 /* ==========================================================================
@@ -908,18 +920,65 @@ function handleImageFileUpload(event, targetInputId, previewImgId) {
 
   const reader = new FileReader();
   reader.onload = function(e) {
-    const dataUrl = e.target.result;
-    const inputElem = document.getElementById(targetInputId);
-    if (inputElem) inputElem.value = dataUrl;
+    const rawDataUrl = e.target.result;
     
-    if (previewImgId) {
-      const imgElem = document.getElementById(previewImgId);
-      if (imgElem) {
-        imgElem.src = dataUrl;
-        imgElem.style.display = 'block';
+    // Auto-compress image using HTML5 Canvas to prevent browser localStorage quota overflow
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 1200;
+      const MAX_HEIGHT = 1200;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width = Math.round((width * MAX_HEIGHT) / height);
+          height = MAX_HEIGHT;
+        }
       }
-    }
-    showToast('Image uploaded and converted successfully!');
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Compress to lightweight JPEG Data URL (quality: 0.8)
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+      const inputElem = document.getElementById(targetInputId);
+      if (inputElem) inputElem.value = compressedDataUrl;
+      
+      if (previewImgId) {
+        const imgElem = document.getElementById(previewImgId);
+        if (imgElem) {
+          imgElem.src = compressedDataUrl;
+          imgElem.style.display = 'block';
+        }
+      }
+      showToast('Image uploaded and optimized successfully!');
+    };
+
+    img.onerror = function() {
+      // Fallback if image object fails
+      const inputElem = document.getElementById(targetInputId);
+      if (inputElem) inputElem.value = rawDataUrl;
+      if (previewImgId) {
+        const imgElem = document.getElementById(previewImgId);
+        if (imgElem) {
+          imgElem.src = rawDataUrl;
+          imgElem.style.display = 'block';
+        }
+      }
+      showToast('Image uploaded successfully!');
+    };
+
+    img.src = rawDataUrl;
   };
   reader.readAsDataURL(file);
 }

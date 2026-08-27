@@ -463,8 +463,13 @@ class Store {
   save() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+      return true;
     } catch (e) {
       console.error('Failed to save to localStorage', e);
+      if (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014) {
+        alert('Warning: Local browser storage limit exceeded! Please use smaller image files or direct image URLs so your changes can be saved permanently.');
+      }
+      return false;
     }
   }
 
@@ -879,7 +884,7 @@ class Store {
 
   saveHomePage(data) {
     this.data.homePage = { ...this.getHomePage(), ...data };
-    this.save();
+    return this.save();
   }
 
   // --- About Us Page Data ---
@@ -889,7 +894,7 @@ class Store {
 
   saveAboutPage(data) {
     this.data.aboutPage = { ...this.getAboutPage(), ...data };
-    this.save();
+    return this.save();
   }
 
   // --- Factory Page Data ---
@@ -899,7 +904,7 @@ class Store {
 
   saveFactoryPage(data) {
     this.data.factoryPage = { ...this.getFactoryPage(), ...data };
-    this.save();
+    return this.save();
   }
 
   // --- Packaging Page Data ---
@@ -909,7 +914,7 @@ class Store {
 
   savePackagingPage(data) {
     this.data.packagingPage = { ...this.getPackagingPage(), ...data };
-    this.save();
+    return this.save();
   }
 
   // --- Contact Page Data ---
@@ -919,7 +924,7 @@ class Store {
 
   saveContactPage(data) {
     this.data.contactPage = { ...this.getContactPage(), ...data };
-    this.save();
+    return this.save();
   }
 
   // --- Footer Data ---
@@ -929,7 +934,7 @@ class Store {
 
   saveFooterData(data) {
     this.data.footerData = { ...this.getFooterData(), ...data };
-    this.save();
+    return this.save();
   }
 }
 
