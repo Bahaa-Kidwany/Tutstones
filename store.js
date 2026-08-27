@@ -2,7 +2,7 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const STORAGE_KEY = 'tut_stones_data_v9';
+const STORAGE_KEY = 'tut_stones_data_v10';
 
 const DEFAULT_DATA = {
   // 1. Categories
@@ -816,20 +816,21 @@ class Store {
   loadData() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return DEFAULT_DATA;
+      if (!raw) return JSON.parse(JSON.stringify(DEFAULT_DATA));
       const parsed = JSON.parse(raw);
       
-      // Auto-reconcile categories and stones if sub-categories are missing in stored state
       const hasSubCats = Array.isArray(parsed.categories) && parsed.categories.some(c => c.parent);
-      if (!hasSubCats) {
-        parsed.categories = DEFAULT_DATA.categories;
-        parsed.stones = DEFAULT_DATA.stones;
+      const hasValidStones = Array.isArray(parsed.stones) && parsed.stones.length >= 10;
+
+      if (!hasSubCats || !hasValidStones) {
+        parsed.categories = JSON.parse(JSON.stringify(DEFAULT_DATA.categories));
+        parsed.stones = JSON.parse(JSON.stringify(DEFAULT_DATA.stones));
       }
 
       return { ...DEFAULT_DATA, ...parsed };
     } catch (e) {
       console.error('Failed to load store from localStorage', e);
-      return DEFAULT_DATA;
+      return JSON.parse(JSON.stringify(DEFAULT_DATA));
     }
   }
 
@@ -951,7 +952,11 @@ class Store {
 
   // --- Categories ---
   getCategories() {
-    return this.data.categories || [];
+    if (!this.data.categories || !Array.isArray(this.data.categories) || this.data.categories.length < 2) {
+      this.data.categories = JSON.parse(JSON.stringify(DEFAULT_DATA.categories));
+      this.save();
+    }
+    return this.data.categories;
   }
 
   addCategory(cat) {
@@ -999,27 +1004,22 @@ class Store {
     this.save();
   }
 
-      this.data.heroSlides = this.data.heroSlides.filter(s => s.id !== id);
+  deleteHeroSlide(id) {
+    this.data.heroSlides = this.data.heroSlides.filter(s => s.id !== id);
     this.save();
   }
 
   // --- Stone Catalogue ---
   getStones() {
-    const list = this.data.stones || [];
-    return list.map(s => {
-      if (s && s.desc) {
-        s.desc = s.desc.replace(/\s*Features full slab veining \(A\) and precision edge view \(B\)\./gi, '').trim();
-      }
-      return s;
-    });
+    if (!this.data.stones || !Array.isArray(this.data.stones) || this.data.stones.length === 0) {
+      this.data.stones = JSON.parse(JSON.stringify(DEFAULT_DATA.stones));
+      this.save();
+    }
+    return this.data.stones;
   }
 
   getStone(id) {
-    const stone = (this.data.stones || []).find(s => s.id === id);
-    if (stone && stone.desc) {
-      stone.desc = stone.desc.replace(/\s*Features full slab veining \(A\) and precision edge view \(B\)\./gi, '').trim();
-    }
-    return stone;
+    return this.data.stones.find(s => s.id === id);
   }
 
   saveStone(stone) {
