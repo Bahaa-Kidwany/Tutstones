@@ -2,7 +2,37 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const STORAGE_KEY = 'tut_stones_data_v10';
+const CURRENT_BUILD_VERSION = '2026.08.28.v12';
+const STORAGE_KEY = 'tut_stones_data_v12';
+
+// Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
+(function autoEnforceLatestVersion() {
+  try {
+    const lastBuild = localStorage.getItem('tut_app_build_version');
+    if (lastBuild !== CURRENT_BUILD_VERSION) {
+      // Purge stale tut_stones localStorage keys
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('tut_stones') || key.startsWith('tut_app')) {
+          localStorage.removeItem(key);
+        }
+      });
+      // Purge Cache Storage if active
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        });
+      }
+      localStorage.setItem('tut_app_build_version', CURRENT_BUILD_VERSION);
+      // Auto reload once seamlessly if build updated
+      if (!sessionStorage.getItem('tut_auto_reloaded_' + CURRENT_BUILD_VERSION)) {
+        sessionStorage.setItem('tut_auto_reloaded_' + CURRENT_BUILD_VERSION, 'true');
+        window.location.reload(true);
+      }
+    }
+  } catch (e) {
+    console.warn('Auto version enforcement:', e);
+  }
+})();
 
 const DEFAULT_DATA = {
   // 1. Categories
