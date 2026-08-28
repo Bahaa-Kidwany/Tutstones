@@ -2,8 +2,8 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const CURRENT_BUILD_VERSION = '2026.08.28.v16';
-const STORAGE_KEY = 'tut_stones_data_v16';
+const CURRENT_BUILD_VERSION = '2026.08.28.v18';
+const STORAGE_KEY = 'tut_stones_data_v18';
 
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
@@ -61,17 +61,9 @@ const DEFAULT_DATA = {
         "slug": "acid-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 1,
         "desc": "Etched with natural acids to create a subtle textured, non-reflective antique surface with enhanced slip resistance.",
         "icon": "ri-contrast-drop-line"
-    },
-    {
-        "id": "paving-tumbled-finish",
-        "name": "Paving Tumbled Finish",
-        "slug": "paving-tumbled-finish",
-        "parent": "marble",
-        "isParent": false,
-        "desc": "Durable stone pavers with rounded tumbled edges, perfect for driveways, courtyards, and garden pathways.",
-        "icon": "ri-road-map-line"
     },
     {
         "id": "brushed-finish",
@@ -79,6 +71,7 @@ const DEFAULT_DATA = {
         "slug": "brushed-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 2,
         "desc": "Softly textured surface achieved by wire brushing, highlighting the natural stone grain with a smooth satin feel.",
         "icon": "ri-brush-line"
     },
@@ -88,6 +81,7 @@ const DEFAULT_DATA = {
         "slug": "tumbled-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 3,
         "desc": "Rustic weathered finish with rounded edges and soft worn texture, evoking ancient Mediterranean stone pavements.",
         "icon": "ri-treasure-map-line"
     },
@@ -97,6 +91,7 @@ const DEFAULT_DATA = {
         "slug": "split-face-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 4,
         "desc": "Raw hand-split textured surface showcasing natural crystalline fractures, ideal for accent walls and exterior facades.",
         "icon": "ri-layout-masonry-line"
     },
@@ -106,6 +101,7 @@ const DEFAULT_DATA = {
         "slug": "bush-hummered-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 5,
         "desc": "Uniformly pitted rough texture created by pneumatic chiseling, giving maximum anti-slip protection for outdoor areas.",
         "icon": "ri-hammer-line"
     },
@@ -115,6 +111,7 @@ const DEFAULT_DATA = {
         "slug": "acid-brushed-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 6,
         "desc": "Combined acid etching and wire brushing for a soft tactile touch with deep color depth and weathered elegance.",
         "icon": "ri-drop-line"
     },
@@ -124,6 +121,7 @@ const DEFAULT_DATA = {
         "slug": "acid-tumbled-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 7,
         "desc": "Acid washed and tumbled for distressed antique edges, rustic texture, and rich stone character.",
         "icon": "ri-sparkles-line"
     },
@@ -133,6 +131,7 @@ const DEFAULT_DATA = {
         "slug": "brushed-sand-blasted-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 8,
         "desc": "High-pressure sand blasting followed by wire brushing for a silky non-slip matte architectural surface.",
         "icon": "ri-sun-line"
     },
@@ -142,8 +141,19 @@ const DEFAULT_DATA = {
         "slug": "bush-hummered-brushed-finish",
         "parent": "marble",
         "isParent": false,
+        "order": 9,
         "desc": "Chiseled bush-hammered texture smoothed with wire brushing for high-end exterior cladding and paving.",
         "icon": "ri-tools-line"
+    },
+    {
+        "id": "paving-tumbled-finish",
+        "name": "Paving Tumbled Finish",
+        "slug": "paving-tumbled-finish",
+        "parent": "marble",
+        "isParent": false,
+        "order": 10,
+        "desc": "Durable stone pavers with rounded tumbled edges, perfect for driveways, courtyards, and garden pathways.",
+        "icon": "ri-road-map-line"
     }
 ],
 

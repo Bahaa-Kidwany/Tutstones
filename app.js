@@ -907,6 +907,7 @@ function initCatalogue() {
     if (showSubBarForParent) {
       const parentObj = primaryCats.find(p => p.id === showSubBarForParent);
       const relevantSubCats = subCats.filter(s => s.parent === showSubBarForParent);
+      relevantSubCats.sort((a, b) => (a.order || 99) - (b.order || 99));
 
       if (relevantSubCats.length > 0) {
         let subHTML = `
@@ -1115,6 +1116,19 @@ function initCatalogue() {
         (s.desc && s.desc.toLowerCase().includes(q))
       );
     }
+
+    // Sort stones strictly by sub-category order (1 through 10), then by name
+    const subCatOrderMap = {};
+    TutStonesStore.getCategories().forEach(c => {
+      if (c.order) subCatOrderMap[c.id] = c.order;
+    });
+
+    filtered.sort((a, b) => {
+      const orderA = subCatOrderMap[a.category] || 99;
+      const orderB = subCatOrderMap[b.category] || 99;
+      if (orderA !== orderB) return orderA - orderB;
+      return a.name.localeCompare(b.name);
+    });
 
     const totalCount = filtered.length;
     const visibleItems = filtered.slice(0, visibleCount);
