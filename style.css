@@ -1261,9 +1261,22 @@ button {
 }
 
 .filter-pill:hover, .filter-pill.active {
-  background: var(--color-gold-primary);
-  color: #000;
-  border-color: var(--color-gold-primary);
+  background: #8D4F4E !important;
+  color: #FFFFFF !important;
+  border-color: #8D4F4E !important;
+}
+
+.filter-pill.active i,
+.filter-pill.active span,
+.filter-pill:hover i {
+  color: #FFFFFF !important;
+}
+
+.filter-pill.active .pill-badge {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  font-weight: 700 !important;
 }
 
 .search-box {
