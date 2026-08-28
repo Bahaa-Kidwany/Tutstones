@@ -2,8 +2,8 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const CURRENT_BUILD_VERSION = '2026.08.28.v18';
-const STORAGE_KEY = 'tut_stones_data_v18';
+const CURRENT_BUILD_VERSION = '2026.08.28.v20';
+const STORAGE_KEY = 'tut_stones_data_v20';
 
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
@@ -865,6 +865,24 @@ class Store {
       if (!hasSubCats || !hasValidStones) {
         parsed.categories = JSON.parse(JSON.stringify(DEFAULT_DATA.categories));
         parsed.stones = JSON.parse(JSON.stringify(DEFAULT_DATA.stones));
+      } else {
+        // Self-Healing Image Path Reconciler:
+        DEFAULT_DATA.stones.forEach(defStone => {
+          const match = parsed.stones.find(s => s.id === defStone.id);
+          if (match) {
+            if (!match.image || match.image.includes('marble_calacatta')) {
+              match.image = defStone.image;
+            }
+            if (defStone.imageSlab && (!match.imageSlab || match.imageSlab.includes('marble_calacatta'))) {
+              match.imageSlab = defStone.imageSlab;
+            }
+            if (defStone.imageEdge && (!match.imageEdge || match.imageEdge.includes('marble_calacatta'))) {
+              match.imageEdge = defStone.imageEdge;
+            }
+          } else {
+            parsed.stones.push(JSON.parse(JSON.stringify(defStone)));
+          }
+        });
       }
 
       return { ...DEFAULT_DATA, ...parsed };

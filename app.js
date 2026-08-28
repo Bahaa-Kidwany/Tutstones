@@ -771,6 +771,15 @@ function renderFeaturedSections() {
   }
 }
 
+function safeImgSrc(url) {
+  if (!url) return 'assets/images/marble_calacatta.png';
+  try {
+    return encodeURI(url);
+  } catch(e) {
+    return url;
+  }
+}
+
 function createStoneCardHTML(stone) {
   const hasSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
   
@@ -780,11 +789,11 @@ function createStoneCardHTML(stone) {
       <div class="stone-thumb">
         <div class="stone-diag-split">
           <div class="diag-half diag-left" title="${stone.name} - Full Slab (A)">
-            <img src="${stone.imageSlab}" alt="${stone.name} Full Slab" loading="lazy" onerror="this.src='${stone.image}'">
+            <img src="${safeImgSrc(stone.imageSlab)}" alt="${stone.name} Full Slab" loading="lazy" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
             <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab</span>
           </div>
           <div class="diag-half diag-right" title="${stone.name} - Edge View (B)">
-            <img src="${stone.imageEdge}" alt="${stone.name} Edge View" loading="lazy" onerror="this.src='${stone.image}'">
+            <img src="${safeImgSrc(stone.imageEdge)}" alt="${stone.name} Edge View" loading="lazy" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
             <span class="diag-label"><i class="ri-stack-line"></i> Edge View</span>
           </div>
           <div class="diag-split-line"></div>
@@ -795,7 +804,7 @@ function createStoneCardHTML(stone) {
   } else {
     thumbHTML = `
       <div class="stone-thumb">
-        <img src="${stone.image}" alt="${stone.name}" loading="lazy" onerror="this.src='assets/images/marble_calacatta.png'">
+        <img src="${safeImgSrc(stone.image)}" alt="${stone.name}" loading="lazy" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
         <span class="stone-badge">${stone.tag || 'Natural Stone'}</span>
       </div>
     `;
@@ -1191,11 +1200,11 @@ function openStoneModal(stoneId) {
       <div class="modal-image">
         <div class="stone-diag-split modal-diag-split">
           <div class="diag-half diag-left" title="${stone.name} - Full Slab (A)">
-            <img src="${stone.imageSlab}" alt="${stone.name} Full Slab" onerror="this.src='${stone.image}'">
+            <img src="${safeImgSrc(stone.imageSlab)}" alt="${stone.name} Full Slab" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
             <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab (A)</span>
           </div>
           <div class="diag-half diag-right" title="${stone.name} - Edge View (B)">
-            <img src="${stone.imageEdge}" alt="${stone.name} Edge View" onerror="this.src='${stone.image}'">
+            <img src="${safeImgSrc(stone.imageEdge)}" alt="${stone.name} Edge View" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
             <span class="diag-label"><i class="ri-stack-line"></i> Edge View (B)</span>
           </div>
           <div class="diag-split-line"></div>
@@ -1208,7 +1217,7 @@ function openStoneModal(stoneId) {
   } else {
     imageBlock = `
       <div class="modal-image">
-        <img src="${stone.image}" alt="${stone.name}" onerror="this.src='assets/images/marble_calacatta.png'">
+        <img src="${safeImgSrc(stone.image)}" alt="${stone.name}" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
       </div>
     `;
   }
