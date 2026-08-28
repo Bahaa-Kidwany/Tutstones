@@ -1010,9 +1010,93 @@ function initCatalogue() {
     }
   }
 
-  function filterAndRender() {
+  let itemsPerPage = 9;
+  let visibleCount = itemsPerPage;
+
+  function resetPagination() {
+    visibleCount = itemsPerPage;
+  }
+
+  function renderResultsCountBar(visibleItemsCount, totalFilteredCount) {
+    const countBar = document.getElementById('results-count-bar');
+    if (!countBar) return;
+
+    if (totalFilteredCount === 0) {
+      countBar.style.display = 'none';
+      return;
+    }
+
+    countBar.style.display = 'flex';
+    countBar.innerHTML = `
+      <div class="results-count-badge">
+        <i class="ri-stack-line"></i>
+        Showing <strong>${visibleItemsCount}</strong> of <strong>${totalFilteredCount}</strong> Stone Materials
+      </div>
+      <div style="font-size: 0.8rem; color: var(--color-text-muted);">
+        <i class="ri-filter-3-line"></i> Filter: <span style="font-weight: 700; text-transform: capitalize; color: #8D4F4E;">${currentCategory.replace('-', ' ')}</span>
+      </div>
+    `;
+  }
+
+  function renderLoadMoreButton(visibleItemsCount, totalFilteredCount) {
+    const loadMoreContainer = document.getElementById('load-more-container');
+    if (!loadMoreContainer) return;
+
+    if (totalFilteredCount <= visibleItemsCount) {
+      if (totalFilteredCount > 0) {
+        loadMoreContainer.style.display = 'block';
+        loadMoreContainer.innerHTML = `
+          <span class="all-loaded-text">
+            <i class="ri-checkbox-circle-fill" style="color: #25D366;"></i> All ${totalFilteredCount} Stone Materials Loaded
+          </span>
+        `;
+      } else {
+        loadMoreContainer.style.display = 'none';
+      }
+      return;
+    }
+
+    const remaining = totalFilteredCount - visibleItemsCount;
+    loadMoreContainer.style.display = 'block';
+    loadMoreContainer.innerHTML = `
+      <button type="button" id="btn-load-more" class="btn-load-more">
+        <i class="ri-loader-4-line"></i> Load More Materials (${remaining} Remaining)
+      </button>
+    `;
+
+    document.getElementById('btn-load-more')?.addEventListener('click', () => {
+      visibleCount += itemsPerPage;
+      filterAndRender(false);
+    });
+  }
+
+  function filterAndRender(resetPage = true) {
+    if (resetPage) {
+      resetPagination();
+    }
+
     renderCategoryDescriptionBanner(currentCategory);
-    let filtered = TutStonesStore.getStones();
+    let allStones = TutStonesStore.getStones();
+
+    // Async Data Protection Safeguard:
+    if ((!allStones || allStones.length === 0) && typeof TutStonesStore.loadData === 'function') {
+      TutStonesStore.data = TutStonesStore.loadData();
+      allStones = TutStonesStore.getStones();
+    }
+
+    if (!allStones || allStones.length === 0) {
+      catalogueGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--color-text-muted);">
+          <i class="ri-loader-4-line" style="font-size: 2.5rem; color: var(--color-gold-primary); display: block; margin-bottom: 1rem; animation: spin 1s infinite linear;"></i>
+          <h3>Loading Natural Stone Catalogue...</h3>
+          <p>Fetching material specifications and finishes.</p>
+        </div>
+      `;
+      setTimeout(() => filterAndRender(resetPage), 150);
+      return;
+    }
+
+    let filtered = allStones;
 
     if (currentCategory !== 'all') {
       const targetCat = currentCategory.toLowerCase();
@@ -1032,7 +1116,12 @@ function initCatalogue() {
       );
     }
 
-    if (filtered.length === 0) {
+    const totalCount = filtered.length;
+    const visibleItems = filtered.slice(0, visibleCount);
+
+    renderResultsCountBar(visibleItems.length, totalCount);
+
+    if (totalCount === 0) {
       catalogueGrid.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--color-text-muted);">
           <i class="ri-search-line" style="font-size: 2.5rem; color: var(--color-gold-primary); display: block; margin-bottom: 1rem;"></i>
@@ -1041,16 +1130,22 @@ function initCatalogue() {
         </div>
       `;
     } else {
-      catalogueGrid.innerHTML = filtered.map(createStoneCardHTML).join('');
+      catalogueGrid.innerHTML = visibleItems.map(createStoneCardHTML).join('');
     }
+
+    renderLoadMoreButton(visibleItems.length, totalCount);
   }
 
   searchInput?.addEventListener('input', (e) => {
     searchQuery = e.target.value;
-    filterAndRender();
+    filterAndRender(true);
   });
 
-  filterAndRender();
+  filterAndRender(true);
+
+  // Safety retries for slow or async image/script initialization
+  setTimeout(() => filterAndRender(false), 200);
+  setTimeout(() => filterAndRender(false), 600);
 }
 
 /* ==========================================================================
