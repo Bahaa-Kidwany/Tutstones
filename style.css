@@ -3090,20 +3090,37 @@ html[data-theme="pharaonic"] .page-header-banner,
   transform: translateY(-1px);
 }
 
-.sub-filter-pill.active {
-  background: #8D4F4E;
-  color: #FFFFFF;
-  border-color: #8D4F4E;
-  box-shadow: 0 2px 8px rgba(141, 79, 78, 0.3);
+.sub-filter-pill.active,
+.filter-pill.active {
+  background: #8D4F4E !important;
+  color: #FFFFFF !important;
+  border-color: #8D4F4E !important;
+  box-shadow: 0 4px 12px rgba(141, 79, 78, 0.35);
+}
+
+.sub-filter-pill.active i,
+.filter-pill.active i {
+  color: #FFFFFF !important;
 }
 
 .pill-badge {
   font-size: 0.7rem;
-  padding: 0.15rem 0.45rem;
+  padding: 0.18rem 0.5rem;
   background: rgba(141, 79, 78, 0.15);
   color: #8D4F4E;
   border-radius: 4px;
   margin-left: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+/* Invert sub-category count badge when parent pill is selected/active */
+.filter-pill.active .pill-badge,
+.sub-filter-pill.active .pill-badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* Results Count Bar & Load More Pagination */
