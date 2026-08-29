@@ -798,61 +798,25 @@ function createStoneCardHTML(stone) {
           </div>
           <div class="diag-split-line"></div>
         </div>
-        <span class="stone-badge">${stone.tag || stone.finish || 'Natural Stone'}</span>
       </div>
     `;
   } else {
     thumbHTML = `
       <div class="stone-thumb">
         <img src="${safeImgSrc(stone.image)}" alt="${stone.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
-        <span class="stone-badge">${stone.tag || 'Natural Stone'}</span>
       </div>
     `;
   }
 
   return `
-    <div class="stone-card">
+    <div class="stone-card" onclick="openStoneModal('${stone.id}')" style="cursor: pointer;" title="Click to view specifications for ${stone.name}">
       ${thumbHTML}
-      <div class="stone-body">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem;">
-          <h3 class="stone-name">${stone.name}</h3>
-          <span style="font-size: 0.75rem; color: var(--color-gold-primary); text-transform: uppercase; font-weight: 600;">${(stone.finish || stone.category || '').toUpperCase()}</span>
-        </div>
-        
-        <p class="stone-desc" style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">${stone.desc || ''}</p>
-
-        <!-- Full Specifications Details On Card -->
-        <table class="card-spec-table">
-          <tr>
-            <td><i class="ri-map-pin-line"></i> Origin</td>
-            <td>${stone.origin || 'Egypt'}</td>
-          </tr>
-          <tr>
-            <td><i class="ri-sparkling-line"></i> Surface Finish</td>
-            <td>${stone.finish || 'Polished'}</td>
-          </tr>
-          <tr>
-            <td><i class="ri-ruler-2-line"></i> Density</td>
-            <td>${stone.density || '2.71 g/cm³'}</td>
-          </tr>
-          <tr>
-            <td><i class="ri-drop-line"></i> Water Abs.</td>
-            <td>${stone.waterAbs || '0.14%'}</td>
-          </tr>
-          <tr>
-            <td><i class="ri-shield-flash-line"></i> Flexural Str.</td>
-            <td>${stone.flexural || '15.2 MPa'}</td>
-          </tr>
-          <tr>
-            <td><i class="ri-layout-grid-line"></i> Applications</td>
-            <td>${stone.applications || 'Flooring, Cladding, Countertops'}</td>
-          </tr>
-        </table>
-
-        <div class="stone-footer" style="margin-top: auto; padding-top: 0.75rem;">
-          <button class="btn-spec" style="width: 100%; justify-content: center;" onclick="openStoneModal('${stone.id}')">
-            <i class="ri-mail-send-line"></i> Request Spec Sheet & Sample Slabs
-          </button>
+      <div class="stone-body" style="padding: 1rem 1.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+          <h3 class="stone-name" style="margin-bottom: 0; font-size: 1.15rem;">${stone.name}</h3>
+          <span style="font-size: 0.78rem; color: var(--color-gold-primary); text-transform: uppercase; font-weight: 600; background: rgba(141, 79, 78, 0.15); padding: 0.25rem 0.65rem; border-radius: 4px; border: 1px solid rgba(141, 79, 78, 0.35); white-space: nowrap;">
+            <i class="ri-sparkling-line" style="font-size: 0.75rem;"></i> ${stone.finish || stone.category || 'Natural Finish'}
+          </span>
         </div>
       </div>
     </div>
