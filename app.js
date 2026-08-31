@@ -1291,7 +1291,7 @@ document.addEventListener('mouseout', (e) => {
 });
 
 /* ==========================================================================
-   Ultra-Fast Lightweight Image Hover Preview (No Blur, Corner Inset PIP)
+   Pure Image-Only Hover Preview (No Window, No Blur, Corner PIP Switcher)
    ========================================================================== */
 let globalHoverPreviewEl = null;
 let globalHoverPreviewImg = null;
@@ -1304,28 +1304,32 @@ let currentAltUrl = '';
 let currentIsSlab = true;
 
 function ensureHoverPreviewDOM() {
+  // Purge any legacy window modal element if present
+  const legacyModal = document.getElementById('stone-image-popup');
+  if (legacyModal) legacyModal.remove();
+
   if (!globalHoverPreviewEl) {
-    globalHoverPreviewEl = document.getElementById('stone-hover-preview');
+    globalHoverPreviewEl = document.getElementById('stone-clean-preview');
     if (!globalHoverPreviewEl) {
       globalHoverPreviewEl = document.createElement('div');
-      globalHoverPreviewEl.id = 'stone-hover-preview';
-      globalHoverPreviewEl.className = 'stone-hover-preview';
+      globalHoverPreviewEl.id = 'stone-clean-preview';
+      globalHoverPreviewEl.className = 'stone-clean-preview';
       globalHoverPreviewEl.setAttribute('aria-hidden', 'true');
       globalHoverPreviewEl.innerHTML = `
-        <div class="stone-hover-preview-container" onmouseleave="hideStonePreview()">
-          <img id="stone-hover-preview-img" src="" alt="Enlarged Stone Preview">
-          <div id="stone-hover-corner-inset" class="stone-hover-corner-inset" style="display: none;" onclick="swapStonePreviewView(event)" onmouseenter="swapStonePreviewView(event)" title="Click or hover to swap view">
-            <img id="stone-hover-corner-img" src="" alt="Corner View">
-            <span id="stone-hover-corner-label" class="corner-label">Edge View</span>
+        <div class="stone-clean-preview-wrapper" onmouseleave="hideStonePreview()">
+          <img id="stone-clean-img" class="stone-clean-img" src="" alt="Enlarged Stone Preview">
+          <div id="stone-clean-corner" class="stone-clean-corner" style="display: none;" onclick="swapStonePreviewView(event)" onmouseenter="swapStonePreviewView(event)" title="Click or hover to switch view">
+            <img id="stone-clean-corner-img" src="" alt="Corner View">
+            <span id="stone-clean-corner-label" class="corner-label">Edge View</span>
           </div>
         </div>
       `;
       (document.body || document.documentElement).appendChild(globalHoverPreviewEl);
     }
-    globalHoverPreviewImg = globalHoverPreviewEl.querySelector('#stone-hover-preview-img');
-    globalHoverCornerInset = globalHoverPreviewEl.querySelector('#stone-hover-corner-inset');
-    globalHoverCornerImg = globalHoverPreviewEl.querySelector('#stone-hover-corner-img');
-    globalHoverCornerLabel = globalHoverPreviewEl.querySelector('#stone-hover-corner-label');
+    globalHoverPreviewImg = globalHoverPreviewEl.querySelector('#stone-clean-img');
+    globalHoverCornerInset = globalHoverPreviewEl.querySelector('#stone-clean-corner');
+    globalHoverCornerImg = globalHoverPreviewEl.querySelector('#stone-clean-corner-img');
+    globalHoverCornerLabel = globalHoverPreviewEl.querySelector('#stone-clean-corner-label');
   }
 }
 

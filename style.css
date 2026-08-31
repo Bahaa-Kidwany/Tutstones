@@ -1109,29 +1109,33 @@ button {
 }
 
 /* ==========================================================================
-   ULTRA-FAST LIGHTWEIGHT STONE HOVER PREVIEW (IMAGE ONLY, NO BLUR, CORNER PIP INSET)
+   PURE IMAGE-ONLY HOVER PREVIEW (NO WINDOW, NO BLUR, CORNER PIP SWITCHER)
    ========================================================================== */
-.stone-hover-preview {
+.stone-clean-preview {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.94);
+  transform: translate(-50%, -50%) scale(0.95);
   z-index: 99999;
-  pointer-events: auto;
+  pointer-events: none !important;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.15s ease, transform 0.15s ease;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-.stone-hover-preview.active {
+.stone-clean-preview.active {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, -50%) scale(1);
 }
 
-.stone-hover-preview-container {
+.stone-clean-preview-wrapper {
   position: relative;
   display: inline-block;
+  pointer-events: auto !important;
   border-radius: 12px;
   border: 2.5px solid var(--color-border-gold, #D4AF37);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(212, 175, 55, 0.35);
@@ -1139,14 +1143,14 @@ button {
   overflow: hidden;
 }
 
-.stone-hover-preview-container > img {
+.stone-clean-img {
   max-width: 80vw;
   max-height: 82vh;
   object-fit: contain;
   display: block;
 }
 
-.stone-hover-corner-inset {
+.stone-clean-corner {
   position: absolute;
   bottom: 12px;
   right: 12px;
@@ -1155,31 +1159,31 @@ button {
   border-radius: 8px;
   border: 1.5px solid #D4AF37;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.75);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   background: #000000;
-  z-index: 10;
+  z-index: 15;
 }
 
-.stone-hover-corner-inset:hover {
+.stone-clean-corner:hover {
   transform: scale(1.08);
   box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
 }
 
-.stone-hover-corner-inset img {
+.stone-clean-corner img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.stone-hover-corner-inset .corner-label {
+.stone-clean-corner .corner-label {
   position: absolute;
   bottom: 4px;
   left: 4px;
   right: 4px;
-  background: rgba(14, 18, 26, 0.85);
+  background: rgba(14, 18, 26, 0.88);
   color: #FFFFFF;
   font-size: 0.68rem;
   font-weight: 700;
