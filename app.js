@@ -793,11 +793,11 @@ function createStoneCardHTML(stone) {
     thumbHTML = `
       <div class="stone-thumb" onmouseleave="hideStonePreview()">
         <div class="stone-diag-split">
-          <div class="diag-half diag-left" onmouseenter="showStonePreview('${slabUrl}')" title="${stone.name} - Full Slab (A)">
+          <div class="diag-half diag-left" onmouseenter="showStonePreview('${slabUrl}', '${edgeUrl}', true)" title="${stone.name} - Full Slab (A)">
             <img src="${slabUrl}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
             <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab</span>
           </div>
-          <div class="diag-half diag-right" onmouseenter="showStonePreview('${edgeUrl}')" title="${stone.name} - Edge View (B)">
+          <div class="diag-half diag-right" onmouseenter="showStonePreview('${edgeUrl}', '${slabUrl}', false)" title="${stone.name} - Edge View (B)">
             <img src="${edgeUrl}" alt="${stone.name} Edge View" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
             <span class="diag-label"><i class="ri-stack-line"></i> Edge View</span>
           </div>
@@ -807,7 +807,7 @@ function createStoneCardHTML(stone) {
     `;
   } else {
     thumbHTML = `
-      <div class="stone-thumb" onmouseenter="showStonePreview('${mainUrl}')" onmouseleave="hideStonePreview()" title="${stone.name}">
+      <div class="stone-thumb" onmouseenter="showStonePreview('${mainUrl}', null, true)" onmouseleave="hideStonePreview()" title="${stone.name}">
         <img src="${mainUrl}" alt="${stone.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
       </div>
     `;
@@ -1291,10 +1291,17 @@ document.addEventListener('mouseout', (e) => {
 });
 
 /* ==========================================================================
-   Ultra-Fast Lightweight Image Hover Preview (No Blur, High Performance)
+   Ultra-Fast Lightweight Image Hover Preview (No Blur, Corner Inset PIP)
    ========================================================================== */
-let globalHoverPreviewImg = null;
 let globalHoverPreviewEl = null;
+let globalHoverPreviewImg = null;
+let globalHoverCornerInset = null;
+let globalHoverCornerImg = null;
+let globalHoverCornerLabel = null;
+
+let currentMainUrl = '';
+let currentAltUrl = '';
+let currentIsSlab = true;
 
 function ensureHoverPreviewDOM() {
   if (!globalHoverPreviewEl) {
@@ -1304,23 +1311,60 @@ function ensureHoverPreviewDOM() {
       globalHoverPreviewEl.id = 'stone-hover-preview';
       globalHoverPreviewEl.className = 'stone-hover-preview';
       globalHoverPreviewEl.setAttribute('aria-hidden', 'true');
-      globalHoverPreviewEl.innerHTML = `<img id="stone-hover-preview-img" src="" alt="Enlarged Stone Preview">`;
+      globalHoverPreviewEl.innerHTML = `
+        <div class="stone-hover-preview-container" onmouseleave="hideStonePreview()">
+          <img id="stone-hover-preview-img" src="" alt="Enlarged Stone Preview">
+          <div id="stone-hover-corner-inset" class="stone-hover-corner-inset" style="display: none;" onclick="swapStonePreviewView(event)" onmouseenter="swapStonePreviewView(event)" title="Click or hover to swap view">
+            <img id="stone-hover-corner-img" src="" alt="Corner View">
+            <span id="stone-hover-corner-label" class="corner-label">Edge View</span>
+          </div>
+        </div>
+      `;
       (document.body || document.documentElement).appendChild(globalHoverPreviewEl);
     }
     globalHoverPreviewImg = globalHoverPreviewEl.querySelector('#stone-hover-preview-img');
+    globalHoverCornerInset = globalHoverPreviewEl.querySelector('#stone-hover-corner-inset');
+    globalHoverCornerImg = globalHoverPreviewEl.querySelector('#stone-hover-corner-img');
+    globalHoverCornerLabel = globalHoverPreviewEl.querySelector('#stone-hover-corner-label');
   }
 }
 
-window.showStonePreview = function(imgSrc) {
-  if (!imgSrc) return;
+window.showStonePreview = function(mainUrl, altUrl = null, isSlab = true) {
+  if (!mainUrl) return;
   ensureHoverPreviewDOM();
+
+  currentMainUrl = mainUrl;
+  currentAltUrl = altUrl;
+  currentIsSlab = isSlab;
+
   if (globalHoverPreviewImg) {
-    globalHoverPreviewImg.src = imgSrc;
+    globalHoverPreviewImg.src = mainUrl;
   }
+
+  if (altUrl && altUrl !== mainUrl) {
+    if (globalHoverCornerImg) globalHoverCornerImg.src = altUrl;
+    if (globalHoverCornerLabel) globalHoverCornerLabel.textContent = isSlab ? 'Edge View' : 'Full Slab';
+    if (globalHoverCornerInset) globalHoverCornerInset.style.display = 'block';
+  } else {
+    if (globalHoverCornerInset) globalHoverCornerInset.style.display = 'none';
+  }
+
   if (globalHoverPreviewEl) {
     globalHoverPreviewEl.classList.add('active');
     globalHoverPreviewEl.setAttribute('aria-hidden', 'false');
   }
+};
+
+window.swapStonePreviewView = function(e) {
+  if (e) e.stopPropagation();
+  if (!currentAltUrl || currentAltUrl === currentMainUrl) return;
+
+  const tempUrl = currentMainUrl;
+  currentMainUrl = currentAltUrl;
+  currentAltUrl = tempUrl;
+  currentIsSlab = !currentIsSlab;
+
+  window.showStonePreview(currentMainUrl, currentAltUrl, currentIsSlab);
 };
 
 window.hideStonePreview = function() {
