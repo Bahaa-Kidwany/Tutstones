@@ -1353,21 +1353,11 @@ function initStoneImagePopup() {
     }
   });
 
-  // Global mouseout trigger: close popup when cursor moves outside the stone thumbnail
+  // Global mouseout trigger: close popup ONLY when cursor moves outside the stone card/thumbnail
   document.addEventListener('mouseout', (e) => {
-    const leftTarget = e.target.closest('.diag-left');
-    const rightTarget = e.target.closest('.diag-right');
-    const thumbTarget = e.target.closest('.stone-thumb');
-    const target = leftTarget || rightTarget || thumbTarget;
-
-    if (target) {
-      // If cursor is still inside target element or moving into the popup image, keep open
-      if (e.relatedTarget && (target.contains(e.relatedTarget) || popupEl.contains(e.relatedTarget))) {
-        return;
-      }
-      closePopup();
-    } else if (popupEl.classList.contains('active')) {
-      if (e.relatedTarget && !popupEl.contains(e.relatedTarget)) {
+    const card = e.target.closest('.stone-card, .stone-thumb');
+    if (card) {
+      if (!e.relatedTarget || !card.contains(e.relatedTarget)) {
         closePopup();
       }
     }

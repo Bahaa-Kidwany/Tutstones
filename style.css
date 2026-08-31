@@ -1145,7 +1145,7 @@ button {
   transform: scale(0.92);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   background: #0A0E17;
-  pointer-events: auto;
+  pointer-events: none !important;
 }
 
 .stone-image-popup.active .stone-image-popup-img {
