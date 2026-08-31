@@ -784,20 +784,22 @@ function safeImgSrc(url) {
 function createStoneCardHTML(stone) {
   const hasSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
   
+  const slabUrl = safeImgSrc(stone.imageSlab || stone.image);
+  const edgeUrl = safeImgSrc(stone.imageEdge || stone.image);
+  const mainUrl = safeImgSrc(stone.image);
+
   let thumbHTML = '';
   if (hasSplit) {
     thumbHTML = `
-      <div class="stone-thumb" onmouseleave="window._hideStonePopup && window._hideStonePopup()">
-        <div class="stone-diag-split" data-stone-id="${stone.id}" data-stone-name="${stone.name}" data-img-slab="${safeImgSrc(stone.imageSlab)}" data-img-edge="${safeImgSrc(stone.imageEdge)}" data-img="${safeImgSrc(stone.image)}">
-          <div class="diag-half diag-left" data-side="left" data-stone-id="${stone.id}" onmouseenter="openStonePopupFromCard('${stone.id}', 'left')" title="${stone.name} - Full Slab (A)">
-            <img src="${safeImgSrc(stone.imageSlab)}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
+      <div class="stone-thumb" onmouseleave="hideStonePreview()">
+        <div class="stone-diag-split">
+          <div class="diag-half diag-left" onmouseenter="showStonePreview('${slabUrl}')" title="${stone.name} - Full Slab (A)">
+            <img src="${slabUrl}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
             <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab</span>
-            <div class="side-hover-hint"><i class="ri-zoom-in-line"></i> Hover to Enlarge</div>
           </div>
-          <div class="diag-half diag-right" data-side="right" data-stone-id="${stone.id}" onmouseenter="openStonePopupFromCard('${stone.id}', 'right')" title="${stone.name} - Edge View (B)">
-            <img src="${safeImgSrc(stone.imageEdge)}" alt="${stone.name} Edge View" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
+          <div class="diag-half diag-right" onmouseenter="showStonePreview('${edgeUrl}')" title="${stone.name} - Edge View (B)">
+            <img src="${edgeUrl}" alt="${stone.name} Edge View" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
             <span class="diag-label"><i class="ri-stack-line"></i> Edge View</span>
-            <div class="side-hover-hint"><i class="ri-zoom-in-line"></i> Hover to Enlarge</div>
           </div>
           <div class="diag-split-line"></div>
         </div>
@@ -805,15 +807,14 @@ function createStoneCardHTML(stone) {
     `;
   } else {
     thumbHTML = `
-      <div class="stone-thumb" data-stone-id="${stone.id}" onmouseenter="openStonePopupFromCard('${stone.id}', 'single')" onmouseleave="window._hideStonePopup && window._hideStonePopup()" title="${stone.name}">
-        <img src="${safeImgSrc(stone.image)}" alt="${stone.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
-        <div class="side-hover-hint"><i class="ri-zoom-in-line"></i> Hover to Enlarge</div>
+      <div class="stone-thumb" onmouseenter="showStonePreview('${mainUrl}')" onmouseleave="hideStonePreview()" title="${stone.name}">
+        <img src="${mainUrl}" alt="${stone.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
       </div>
     `;
   }
 
   return `
-    <div class="stone-card" data-stone-id="${stone.id}" onclick="openStoneModal('${stone.id}')" style="cursor: pointer;" title="Click to view specifications for ${stone.name}">
+    <div class="stone-card" onclick="openStoneModal('${stone.id}')" onmouseleave="hideStonePreview()" style="cursor: pointer;" title="Click to view specifications for ${stone.name}">
       ${thumbHTML}
       <div class="stone-body" style="padding: 1rem 1.25rem;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
@@ -1290,96 +1291,49 @@ document.addEventListener('mouseout', (e) => {
 });
 
 /* ==========================================================================
-   Stone Image Hover Popup (Image-Only, Transparent Backdrop, Auto-Close on Mouse Out)
+   Ultra-Fast Lightweight Image Hover Preview (No Blur, High Performance)
    ========================================================================== */
-function initStoneImagePopup() {
-  let popupEl = document.getElementById('stone-image-popup');
-  if (!popupEl) {
-    popupEl = document.createElement('div');
-    popupEl.id = 'stone-image-popup';
-    popupEl.className = 'stone-image-popup';
-    popupEl.setAttribute('aria-hidden', 'true');
-    popupEl.innerHTML = `
-      <img id="popup-img" class="stone-image-popup-img" src="" alt="Enlarged Stone Preview">
-    `;
-    (document.body || document.documentElement).appendChild(popupEl);
-  }
+let globalHoverPreviewImg = null;
+let globalHoverPreviewEl = null;
 
-  const imgEl = popupEl.querySelector('#popup-img');
-
-  function openPopup(imgSrc) {
-    if (!imgSrc) return;
-    imgEl.src = imgSrc;
-    popupEl.classList.add('active');
-    popupEl.setAttribute('aria-hidden', 'false');
-  }
-
-  function closePopup() {
-    popupEl.classList.remove('active');
-    popupEl.setAttribute('aria-hidden', 'true');
-  }
-
-  window._showStonePopupImg = function(imgSrc) {
-    openPopup(imgSrc);
-  };
-
-  window._hideStonePopup = function() {
-    closePopup();
-  };
-
-  // Close popup on click or Escape key
-  popupEl.addEventListener('click', closePopup);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closePopup();
-  });
-
-  // Global mouseover trigger
-  document.addEventListener('mouseover', (e) => {
-    const leftTarget = e.target.closest('.diag-left');
-    const rightTarget = e.target.closest('.diag-right');
-    const thumbTarget = e.target.closest('.stone-thumb');
-
-    let target = leftTarget || rightTarget || (thumbTarget && !thumbTarget.querySelector('.stone-diag-split') ? thumbTarget : null);
-    if (!target) return;
-
-    let side = leftTarget ? 'left' : (rightTarget ? 'right' : 'single');
-    const splitContainer = target.closest('.stone-diag-split');
-    const thumbContainer = target.closest('.stone-thumb');
-    const cardContainer = target.closest('.stone-card');
-
-    let stoneId = target.dataset.stoneId || splitContainer?.dataset.stoneId || thumbContainer?.dataset.stoneId || cardContainer?.dataset.stoneId;
-    if (stoneId && window.openStonePopupFromCard) {
-      window.openStonePopupFromCard(stoneId, side);
+function ensureHoverPreviewDOM() {
+  if (!globalHoverPreviewEl) {
+    globalHoverPreviewEl = document.getElementById('stone-hover-preview');
+    if (!globalHoverPreviewEl) {
+      globalHoverPreviewEl = document.createElement('div');
+      globalHoverPreviewEl.id = 'stone-hover-preview';
+      globalHoverPreviewEl.className = 'stone-hover-preview';
+      globalHoverPreviewEl.setAttribute('aria-hidden', 'true');
+      globalHoverPreviewEl.innerHTML = `<img id="stone-hover-preview-img" src="" alt="Enlarged Stone Preview">`;
+      (document.body || document.documentElement).appendChild(globalHoverPreviewEl);
     }
-  });
-
-  // Global mouseout trigger: close popup ONLY when cursor moves outside the stone card/thumbnail
-  document.addEventListener('mouseout', (e) => {
-    const card = e.target.closest('.stone-card, .stone-thumb');
-    if (card) {
-      if (!e.relatedTarget || !card.contains(e.relatedTarget)) {
-        closePopup();
-      }
-    }
-  });
+    globalHoverPreviewImg = globalHoverPreviewEl.querySelector('#stone-hover-preview-img');
+  }
 }
 
-// Global instant trigger helper
-window.openStonePopupFromCard = function(stoneId, side = 'left') {
-  initStoneImagePopup();
-  if (typeof TutStonesStore === 'undefined') return;
-  const stone = TutStonesStore.getStone(stoneId);
-  if (!stone) return;
-
-  let imgSrc = safeImgSrc(stone.image);
-  if (side === 'right' && stone.imageEdge) {
-    imgSrc = safeImgSrc(stone.imageEdge);
-  } else if ((side === 'left' || side === 'single') && (stone.imageSlab || stone.image)) {
-    imgSrc = safeImgSrc(stone.imageSlab || stone.image);
+window.showStonePreview = function(imgSrc) {
+  if (!imgSrc) return;
+  ensureHoverPreviewDOM();
+  if (globalHoverPreviewImg) {
+    globalHoverPreviewImg.src = imgSrc;
   }
-
-  if (window._showStonePopupImg) {
-    window._showStonePopupImg(imgSrc);
+  if (globalHoverPreviewEl) {
+    globalHoverPreviewEl.classList.add('active');
+    globalHoverPreviewEl.setAttribute('aria-hidden', 'false');
   }
 };
+
+window.hideStonePreview = function() {
+  if (globalHoverPreviewEl) {
+    globalHoverPreviewEl.classList.remove('active');
+    globalHoverPreviewEl.setAttribute('aria-hidden', 'true');
+  }
+};
+
+function initStoneImagePopup() {
+  ensureHoverPreviewDOM();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') window.hideStonePreview();
+  });
+}
 
