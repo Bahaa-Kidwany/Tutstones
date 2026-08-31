@@ -791,13 +791,13 @@ function createStoneCardHTML(stone) {
   let thumbHTML = '';
   if (hasSplit) {
     thumbHTML = `
-      <div class="stone-thumb" data-stone-id="${stone.id}">
-        <div class="stone-diag-split" data-stone-id="${stone.id}">
-          <div class="diag-half diag-left" data-stone-id="${stone.id}" data-side="left" title="${stone.name} - Full Slab (A)">
+      <div class="stone-thumb" data-stone-id="${stone.id}" data-slab="${slabUrl}" data-edge="${edgeUrl}" data-main="${mainUrl}">
+        <div class="stone-diag-split" data-stone-id="${stone.id}" data-slab="${slabUrl}" data-edge="${edgeUrl}" data-main="${mainUrl}">
+          <div class="diag-half diag-left" data-stone-id="${stone.id}" data-side="left" data-slab="${slabUrl}" data-edge="${edgeUrl}" title="${stone.name} - Full Slab (A)">
             <img src="${slabUrl}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
             <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab</span>
           </div>
-          <div class="diag-half diag-right" data-stone-id="${stone.id}" data-side="right" title="${stone.name} - Edge View (B)">
+          <div class="diag-half diag-right" data-stone-id="${stone.id}" data-side="right" data-slab="${slabUrl}" data-edge="${edgeUrl}" title="${stone.name} - Edge View (B)">
             <img src="${edgeUrl}" alt="${stone.name} Edge View" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
             <span class="diag-label"><i class="ri-stack-line"></i> Edge View</span>
           </div>
@@ -807,7 +807,7 @@ function createStoneCardHTML(stone) {
     `;
   } else {
     thumbHTML = `
-      <div class="stone-thumb" data-stone-id="${stone.id}" title="${stone.name}">
+      <div class="stone-thumb" data-stone-id="${stone.id}" data-main="${mainUrl}" title="${stone.name}">
         <img src="${mainUrl}" alt="${stone.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
       </div>
     `;
@@ -1394,25 +1394,31 @@ document.addEventListener('mouseover', (e) => {
   const target = left || right || (thumb && !thumb.querySelector('.stone-diag-split') ? thumb : null);
   if (!target) return;
 
-  const card = target.closest('.stone-card');
   const split = target.closest('.stone-diag-split');
   const thumbContainer = target.closest('.stone-thumb');
+  const card = target.closest('.stone-card');
 
-  const stoneId = target.dataset.stoneId || split?.dataset.stoneId || thumbContainer?.dataset.stoneId || card?.dataset.stoneId;
-  if (!stoneId || typeof TutStonesStore === 'undefined') return;
+  let slabUrl = target.dataset.slab || split?.dataset.slab;
+  let edgeUrl = target.dataset.edge || split?.dataset.edge;
+  let mainUrl = target.dataset.main || split?.dataset.main || thumbContainer?.dataset.main;
 
-  const stone = TutStonesStore.getStone(stoneId);
-  if (!stone) return;
+  if (!slabUrl || !mainUrl) {
+    const stoneId = target.dataset.stoneId || split?.dataset.stoneId || thumbContainer?.dataset.stoneId || card?.dataset.stoneId;
+    if (stoneId && typeof TutStonesStore !== 'undefined') {
+      const stone = TutStonesStore.getStone(stoneId);
+      if (stone) {
+        slabUrl = slabUrl || safeImgSrc(stone.imageSlab || stone.image);
+        edgeUrl = edgeUrl || safeImgSrc(stone.imageEdge || stone.image);
+        mainUrl = mainUrl || safeImgSrc(stone.image);
+      }
+    }
+  }
 
-  const slabUrl = safeImgSrc(stone.imageSlab || stone.image);
-  const edgeUrl = safeImgSrc(stone.imageEdge || stone.image);
-  const mainUrl = safeImgSrc(stone.image);
-
-  if (left) {
-    window.showStonePreview(slabUrl, edgeUrl, true);
-  } else if (right) {
-    window.showStonePreview(edgeUrl, slabUrl, false);
-  } else {
+  if (left && slabUrl) {
+    window.showStonePreview(slabUrl, edgeUrl || mainUrl, true);
+  } else if (right && edgeUrl) {
+    window.showStonePreview(edgeUrl, slabUrl || mainUrl, false);
+  } else if (mainUrl) {
     window.showStonePreview(mainUrl, null, true);
   }
 });

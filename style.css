@@ -1127,9 +1127,10 @@ button {
 }
 
 .stone-clean-preview.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  transform: translate(-50%, -50%) scale(1) !important;
 }
 
 .stone-clean-preview-wrapper {
