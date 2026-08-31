@@ -789,12 +789,12 @@ function createStoneCardHTML(stone) {
     thumbHTML = `
       <div class="stone-thumb">
         <div class="stone-diag-split" data-stone-id="${stone.id}" data-stone-name="${stone.name}" data-img-slab="${safeImgSrc(stone.imageSlab)}" data-img-edge="${safeImgSrc(stone.imageEdge)}" data-img="${safeImgSrc(stone.image)}">
-          <div class="diag-half diag-left" data-side="left" data-stone-id="${stone.id}" data-stone-name="${stone.name}" data-img-slab="${safeImgSrc(stone.imageSlab)}" data-img-edge="${safeImgSrc(stone.imageEdge)}" title="${stone.name} - Full Slab (A) (Hover to pop up in bigger window)">
+          <div class="diag-half diag-left" data-side="left" data-stone-id="${stone.id}" onmouseenter="openStonePopupFromCard('${stone.id}', 'left')" title="${stone.name} - Full Slab (A)">
             <img src="${safeImgSrc(stone.imageSlab)}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
             <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab</span>
             <div class="side-hover-hint"><i class="ri-zoom-in-line"></i> Hover to Enlarge</div>
           </div>
-          <div class="diag-half diag-right" data-side="right" data-stone-id="${stone.id}" data-stone-name="${stone.name}" data-img-slab="${safeImgSrc(stone.imageSlab)}" data-img-edge="${safeImgSrc(stone.imageEdge)}" title="${stone.name} - Edge View (B) (Hover to pop up in bigger window)">
+          <div class="diag-half diag-right" data-side="right" data-stone-id="${stone.id}" onmouseenter="openStonePopupFromCard('${stone.id}', 'right')" title="${stone.name} - Edge View (B)">
             <img src="${safeImgSrc(stone.imageEdge)}" alt="${stone.name} Edge View" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
             <span class="diag-label"><i class="ri-stack-line"></i> Edge View</span>
             <div class="side-hover-hint"><i class="ri-zoom-in-line"></i> Hover to Enlarge</div>
@@ -805,7 +805,7 @@ function createStoneCardHTML(stone) {
     `;
   } else {
     thumbHTML = `
-      <div class="stone-thumb" data-stone-id="${stone.id}" data-stone-name="${stone.name}" data-img="${safeImgSrc(stone.image)}" data-side="single" title="${stone.name} (Hover to pop up in bigger window)">
+      <div class="stone-thumb" data-stone-id="${stone.id}" onmouseenter="openStonePopupFromCard('${stone.id}', 'single')" title="${stone.name}">
         <img src="${safeImgSrc(stone.image)}" alt="${stone.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
         <div class="side-hover-hint"><i class="ri-zoom-in-line"></i> Hover to Enlarge</div>
       </div>
@@ -1290,7 +1290,7 @@ document.addEventListener('mouseout', (e) => {
 });
 
 /* ==========================================================================
-   Stone Image Hover Popup Window (Bigger Window Feature for Materials)
+   Stone Image Hover Popup Window (Instant Bigger Window Feature for Materials)
    ========================================================================== */
 function initStoneImagePopup() {
   let popupEl = document.getElementById('stone-image-popup');
@@ -1320,7 +1320,7 @@ function initStoneImagePopup() {
         </div>
         <div class="stone-image-popup-body">
           <img id="popup-img" class="stone-image-popup-img" src="" alt="Enlarged Stone Preview">
-          <div class="popup-zoom-hint"><i class="ri-zoom-in-line"></i> Move cursor over image to inspect fine details</div>
+          <div class="popup-zoom-hint"><i class="ri-zoom-in-line"></i> Hover over image to inspect texture details</div>
         </div>
         <div class="stone-image-popup-footer">
           <span id="popup-finish-info"><i class="ri-sparkling-line"></i> Premium Egyptian Stone</span>
@@ -1330,7 +1330,7 @@ function initStoneImagePopup() {
         </div>
       </div>
     `;
-    document.body.appendChild(popupEl);
+    (document.body || document.documentElement).appendChild(popupEl);
   }
 
   const badgeEl = popupEl.querySelector('#popup-badge');
@@ -1345,10 +1345,10 @@ function initStoneImagePopup() {
   const cardEl = popupEl.querySelector('#stone-popup-card');
 
   let activeStoneState = null;
-  let hoverTimer = null;
   let closeTimer = null;
 
   function openPopup(state) {
+    if (!state) return;
     activeStoneState = state;
     titleEl.textContent = state.stoneName || 'Natural Stone';
     finishInfoEl.innerHTML = `<i class="ri-sparkling-line"></i> ${state.finish || state.category || 'Egyptian Stone Collection'}`;
@@ -1388,6 +1388,14 @@ function initStoneImagePopup() {
     activeStoneState = null;
   }
 
+  window._showStonePopupState = function(state) {
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    openPopup(state);
+  };
+
   closeBtnEl?.addEventListener('click', closePopup);
   popupEl?.addEventListener('click', (e) => {
     if (!cardEl.contains(e.target)) {
@@ -1412,12 +1420,12 @@ function initStoneImagePopup() {
     }
   });
 
-  // Global hover trigger on stone thumbnails
+  // Global mouseover trigger
   document.addEventListener('mouseover', (e) => {
     const leftTarget = e.target.closest('.diag-left');
     const rightTarget = e.target.closest('.diag-right');
     const thumbTarget = e.target.closest('.stone-thumb');
-    
+
     let target = null;
     let side = 'left';
 
@@ -1438,7 +1446,7 @@ function initStoneImagePopup() {
           closeTimer = setTimeout(() => {
             closePopup();
             closeTimer = null;
-          }, 300);
+          }, 200);
         }
       }
       return;
@@ -1454,55 +1462,34 @@ function initStoneImagePopup() {
     const cardContainer = target.closest('.stone-card');
 
     let stoneId = target.dataset.stoneId || splitContainer?.dataset.stoneId || thumbContainer?.dataset.stoneId || cardContainer?.dataset.stoneId;
-    let stone = stoneId && typeof TutStonesStore !== 'undefined' ? TutStonesStore.getStone(stoneId) : null;
-
-    let stoneName = target.dataset.stoneName || splitContainer?.dataset.stoneName || thumbContainer?.dataset.stoneName || stone?.name || 'Stone Preview';
-    let imgSlab = target.dataset.imgSlab || splitContainer?.dataset.imgSlab || stone?.imageSlab || stone?.image;
-    let imgEdge = target.dataset.imgEdge || splitContainer?.dataset.imgEdge || stone?.imageEdge || stone?.image;
-    let imgMain = target.dataset.imgMain || thumbContainer?.dataset.img || stone?.image;
-
-    const state = {
-      stoneId: stoneId || stone?.id,
-      stoneName: stoneName,
-      imgSlab: imgSlab,
-      imgEdge: imgEdge,
-      imgMain: imgMain,
-      side: side,
-      hasSplit: Boolean(imgSlab && imgEdge && imgSlab !== imgEdge),
-      category: stone?.category || stone?.finish,
-      finish: stone?.finish
-    };
-
-    // If popup is already open for same stone, switch side immediately
-    if (popupEl.classList.contains('active') && activeStoneState && activeStoneState.stoneId === state.stoneId) {
-      switchSide(side);
-      return;
-    }
-
-    if (hoverTimer) clearTimeout(hoverTimer);
-
-    // Fast response delay (60ms) for instant popup
-    hoverTimer = setTimeout(() => {
-      openPopup(state);
-    }, 60);
-  });
-
-  document.addEventListener('mouseout', (e) => {
-    const leftTarget = e.target.closest('.diag-left');
-    const rightTarget = e.target.closest('.diag-right');
-    const thumbTarget = e.target.closest('.stone-thumb');
-    const target = leftTarget || rightTarget || thumbTarget;
-
-    if (target) {
-      // Do NOT clear timer if cursor is just moving over a child element (label, img, icon) inside target
-      if (e.relatedTarget && target.contains(e.relatedTarget)) {
-        return;
-      }
-      if (hoverTimer) {
-        clearTimeout(hoverTimer);
-        hoverTimer = null;
-      }
+    if (stoneId && window.openStonePopupFromCard) {
+      window.openStonePopupFromCard(stoneId, side);
     }
   });
 }
+
+// Global instant trigger helper
+window.openStonePopupFromCard = function(stoneId, side = 'left') {
+  initStoneImagePopup();
+  if (typeof TutStonesStore === 'undefined') return;
+  const stone = TutStonesStore.getStone(stoneId);
+  if (!stone) return;
+
+  const hasSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
+  const state = {
+    stoneId: stone.id,
+    stoneName: stone.name,
+    imgSlab: safeImgSrc(stone.imageSlab || stone.image),
+    imgEdge: safeImgSrc(stone.imageEdge || stone.image),
+    imgMain: safeImgSrc(stone.image),
+    side: side,
+    hasSplit: hasSplit,
+    category: stone.category || stone.finish,
+    finish: stone.finish
+  };
+
+  if (window._showStonePopupState) {
+    window._showStonePopupState(state);
+  }
+};
 
