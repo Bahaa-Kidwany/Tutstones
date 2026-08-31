@@ -19,7 +19,88 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=20260829_v22">
+  <link rel="stylesheet" href="style.css?v=20260831_FINAL_RELOAD">
+
+  <style>
+  /* Pure Image-Only Hover Preview Override */
+  .stone-clean-preview {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(0.95) !important;
+    z-index: 999999 !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.15s ease, transform 0.15s ease !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .stone-clean-preview.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+  .stone-clean-preview-wrapper {
+    position: relative !important;
+    display: inline-block !important;
+    pointer-events: none !important;
+    border-radius: 10px !important;
+    border: 2.5px solid #D4AF37 !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(212, 175, 55, 0.35) !important;
+    background: #0A0E17 !important;
+    overflow: hidden !important;
+    line-height: 0 !important;
+  }
+  .stone-clean-img {
+    max-width: 520px !important;
+    max-height: 60vh !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+  .stone-clean-corner {
+    position: absolute !important;
+    bottom: 8px !important;
+    right: 8px !important;
+    width: 110px !important;
+    height: 75px !important;
+    border-radius: 6px !important;
+    border: 1.5px solid #D4AF37 !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8) !important;
+    cursor: pointer !important;
+    background: #000000 !important;
+    z-index: 20 !important;
+    pointer-events: auto !important;
+  }
+  .stone-clean-corner img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  .stone-clean-corner .corner-label {
+    position: absolute !important;
+    bottom: 2px !important;
+    left: 2px !important;
+    right: 2px !important;
+    background: rgba(10, 14, 23, 0.9) !important;
+    color: #FFFFFF !important;
+    font-size: 0.62rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    padding: 0.12rem 0.3rem !important;
+    border-radius: 3px !important;
+    text-align: center !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    pointer-events: none !important;
+    line-height: 1.2 !important;
+  }
+  </style>
 </head>
 
 <body data-page="materials" data-theme="pharaonic">
@@ -226,8 +307,8 @@
     </div>
   </footer>
 
-  <script src="store.js?v=20260831_v5"></script>
-  <script src="app.js?v=20260831_v5"></script>
+  <script src="store.js?v=20260831_FINAL_RELOAD"></script>
+  <script src="app.js?v=20260831_FINAL_RELOAD"></script>
 </body>
 
 </html>
