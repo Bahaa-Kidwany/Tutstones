@@ -1076,6 +1076,9 @@ button {
   background: #8D4F4E;
   color: #FFFFFF;
   border-color: #8D4F4E;
+  transform: translateY(-2px);
+}
+
 /* ==========================================================================
    IMAGE HOVER POPUP WINDOW (BIGGER PREVIEW WINDOW FOR MATERIALS)
    ========================================================================== */

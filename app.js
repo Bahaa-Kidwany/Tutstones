@@ -1416,9 +1416,22 @@ function initStoneImagePopup() {
   document.addEventListener('mouseover', (e) => {
     const leftTarget = e.target.closest('.diag-left');
     const rightTarget = e.target.closest('.diag-right');
-    const singleThumbTarget = e.target.closest('.stone-thumb:not(:has(.stone-diag-split))');
+    const thumbTarget = e.target.closest('.stone-thumb');
     
-    const target = leftTarget || rightTarget || singleThumbTarget;
+    let target = null;
+    let side = 'left';
+
+    if (leftTarget) {
+      target = leftTarget;
+      side = 'left';
+    } else if (rightTarget) {
+      target = rightTarget;
+      side = 'right';
+    } else if (thumbTarget && !thumbTarget.querySelector('.stone-diag-split')) {
+      target = thumbTarget;
+      side = 'single';
+    }
+
     if (!target) {
       if (popupEl.classList.contains('active') && !popupEl.contains(e.target)) {
         if (!closeTimer) {
@@ -1448,11 +1461,6 @@ function initStoneImagePopup() {
     let imgEdge = target.dataset.imgEdge || splitContainer?.dataset.imgEdge || stone?.imageEdge || stone?.image;
     let imgMain = target.dataset.imgMain || thumbContainer?.dataset.img || stone?.image;
 
-    let side = 'left';
-    if (rightTarget) side = 'right';
-    else if (leftTarget) side = 'left';
-    else side = 'single';
-
     const state = {
       stoneId: stoneId || stone?.id,
       stoneName: stoneName,
@@ -1465,23 +1473,31 @@ function initStoneImagePopup() {
       finish: stone?.finish
     };
 
-    if (hoverTimer) clearTimeout(hoverTimer);
-
     // If popup is already open for same stone, switch side immediately
     if (popupEl.classList.contains('active') && activeStoneState && activeStoneState.stoneId === state.stoneId) {
       switchSide(side);
       return;
     }
 
-    // Delay slightly (140ms) to ensure deliberate hover rather than fast cursor pass-over
+    if (hoverTimer) clearTimeout(hoverTimer);
+
+    // Fast response delay (60ms) for instant popup
     hoverTimer = setTimeout(() => {
       openPopup(state);
-    }, 140);
+    }, 60);
   });
 
   document.addEventListener('mouseout', (e) => {
-    const target = e.target.closest('.diag-left, .diag-right, .stone-thumb');
+    const leftTarget = e.target.closest('.diag-left');
+    const rightTarget = e.target.closest('.diag-right');
+    const thumbTarget = e.target.closest('.stone-thumb');
+    const target = leftTarget || rightTarget || thumbTarget;
+
     if (target) {
+      // Do NOT clear timer if cursor is just moving over a child element (label, img, icon) inside target
+      if (e.relatedTarget && target.contains(e.relatedTarget)) {
+        return;
+      }
       if (hoverTimer) {
         clearTimeout(hoverTimer);
         hoverTimer = null;
