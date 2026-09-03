@@ -788,6 +788,11 @@ function createStoneCardHTML(stone) {
   const edgeUrl = safeImgSrc(stone.imageEdge || stone.image);
   const mainUrl = safeImgSrc(stone.image);
 
+  if (hasSplit) {
+    const p1 = new Image(); p1.src = slabUrl;
+    const p2 = new Image(); p2.src = edgeUrl;
+  }
+
   let thumbHTML = '';
   if (hasSplit) {
     thumbHTML = `
@@ -1217,6 +1222,11 @@ function openStoneModal(stoneId) {
   const edgeImg = safeImgSrc(stone.imageEdge);
   const hasTwoImages = Boolean(stone.imageEdge && stone.imageEdge !== (stone.imageSlab || stone.image));
 
+  if (hasTwoImages) {
+    const p1 = new Image(); p1.src = fullImg;
+    const p2 = new Image(); p2.src = edgeImg;
+  }
+
   let imageBlock = '';
   if (hasTwoImages) {
     imageBlock = `
@@ -1228,22 +1238,22 @@ function openStoneModal(stoneId) {
             <i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>
           </div>
 
-          <button type="button" class="modal-gallery-arrow arrow-prev" onclick="switchModalImage('${stone.id}', -1)" aria-label="Previous view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; left: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
+          <button type="button" class="modal-gallery-arrow arrow-prev" onclick="switchModalImage('${stone.id}', 'prev')" aria-label="Previous view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; left: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
-          <button type="button" class="modal-gallery-arrow arrow-next" onclick="switchModalImage('${stone.id}', 1)" aria-label="Next view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; right: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
+          <button type="button" class="modal-gallery-arrow arrow-next" onclick="switchModalImage('${stone.id}', 'next')" aria-label="Next view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; right: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </button>
         </div>
 
         <div class="modal-img-thumbs" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; width: 100% !important; flex-shrink: 0 !important;">
-          <button type="button" class="thumb-card active" id="thumb-0" onclick="switchModalImage('${stone.id}', 0)">
+          <button type="button" class="thumb-card active" id="thumb-0" onclick="switchModalImage('${stone.id}', 'full')">
             <img src="${fullImg}" alt="${stone.name} Full Slab">
             <div class="thumb-info">
               <i class="ri-aspect-ratio-line"></i> <span>Full Slab (A)</span>
             </div>
           </button>
-          <button type="button" class="thumb-card" id="thumb-1" onclick="switchModalImage('${stone.id}', 1)">
+          <button type="button" class="thumb-card" id="thumb-1" onclick="switchModalImage('${stone.id}', 'edge')">
             <img src="${edgeImg}" alt="${stone.name} Edge View">
             <div class="thumb-info">
               <i class="ri-stack-line"></i> <span>Edge View (B)</span>
@@ -1299,9 +1309,7 @@ function ensureModalZoomPopupDOM() {
       modalZoomPopupEl = document.createElement('div');
       modalZoomPopupEl.id = 'modal-zoom-popup';
       modalZoomPopupEl.className = 'modal-zoom-popup';
-      modalZoomPopupEl.innerHTML = `
-        <div class="zoom-label"><i class="ri-zoom-in-line"></i> 2.5x Zoom Inspection</div>
-      `;
+      modalZoomPopupEl.innerHTML = '';
       document.body.appendChild(modalZoomPopupEl);
     }
   }
@@ -1373,40 +1381,34 @@ function switchModalImage(stoneId, action) {
 
   if (!activeImg) return;
 
-  if (action === -1 || action === 1 || action === 'prev' || action === 'next') {
+  if (action === 'prev' || action === -1 || action === 'next' || action === 1) {
     currentModalImgIndex = currentModalImgIndex === 0 ? 1 : 0;
   } else if (action === 0 || action === 'full') {
     currentModalImgIndex = 0;
-  } else if (action === 1 || action === 'edge') {
+  } else if (action === 'edge') {
     currentModalImgIndex = 1;
   }
 
-  // Smooth fade transition
-  activeImg.style.opacity = '0.2';
-  activeImg.style.transform = 'scale(0.98)';
+  const targetSrc = currentModalImgIndex === 0 ? fullImg : edgeImg;
 
-  setTimeout(() => {
-    if (currentModalImgIndex === 0) {
-      activeImg.src = fullImg;
-      activeImg.alt = `${stone.name} Full Slab View (A)`;
-      if (viewBadge) {
-        viewBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>`;
-      }
-      thumb0?.classList.add('active');
-      thumb1?.classList.remove('active');
-    } else {
-      activeImg.src = edgeImg;
-      activeImg.alt = `${stone.name} Edge View (B)`;
-      if (viewBadge) {
-        viewBadge.innerHTML = `<i class="ri-stack-line"></i> <span>Edge View (B)</span>`;
-      }
-      thumb0?.classList.remove('active');
-      thumb1?.classList.add('active');
+  // Immediately assign image src and badge text synchronously for zero latency
+  activeImg.src = targetSrc;
+
+  if (currentModalImgIndex === 0) {
+    activeImg.alt = `${stone.name} Full Slab View (A)`;
+    if (viewBadge) {
+      viewBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>`;
     }
-
-    activeImg.style.opacity = '1';
-    activeImg.style.transform = 'scale(1)';
-  }, 100);
+    thumb0?.classList.add('active');
+    thumb1?.classList.remove('active');
+  } else {
+    activeImg.alt = `${stone.name} Edge View (B)`;
+    if (viewBadge) {
+      viewBadge.innerHTML = `<i class="ri-stack-line"></i> <span>Edge View (B)</span>`;
+    }
+    thumb0?.classList.remove('active');
+    thumb1?.classList.add('active');
+  }
 }
 
 function closeModal() {
