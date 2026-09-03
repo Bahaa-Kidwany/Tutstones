@@ -1017,7 +1017,7 @@ function initCatalogue() {
     }
   }
 
-  let itemsPerPage = 9;
+  let itemsPerPage = 20;
   let visibleCount = itemsPerPage;
 
   function resetPagination() {
@@ -1220,23 +1220,23 @@ function openStoneModal(stoneId) {
   let imageBlock = '';
   if (hasTwoImages) {
     imageBlock = `
-      <div class="modal-image-gallery">
-        <div class="modal-img-stage" id="modal-img-stage">
-          <img id="modal-active-img" src="${fullImg}" alt="${stone.name} Full Slab View" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
+      <div class="modal-image-gallery" style="display: flex !important; flex-direction: column !important; gap: 1rem !important; width: 100% !important; align-items: center !important;">
+        <div class="modal-img-stage" id="modal-img-stage" style="position: relative !important; width: 100% !important; height: 380px !important; max-height: 48vh !important; border-radius: 12px !important; overflow: hidden !important; border: 1.5px solid #DFB77D !important; background: #FAF6F0 !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important;">
+          <img id="modal-active-img" src="${fullImg}" alt="${stone.name} Full Slab View" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
           
-          <div id="modal-view-badge" class="modal-view-badge">
+          <div id="modal-view-badge" class="modal-view-badge" style="position: absolute !important; top: 0.85rem !important; left: 0.85rem !important; background: rgba(255, 253, 248, 0.96) !important; color: #8D4F4E !important; border: 1.5px solid #8D4F4E !important; padding: 0.35rem 0.85rem !important; border-radius: 20px !important; font-size: 0.82rem !important; font-weight: 700 !important; display: flex !important; align-items: center !important; gap: 0.4rem !important; box-shadow: 0 4px 14px rgba(36, 28, 24, 0.18) !important; z-index: 10 !important; pointer-events: none !important; margin: 0 !important;">
             <i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>
           </div>
 
-          <button type="button" class="modal-gallery-arrow arrow-prev" onclick="switchModalImage('${stone.id}', -1)" aria-label="Previous view" title="Switch image view (Click Arrow)">
+          <button type="button" class="modal-gallery-arrow arrow-prev" onclick="switchModalImage('${stone.id}', -1)" aria-label="Previous view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; left: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
-          <button type="button" class="modal-gallery-arrow arrow-next" onclick="switchModalImage('${stone.id}', 1)" aria-label="Next view" title="Switch image view (Click Arrow)">
+          <button type="button" class="modal-gallery-arrow arrow-next" onclick="switchModalImage('${stone.id}', 1)" aria-label="Next view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; right: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </button>
         </div>
 
-        <div class="modal-img-thumbs">
+        <div class="modal-img-thumbs" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; width: 100% !important; flex-shrink: 0 !important;">
           <button type="button" class="thumb-card active" id="thumb-0" onclick="switchModalImage('${stone.id}', 0)">
             <img src="${fullImg}" alt="${stone.name} Full Slab">
             <div class="thumb-info">
@@ -1254,10 +1254,10 @@ function openStoneModal(stoneId) {
     `;
   } else {
     imageBlock = `
-      <div class="modal-image-gallery">
-        <div class="modal-img-stage">
-          <img id="modal-active-img" src="${fullImg}" alt="${stone.name}" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
-          <div class="modal-view-badge">
+      <div class="modal-image-gallery" style="display: flex !important; flex-direction: column !important; gap: 1rem !important; width: 100% !important; align-items: center !important;">
+        <div class="modal-img-stage" style="position: relative !important; width: 100% !important; height: 380px !important; max-height: 48vh !important; border-radius: 12px !important; overflow: hidden !important; border: 1.5px solid #DFB77D !important; background: #FAF6F0 !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important;">
+          <img id="modal-active-img" src="${fullImg}" alt="${stone.name}" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
+          <div class="modal-view-badge" style="position: absolute !important; top: 0.85rem !important; left: 0.85rem !important; background: rgba(255, 253, 248, 0.96) !important; color: #8D4F4E !important; border: 1.5px solid #8D4F4E !important; padding: 0.35rem 0.85rem !important; border-radius: 20px !important; font-size: 0.82rem !important; font-weight: 700 !important; display: flex !important; align-items: center !important; gap: 0.4rem !important; box-shadow: 0 4px 14px rgba(36, 28, 24, 0.18) !important; z-index: 10 !important; pointer-events: none !important; margin: 0 !important;">
             <i class="ri-image-line"></i> <span>Full View</span>
           </div>
         </div>
@@ -1266,8 +1266,8 @@ function openStoneModal(stoneId) {
   }
 
   modalContent.innerHTML = `
-    <div class="modal-clean-layout">
-      <div class="modal-header-simple">
+    <div class="modal-clean-layout" style="padding: 1.75rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; width: 100% !important; box-sizing: border-box !important; max-height: 90vh !important; overflow-y: auto !important;">
+      <div class="modal-header-simple" style="text-align: center !important; margin-bottom: 1rem !important; width: 100% !important; flex-shrink: 0 !important;">
         <span class="section-tag" style="font-size: 0.78rem; letter-spacing: 1.5px; color: #8D4F4E; font-weight: 700; text-transform: uppercase;">
           <i class="ri-sparkling-line"></i> ${(stone.finish || stone.category || 'NATURAL STONE').toUpperCase()}
         </span>
@@ -1277,7 +1277,13 @@ function openStoneModal(stoneId) {
     </div>
   `;
 
-  overlay?.classList.add('active');
+  if (overlay) {
+    overlay.classList.add('active');
+    const container = overlay.querySelector('.modal-container');
+    if (container) {
+      container.style.cssText = "background: rgba(253, 249, 243, 0.96) !important; border: 2.5px solid #8D4F4E !important; outline: 1.5px solid #DFB77D !important; border-radius: 16px !important; max-width: 650px !important; width: 92vw !important; max-height: 90vh !important; overflow: hidden !important; position: relative !important; box-shadow: 0 20px 60px rgba(36, 28, 24, 0.3) !important; display: flex !important; flex-direction: column !important;";
+    }
+  }
   document.body.style.overflow = 'hidden';
 
   // Initialize zoomed-in popup inspection on image hover
