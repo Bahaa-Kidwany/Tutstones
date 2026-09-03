@@ -792,17 +792,16 @@ function createStoneCardHTML(stone) {
   if (hasSplit) {
     thumbHTML = `
       <div class="stone-thumb" data-stone-id="${stone.id}" data-slab="${slabUrl}" data-edge="${edgeUrl}" data-main="${mainUrl}">
-        <div class="stone-diag-split" data-stone-id="${stone.id}" data-slab="${slabUrl}" data-edge="${edgeUrl}" data-main="${mainUrl}">
-          <div class="diag-half diag-left" data-stone-id="${stone.id}" data-side="left" data-slab="${slabUrl}" data-edge="${edgeUrl}" title="${stone.name} - Full Slab (A)">
-            <img src="${slabUrl}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
-            <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab</span>
-          </div>
-          <div class="diag-half diag-right" data-stone-id="${stone.id}" data-side="right" data-slab="${slabUrl}" data-edge="${edgeUrl}" title="${stone.name} - Edge View (B)">
-            <img src="${edgeUrl}" alt="${stone.name} Edge View" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
-            <span class="diag-label"><i class="ri-stack-line"></i> Edge View</span>
-          </div>
-          <div class="diag-split-line"></div>
+        <img id="card-img-${stone.id}" src="${slabUrl}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
+        <div id="card-badge-${stone.id}" class="card-img-badge">
+          <i class="ri-aspect-ratio-line"></i> Full Slab
         </div>
+        <button type="button" class="card-arrow-btn card-arrow-prev" onclick="event.stopPropagation(); toggleCardImage('${stone.id}', -1)" title="Switch image view (Full / Edge)" aria-label="Previous view">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button type="button" class="card-arrow-btn card-arrow-next" onclick="event.stopPropagation(); toggleCardImage('${stone.id}', 1)" title="Switch image view (Full / Edge)" aria-label="Next view">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
     `;
   } else {
@@ -814,7 +813,7 @@ function createStoneCardHTML(stone) {
   }
 
   return `
-    <div class="stone-card" data-stone-id="${stone.id}" onclick="openStoneModal('${stone.id}')" style="cursor: pointer;" title="Click to view specifications for ${stone.name}">
+    <div class="stone-card" data-stone-id="${stone.id}" onclick="openStoneModal('${stone.id}')" style="cursor: pointer;" title="Click to view details & switch images for ${stone.name}">
       ${thumbHTML}
       <div class="stone-body" style="padding: 1rem 1.25rem;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
@@ -826,6 +825,35 @@ function createStoneCardHTML(stone) {
       </div>
     </div>
   `;
+}
+
+function toggleCardImage(stoneId, delta) {
+  const stone = typeof TutStonesStore !== 'undefined' ? TutStonesStore.getStone(stoneId) : null;
+  if (!stone) return;
+
+  const cardImg = document.getElementById(`card-img-${stoneId}`);
+  const cardBadge = document.getElementById(`card-badge-${stoneId}`);
+  if (!cardImg) return;
+
+  const slabUrl = safeImgSrc(stone.imageSlab || stone.image);
+  const edgeUrl = safeImgSrc(stone.imageEdge);
+  if (!edgeUrl) return;
+
+  const isCurrentSlab = cardImg.src.includes(encodeURI(stone.imageSlab || stone.image)) || cardImg.alt.includes('Full Slab');
+
+  if (isCurrentSlab) {
+    cardImg.src = edgeUrl;
+    cardImg.alt = `${stone.name} Edge View`;
+    if (cardBadge) {
+      cardBadge.innerHTML = `<i class="ri-stack-line"></i> Edge View`;
+    }
+  } else {
+    cardImg.src = slabUrl;
+    cardImg.alt = `${stone.name} Full Slab`;
+    if (cardBadge) {
+      cardBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> Full Slab`;
+    }
+  }
 }
 
 /* ==========================================================================
@@ -1143,6 +1171,9 @@ function initCatalogue() {
 /* ==========================================================================
    6. Specification Modal & Inquiry Handler
    ========================================================================== */
+let currentModalStoneId = null;
+let currentModalImgIndex = 0; // 0 = Full Slab (A), 1 = Edge View (B)
+
 function initModal() {
   const overlay = document.getElementById('spec-modal');
   const closeBtn = document.getElementById('modal-close-btn');
@@ -1151,109 +1182,229 @@ function initModal() {
   overlay?.addEventListener('click', (e) => {
     if (e.target === overlay) closeModal();
   });
+
+  // Keyboard navigation for image switching & closing
+  document.addEventListener('keydown', (e) => {
+    const activeOverlay = document.getElementById('spec-modal');
+    if (activeOverlay && activeOverlay.classList.contains('active')) {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        if (currentModalStoneId) {
+          switchModalImage(currentModalStoneId, e.key === 'ArrowLeft' ? -1 : 1);
+        }
+      } else if (e.key === 'Escape') {
+        closeModal();
+      }
+    }
+  });
 }
 
 function openStoneModal(stoneId) {
+  if (typeof window.hideStonePreview === 'function') {
+    window.hideStonePreview();
+  }
   if (typeof TutStonesStore === 'undefined') return;
   const stone = TutStonesStore.getStone(stoneId);
   if (!stone) return;
 
+  currentModalStoneId = stoneId;
+  currentModalImgIndex = 0; // Default to Full Slab View (0)
+
   const overlay = document.getElementById('spec-modal');
   const modalContent = document.getElementById('modal-content-body');
+  if (!overlay || !modalContent) return;
 
-  const hasSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
+  const fullImg = safeImgSrc(stone.imageSlab || stone.image);
+  const edgeImg = safeImgSrc(stone.imageEdge);
+  const hasTwoImages = Boolean(stone.imageEdge && stone.imageEdge !== (stone.imageSlab || stone.image));
 
   let imageBlock = '';
-  if (hasSplit) {
+  if (hasTwoImages) {
     imageBlock = `
-      <div class="modal-image">
-        <div class="stone-diag-split modal-diag-split">
-          <div class="diag-half diag-left" title="${stone.name} - Full Slab (A)">
-            <img src="${safeImgSrc(stone.imageSlab)}" alt="${stone.name} Full Slab" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
-            <span class="diag-label"><i class="ri-aspect-ratio-line"></i> Full Slab (A)</span>
+      <div class="modal-image-gallery">
+        <div class="modal-img-stage" id="modal-img-stage">
+          <img id="modal-active-img" src="${fullImg}" alt="${stone.name} Full Slab View" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
+          
+          <div id="modal-view-badge" class="modal-view-badge">
+            <i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>
           </div>
-          <div class="diag-half diag-right" title="${stone.name} - Edge View (B)">
-            <img src="${safeImgSrc(stone.imageEdge)}" alt="${stone.name} Edge View" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
-            <span class="diag-label"><i class="ri-stack-line"></i> Edge View (B)</span>
-          </div>
-          <div class="diag-split-line"></div>
+
+          <button type="button" class="modal-gallery-arrow arrow-prev" onclick="switchModalImage('${stone.id}', -1)" aria-label="Previous view" title="Switch image view (Click Arrow)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="modal-gallery-arrow arrow-next" onclick="switchModalImage('${stone.id}', 1)" aria-label="Next view" title="Switch image view (Click Arrow)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
-        <p style="text-align: center; font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.6rem;">
-          <i class="ri-cursor-line"></i> Hover left or right to expand Full Slab (A) or Edge View (B)
-        </p>
+
+        <div class="modal-img-thumbs">
+          <button type="button" class="thumb-card active" id="thumb-0" onclick="switchModalImage('${stone.id}', 0)">
+            <img src="${fullImg}" alt="${stone.name} Full Slab">
+            <div class="thumb-info">
+              <i class="ri-aspect-ratio-line"></i> <span>Full Slab (A)</span>
+            </div>
+          </button>
+          <button type="button" class="thumb-card" id="thumb-1" onclick="switchModalImage('${stone.id}', 1)">
+            <img src="${edgeImg}" alt="${stone.name} Edge View">
+            <div class="thumb-info">
+              <i class="ri-stack-line"></i> <span>Edge View (B)</span>
+            </div>
+          </button>
+        </div>
       </div>
     `;
   } else {
     imageBlock = `
-      <div class="modal-image">
-        <img src="${safeImgSrc(stone.image)}" alt="${stone.name}" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
+      <div class="modal-image-gallery">
+        <div class="modal-img-stage">
+          <img id="modal-active-img" src="${fullImg}" alt="${stone.name}" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
+          <div class="modal-view-badge">
+            <i class="ri-image-line"></i> <span>Full View</span>
+          </div>
+        </div>
       </div>
     `;
   }
 
   modalContent.innerHTML = `
-    <div class="modal-grid">
-      ${imageBlock}
-      <div class="modal-details">
-        <span class="section-tag">${(stone.category || 'STONE').toUpperCase()}</span>
-        <h3>${stone.name}</h3>
-        <p style="color: var(--color-text-muted); margin-bottom: 1rem;">${stone.desc || ''}</p>
-        
-        <table class="spec-table">
-          <tr>
-            <td>Country of Origin</td>
-            <td>${stone.origin || 'N/A'}</td>
-          </tr>
-          <tr>
-            <td>Available Finishes</td>
-            <td>${stone.finish || 'Polished'}</td>
-          </tr>
-          <tr>
-            <td>Bulk Density</td>
-            <td>${stone.density || 'N/A'}</td>
-          </tr>
-          <tr>
-            <td>Water Absorption</td>
-            <td>${stone.waterAbs || 'N/A'}</td>
-          </tr>
-          <tr>
-            <td>Flexural Strength</td>
-            <td>${stone.flexural || 'N/A'}</td>
-          </tr>
-          <tr>
-            <td>Recommended Uses</td>
-            <td>${stone.applications || 'Flooring, Countertops'}</td>
-          </tr>
-        </table>
-
-        <div style="margin-top: 1.5rem; background: var(--color-bg-surface); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border-gold);">
-          <h4 style="color: var(--color-gold-primary); font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-            <i class="ri-mail-send-line"></i> Request Spec Sheet & Sample
-          </h4>
-          <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1rem;">
-            Send an instant request to our stone specialist team for full technical documentation and slab availability.
-          </p>
-          <form onsubmit="handleInquirySubmit(event, '${stone.name}')">
-            <div class="form-group" style="margin-bottom: 0.75rem;">
-              <input type="text" placeholder="Your Name or Firm" required>
-            </div>
-            <div class="form-group" style="margin-bottom: 0.75rem;">
-              <input type="email" placeholder="Your Email Address" required>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.6rem;">
-              Request Details (No Payment Required)
-            </button>
-          </form>
-        </div>
+    <div class="modal-clean-layout">
+      <div class="modal-header-simple">
+        <span class="section-tag" style="font-size: 0.78rem; letter-spacing: 1.5px; color: #8D4F4E; font-weight: 700; text-transform: uppercase;">
+          <i class="ri-sparkling-line"></i> ${(stone.finish || stone.category || 'NATURAL STONE').toUpperCase()}
+        </span>
+        <h3 style="font-family: var(--font-heading); font-size: 1.95rem; color: #241C18; margin: 0.35rem 0 0 0; font-weight: 700;">${stone.name}</h3>
       </div>
+      ${imageBlock}
     </div>
   `;
 
   overlay?.classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  // Initialize zoomed-in popup inspection on image hover
+  setTimeout(initModalZoomEvents, 50);
+}
+
+let modalZoomPopupEl = null;
+
+function ensureModalZoomPopupDOM() {
+  if (!modalZoomPopupEl) {
+    modalZoomPopupEl = document.getElementById('modal-zoom-popup');
+    if (!modalZoomPopupEl) {
+      modalZoomPopupEl = document.createElement('div');
+      modalZoomPopupEl.id = 'modal-zoom-popup';
+      modalZoomPopupEl.className = 'modal-zoom-popup';
+      modalZoomPopupEl.innerHTML = `
+        <div class="zoom-label"><i class="ri-zoom-in-line"></i> 2.5x Zoom Inspection</div>
+      `;
+      document.body.appendChild(modalZoomPopupEl);
+    }
+  }
+}
+
+function initModalZoomEvents() {
+  ensureModalZoomPopupDOM();
+  const stage = document.getElementById('modal-img-stage');
+  const activeImg = document.getElementById('modal-active-img');
+  if (!stage || !activeImg) return;
+
+  stage.onmousemove = function(e) {
+    if (e.target.closest('.modal-gallery-arrow') || e.target.closest('.modal-view-badge')) {
+      hideModalZoomPopup();
+      return;
+    }
+
+    const rect = stage.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const xPercent = (x / rect.width) * 100;
+    const yPercent = (y / rect.height) * 100;
+
+    if (modalZoomPopupEl) {
+      modalZoomPopupEl.style.backgroundImage = `url("${activeImg.src}")`;
+      modalZoomPopupEl.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
+
+      let popupLeft = e.clientX + 25;
+      let popupTop = e.clientY - 160;
+
+      if (popupLeft + 330 > window.innerWidth) {
+        popupLeft = e.clientX - 345;
+      }
+      if (popupTop < 10) popupTop = 10;
+      if (popupTop + 330 > window.innerHeight) {
+        popupTop = window.innerHeight - 340;
+      }
+
+      modalZoomPopupEl.style.left = `${popupLeft}px`;
+      modalZoomPopupEl.style.top = `${popupTop}px`;
+      modalZoomPopupEl.classList.add('active');
+    }
+  };
+
+  stage.onmouseleave = function() {
+    hideModalZoomPopup();
+  };
+}
+
+function hideModalZoomPopup() {
+  if (modalZoomPopupEl) {
+    modalZoomPopupEl.classList.remove('active');
+  }
+}
+
+function switchModalImage(stoneId, action) {
+  hideModalZoomPopup();
+  const stone = typeof TutStonesStore !== 'undefined' ? TutStonesStore.getStone(stoneId) : null;
+  if (!stone) return;
+
+  const fullImg = safeImgSrc(stone.imageSlab || stone.image);
+  const edgeImg = safeImgSrc(stone.imageEdge);
+  if (!edgeImg) return;
+
+  const activeImg = document.getElementById('modal-active-img');
+  const viewBadge = document.getElementById('modal-view-badge');
+  const thumb0 = document.getElementById('thumb-0');
+  const thumb1 = document.getElementById('thumb-1');
+
+  if (!activeImg) return;
+
+  if (action === -1 || action === 1 || action === 'prev' || action === 'next') {
+    currentModalImgIndex = currentModalImgIndex === 0 ? 1 : 0;
+  } else if (action === 0 || action === 'full') {
+    currentModalImgIndex = 0;
+  } else if (action === 1 || action === 'edge') {
+    currentModalImgIndex = 1;
+  }
+
+  // Smooth fade transition
+  activeImg.style.opacity = '0.2';
+  activeImg.style.transform = 'scale(0.98)';
+
+  setTimeout(() => {
+    if (currentModalImgIndex === 0) {
+      activeImg.src = fullImg;
+      activeImg.alt = `${stone.name} Full Slab View (A)`;
+      if (viewBadge) {
+        viewBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>`;
+      }
+      thumb0?.classList.add('active');
+      thumb1?.classList.remove('active');
+    } else {
+      activeImg.src = edgeImg;
+      activeImg.alt = `${stone.name} Edge View (B)`;
+      if (viewBadge) {
+        viewBadge.innerHTML = `<i class="ri-stack-line"></i> <span>Edge View (B)</span>`;
+      }
+      thumb0?.classList.remove('active');
+      thumb1?.classList.add('active');
+    }
+
+    activeImg.style.opacity = '1';
+    activeImg.style.transform = 'scale(1)';
+  }, 100);
 }
 
 function closeModal() {
+  hideModalZoomPopup();
   const overlay = document.getElementById('spec-modal');
   overlay?.classList.remove('active');
   document.body.style.overflow = '';
@@ -1290,145 +1441,9 @@ document.addEventListener('mouseout', (e) => {
   }
 });
 
-/* ==========================================================================
-   Pure Image-Only Hover Preview (No Window, No Blur, Corner PIP Switcher)
-   ========================================================================== */
-let globalHoverPreviewEl = null;
-let globalHoverPreviewImg = null;
-let globalHoverCornerInset = null;
-let globalHoverCornerImg = null;
-let globalHoverCornerLabel = null;
-
-let currentMainUrl = '';
-let currentAltUrl = '';
-let currentIsSlab = true;
-
-function ensureHoverPreviewDOM() {
-  // Purge any legacy window modal element if present
-  const legacyModal = document.getElementById('stone-image-popup');
-  if (legacyModal) legacyModal.remove();
-
-  if (!globalHoverPreviewEl) {
-    globalHoverPreviewEl = document.getElementById('stone-clean-preview');
-    if (!globalHoverPreviewEl) {
-      globalHoverPreviewEl = document.createElement('div');
-      globalHoverPreviewEl.id = 'stone-clean-preview';
-      globalHoverPreviewEl.className = 'stone-clean-preview';
-      globalHoverPreviewEl.setAttribute('aria-hidden', 'true');
-      globalHoverPreviewEl.innerHTML = `
-        <div class="stone-clean-preview-wrapper">
-          <img id="stone-clean-img" class="stone-clean-img" src="" alt="Enlarged Stone Preview">
-          <div id="stone-clean-corner" class="stone-clean-corner" style="display: none;" onclick="swapStonePreviewView(event)" onmouseenter="swapStonePreviewView(event)" title="Click or hover to switch view">
-            <img id="stone-clean-corner-img" src="" alt="Corner View">
-            <span id="stone-clean-corner-label" class="corner-label">Edge View</span>
-          </div>
-        </div>
-      `;
-      (document.body || document.documentElement).appendChild(globalHoverPreviewEl);
-    }
-    globalHoverPreviewImg = globalHoverPreviewEl.querySelector('#stone-clean-img');
-    globalHoverCornerInset = globalHoverPreviewEl.querySelector('#stone-clean-corner');
-    globalHoverCornerImg = globalHoverPreviewEl.querySelector('#stone-clean-corner-img');
-    globalHoverCornerLabel = globalHoverPreviewEl.querySelector('#stone-clean-corner-label');
-  }
-}
-
-window.showStonePreview = function(mainUrl, altUrl = null, isSlab = true) {
-  if (!mainUrl) return;
-  ensureHoverPreviewDOM();
-
-  currentMainUrl = mainUrl;
-  currentAltUrl = altUrl;
-  currentIsSlab = isSlab;
-
-  if (globalHoverPreviewImg) {
-    globalHoverPreviewImg.src = mainUrl;
-  }
-
-  if (altUrl && altUrl !== mainUrl) {
-    if (globalHoverCornerImg) globalHoverCornerImg.src = altUrl;
-    if (globalHoverCornerLabel) globalHoverCornerLabel.textContent = isSlab ? 'Edge View' : 'Full Slab';
-    if (globalHoverCornerInset) globalHoverCornerInset.style.display = 'block';
-  } else {
-    if (globalHoverCornerInset) globalHoverCornerInset.style.display = 'none';
-  }
-
-  if (globalHoverPreviewEl) {
-    globalHoverPreviewEl.classList.add('active');
-    globalHoverPreviewEl.setAttribute('aria-hidden', 'false');
-  }
-};
-
-window.swapStonePreviewView = function(e) {
-  if (e) e.stopPropagation();
-  if (!currentAltUrl || currentAltUrl === currentMainUrl) return;
-
-  const tempUrl = currentMainUrl;
-  currentMainUrl = currentAltUrl;
-  currentAltUrl = tempUrl;
-  currentIsSlab = !currentIsSlab;
-
-  window.showStonePreview(currentMainUrl, currentAltUrl, currentIsSlab);
-};
-
-window.hideStonePreview = function() {
-  if (globalHoverPreviewEl) {
-    globalHoverPreviewEl.classList.remove('active');
-    globalHoverPreviewEl.setAttribute('aria-hidden', 'true');
-  }
-};
-
-function initStoneImagePopup() {
-  ensureHoverPreviewDOM();
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') window.hideStonePreview();
-  });
-}
-
-/* Global Delegated Event Listeners for Stone Hover Preview */
-document.addEventListener('mouseover', (e) => {
-  const left = e.target.closest('.diag-left');
-  const right = e.target.closest('.diag-right');
-  const thumb = e.target.closest('.stone-thumb');
-
-  const target = left || right || (thumb && !thumb.querySelector('.stone-diag-split') ? thumb : null);
-  if (!target) return;
-
-  const split = target.closest('.stone-diag-split');
-  const thumbContainer = target.closest('.stone-thumb');
-  const card = target.closest('.stone-card');
-
-  let slabUrl = target.dataset.slab || split?.dataset.slab;
-  let edgeUrl = target.dataset.edge || split?.dataset.edge;
-  let mainUrl = target.dataset.main || split?.dataset.main || thumbContainer?.dataset.main;
-
-  if (!slabUrl || !mainUrl) {
-    const stoneId = target.dataset.stoneId || split?.dataset.stoneId || thumbContainer?.dataset.stoneId || card?.dataset.stoneId;
-    if (stoneId && typeof TutStonesStore !== 'undefined') {
-      const stone = TutStonesStore.getStone(stoneId);
-      if (stone) {
-        slabUrl = slabUrl || safeImgSrc(stone.imageSlab || stone.image);
-        edgeUrl = edgeUrl || safeImgSrc(stone.imageEdge || stone.image);
-        mainUrl = mainUrl || safeImgSrc(stone.image);
-      }
-    }
-  }
-
-  if (left && slabUrl) {
-    window.showStonePreview(slabUrl, edgeUrl || mainUrl, true);
-  } else if (right && edgeUrl) {
-    window.showStonePreview(edgeUrl, slabUrl || mainUrl, false);
-  } else if (mainUrl) {
-    window.showStonePreview(mainUrl, null, true);
-  }
-});
-
-document.addEventListener('mouseout', (e) => {
-  const card = e.target.closest('.stone-card, .stone-thumb');
-  if (card) {
-    if (!e.relatedTarget || !card.contains(e.relatedTarget)) {
-      window.hideStonePreview();
-    }
-  }
-});
+/* Outside Hover Preview Disabled */
+window.showStonePreview = function() {};
+window.swapStonePreviewView = function() {};
+window.hideStonePreview = function() {};
+function initStoneImagePopup() {}
 

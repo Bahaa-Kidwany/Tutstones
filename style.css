@@ -1449,15 +1449,16 @@ button {
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   opacity: 0;
   visibility: hidden;
-  transition: var(--transition-smooth);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .modal-overlay.active {
@@ -1466,42 +1467,101 @@ button {
 }
 
 .modal-container {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border-gold);
+  background: rgba(253, 249, 243, 0.94) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 2px solid #8D4F4E;
   border-radius: var(--radius-lg);
-  max-width: 900px;
+  max-width: 720px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 50px rgba(36, 28, 24, 0.25), 0 0 25px rgba(223, 183, 125, 0.3);
+}
+
+/* Modal Image Zoomed-In Inspection Popup */
+.modal-zoom-popup {
+  position: fixed;
+  width: 320px;
+  height: 320px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-gold-primary);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.85), 0 0 25px rgba(212, 175, 55, 0.35);
+  background-repeat: no-repeat;
+  background-size: 280% 280%;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 2500;
+  background-color: #06090F;
+  overflow: hidden;
+}
+
+.modal-zoom-popup.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-zoom-popup .zoom-label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(10, 14, 23, 0.92);
+  color: var(--color-gold-primary);
+  border: 1px solid var(--color-border-gold);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .modal-close {
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.1);
-  color: #FFF;
+  background: rgba(36, 28, 24, 0.08);
+  color: #241C18;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   transition: var(--transition-fast);
-  z-index: 10;
+  z-index: 20;
+  border: 1.5px solid rgba(36, 28, 24, 0.15);
 }
 
 .modal-close:hover {
-  background: var(--color-gold-primary);
-  color: #000;
+  background: #8D4F4E;
+  color: #FFFFFF;
+  border-color: #8D4F4E;
+}
+
+.modal-clean-layout {
+  padding: 2.25rem 2rem 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.modal-header-simple {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  width: 100%;
 }
 
 .modal-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.05fr 1fr;
   gap: 2rem;
   padding: 2.5rem;
 }
@@ -1517,7 +1577,223 @@ button {
 .modal-image img {
   width: 100%;
   height: 100%;
+  object-fit: contain !important;
+}
+
+/* Stone Card Grid & Modal Badge Tags (Translucent Light Cream) */
+.card-img-badge,
+.modal-view-badge {
+  position: absolute;
+  background: rgba(255, 253, 248, 0.96) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  color: #8D4F4E !important;
+  border: 1.5px solid #8D4F4E !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 4px 14px rgba(36, 28, 24, 0.18) !important;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.card-img-badge {
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+.modal-view-badge {
+  top: 0.85rem;
+  left: 0.85rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+}
+
+.card-img-badge i,
+.modal-view-badge i {
+  color: #8D4F4E !important;
+}
+
+.card-arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #FFFFFF !important;
+  backdrop-filter: blur(4px);
+  border: 1.5px solid var(--color-border-gold);
+  color: #000000 !important;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.95;
+  transition: all 0.2s ease;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.stone-card:hover .card-arrow-btn {
+  opacity: 1;
+}
+
+.card-arrow-btn:hover {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border-color: var(--color-gold-primary);
+  transform: translateY(-50%) scale(1.15);
+  box-shadow: 0 6px 15px rgba(212, 175, 55, 0.45);
+}
+
+.card-arrow-prev {
+  left: 0.5rem;
+}
+
+.card-arrow-next {
+  right: 0.5rem;
+}
+
+/* Modal Gallery Image Stage & Arrow Navigation */
+.modal-image-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.modal-img-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 320px;
+  max-height: 440px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1.5px solid #DFB77D;
+  background: #FAF6F0;
+  box-shadow: 0 10px 30px rgba(36, 28, 24, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-img-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: block;
+}
+
+
+.modal-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #FFFFFF !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 2px solid #8D4F4E;
+  color: #000000 !important;
+  font-size: 1.6rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2);
+}
+
+.card-arrow-btn svg,
+.modal-gallery-arrow svg {
+  display: block !important;
+  stroke: #000000 !important;
+  fill: none !important;
+  pointer-events: none !important;
+}
+
+.modal-gallery-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.modal-gallery-arrow.arrow-prev {
+  left: 0.75rem;
+}
+
+.modal-gallery-arrow.arrow-next {
+  right: 0.75rem;
+}
+
+.modal-img-thumbs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.thumb-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid rgba(141, 79, 78, 0.25);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.thumb-card img {
+  width: 55px;
+  height: 42px;
   object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid rgba(141, 79, 78, 0.2);
+  flex-shrink: 0;
+}
+
+.thumb-card .thumb-info {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #55443D;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.thumb-card:hover {
+  border-color: #8D4F4E;
+  background: rgba(141, 79, 78, 0.08);
+}
+
+.thumb-card.active {
+  border-color: #8D4F4E;
+  background: rgba(141, 79, 78, 0.15);
+  box-shadow: 0 0 12px rgba(141, 79, 78, 0.2);
+}
+
+.thumb-card.active .thumb-info {
+  color: #8D4F4E;
+  font-weight: 700;
+}
+
+.thumb-card.active img {
+  border-color: #8D4F4E;
 }
 
 .modal-details h3 {
@@ -3052,19 +3328,44 @@ html[data-theme="pharaonic"] .page-header-banner,
   font-weight: 600 !important;
 }
 
-/* Modal in Pharaonic Light Palette */
+/* Modal in Pharaonic Light Translucent Palette */
+[data-theme="pharaonic"] .modal-container,
 [data-theme="pharaonic"] .modal-content {
-  background: #FAF6F0 !important;
-  backdrop-filter: blur(20px) !important;
-  border: 3px solid #8D4F4E !important;
-  outline: 2px solid #DFB77D !important;
+  background: rgba(253, 249, 243, 0.95) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 2.5px solid #8D4F4E !important;
+  outline: 1.5px solid #DFB77D !important;
   color: #241C18 !important;
-  box-shadow: 0 15px 50px rgba(36, 28, 24, 0.2) !important;
+  box-shadow: 0 20px 60px rgba(36, 28, 24, 0.25), 0 0 35px rgba(223, 183, 125, 0.35) !important;
 }
 
-[data-theme="pharaonic"] .modal-header h3 {
+[data-theme="pharaonic"] .modal-details h3,
+[data-theme="pharaonic"] .modal-header-simple h3 {
   font-family: var(--font-heading) !important;
-  color: #8D4F4E !important;
+  color: #241C18 !important;
+}
+
+[data-theme="pharaonic"] .spec-table td {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+[data-theme="pharaonic"] .spec-table td:first-child {
+  color: #B0B8C4 !important;
+}
+
+[data-theme="pharaonic"] .spec-table td:last-child {
+  color: #D4AF37 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="pharaonic"] .modal-container input[type="text"],
+[data-theme="pharaonic"] .modal-container input[type="email"],
+[data-theme="pharaonic"] .modal-container select,
+[data-theme="pharaonic"] .modal-container textarea {
+  background: #111622 !important;
+  border: 1px solid rgba(212, 175, 55, 0.5) !important;
+  color: #FFFFFF !important;
 }
 
 /* Form Controls in Pharaonic Light Palette */
