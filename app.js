@@ -978,10 +978,10 @@ function initCatalogue() {
   }
 
   function renderCategoryDescriptionBanner(catId) {
-    const banner = document.getElementById('category-description-banner');
+    const banner = document.getElementById('category-description-banner') || document.getElementById('category-desc-banner');
     if (!banner) return;
 
-    if (catId === 'all') {
+    if (!catId || catId === 'all') {
       banner.innerHTML = `
         <div class="category-desc-card">
           <div class="category-desc-icon"><i class="ri-apps-2-line"></i></div>
@@ -995,16 +995,20 @@ function initCatalogue() {
     }
 
     const currentCats = TutStonesStore.getCategories();
+    const safeCatId = String(catId).toLowerCase();
     const cat = currentCats.find(c => 
-      c.id.toLowerCase() === catId.toLowerCase() || 
-      (c.slug && c.slug.toLowerCase() === catId.toLowerCase()) || 
-      c.name.toLowerCase().includes(catId.toLowerCase())
+      (c.id && String(c.id).toLowerCase() === safeCatId) || 
+      (c.slug && String(c.slug).toLowerCase() === safeCatId) || 
+      (c.name && typeof c.name === 'string' && String(c.name).toLowerCase().includes(safeCatId))
     );
 
     if (cat) {
       const parentCat = cat.parent ? currentCats.find(p => p.id === cat.parent) : null;
-      const breadcrumbHTML = parentCat 
-        ? `<div style="font-size: 0.78rem; font-weight: 700; color: #8D4F4E; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;"><i class="ri-node-tree"></i> ${parentCat.name}  &rsaquo;  ${cat.name} (Sub-Category)</div>` 
+      const parentName = parentCat && typeof parentCat.name === 'string' ? parentCat.name : '';
+      const catName = cat.name || 'Category';
+
+      const breadcrumbHTML = parentName 
+        ? `<div style="font-size: 0.78rem; font-weight: 700; color: #8D4F4E; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;"><i class="ri-node-tree"></i> ${parentName} &rsaquo; ${catName} (Sub-Category)</div>` 
         : `<div style="font-size: 0.78rem; font-weight: 700; color: #8D4F4E; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem;"><i class="ri-vip-diamond-line"></i> Primary Stone Collection</div>`;
 
       banner.innerHTML = `
@@ -1012,8 +1016,8 @@ function initCatalogue() {
           <div class="category-desc-icon"><i class="${cat.icon || 'ri-price-tag-3-line'}"></i></div>
           <div class="category-desc-content">
             ${breadcrumbHTML}
-            <h4 class="category-desc-title">${cat.name}</h4>
-            <p class="category-desc-text">${cat.desc || `Explore our curated selection of ${cat.name} slabs.`}</p>
+            <h4 class="category-desc-title">${catName}</h4>
+            <p class="category-desc-text">${cat.desc || `Explore our curated selection of ${catName} slabs.`}</p>
           </div>
         </div>
       `;
@@ -1110,12 +1114,38 @@ function initCatalogue() {
 
     let filtered = allStones;
 
-    if (currentCategory !== 'all') {
-      const targetCat = currentCategory.toLowerCase();
+    if (currentCategory && currentCategory !== 'all') {
+      const safeCurrentCat = String(currentCategory).toLowerCase();
+      const currentCats = TutStonesStore.getCategories();
+      
+      const targetCatObj = currentCats.find(c => 
+        (c.id && String(c.id).toLowerCase() === safeCurrentCat) || 
+        (c.slug && String(c.slug).toLowerCase() === safeCurrentCat)
+      );
+
+      const validCatIds = new Set();
+      validCatIds.add(safeCurrentCat);
+
+      if (targetCatObj) {
+        if (targetCatObj.id) validCatIds.add(String(targetCatObj.id).toLowerCase());
+        if (targetCatObj.slug) validCatIds.add(String(targetCatObj.slug).toLowerCase());
+
+        // If filtering by a primary parent collection (e.g. 'marble'), include all sub-categories belonging to it
+        currentCats.filter(c => c.parent === targetCatObj.id).forEach(sub => {
+          if (sub.id) validCatIds.add(String(sub.id).toLowerCase());
+          if (sub.slug) validCatIds.add(String(sub.slug).toLowerCase());
+        });
+      }
+
       filtered = filtered.filter(s => {
-        const stoneCat = (s.category || '').toLowerCase();
-        const parentCat = (s.parentCategory || '').toLowerCase();
-        return stoneCat === targetCat || parentCat === targetCat;
+        const sCat = typeof s.category === 'string' ? s.category.toLowerCase() : (s.category && s.category.id ? String(s.category.id).toLowerCase() : '');
+        const sParent = typeof s.parentCategory === 'string' ? s.parentCategory.toLowerCase() : (s.parentCategory && s.parentCategory.id ? String(s.parentCategory.id).toLowerCase() : '');
+        
+        // Also check category parent mapping from store categories
+        const catObj = currentCats.find(c => (c.id && String(c.id).toLowerCase() === sCat) || (c.slug && String(c.slug).toLowerCase() === sCat));
+        const catParentId = catObj && catObj.parent ? String(catObj.parent).toLowerCase() : '';
+
+        return validCatIds.has(sCat) || validCatIds.has(sParent) || validCatIds.has(catParentId);
       });
     }
 
