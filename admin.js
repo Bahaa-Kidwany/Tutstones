@@ -136,7 +136,7 @@ function collectAllPageFormsToStoreData() {
       emailSecondary: document.getElementById('cnt-email-secondary').value,
       phoneTitle: document.getElementById('cnt-phone-title').value,
       phonePrimary: document.getElementById('cnt-phone-primary').value,
-      whatsappNum: document.getElementById('cnt-whatsapp-num').value
+      whatsappNumber: document.getElementById('cnt-whatsapp-num').value
     });
   }
 
@@ -159,6 +159,26 @@ function saveAllGlobalChanges() {
   setUnsavedChanges(false);
   refreshAllAdminViews();
   showToast('All modifications across all pages saved successfully!');
+}
+
+function exportDataToCodebase() {
+  saveAllGlobalChanges();
+  try {
+    const jsonStr = JSON.stringify(TutStonesStore.data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tut_stones_data_export.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Store data exported to tut_stones_data_export.json!');
+  } catch (e) {
+    console.error('Export failed:', e);
+    showToast('Failed to export data file.');
+  }
 }
 
 function undoCurrentPageEdits(pageKey) {

@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Admin Stylesheet -->
-  <link rel="stylesheet" href="admin.css?v=20260906_v32">
+  <link rel="stylesheet" href="admin.css?v=20260906_v33">
 </head>
 <body class="mode-editor">
 
@@ -89,6 +89,9 @@
           </button>
           <button type="button" class="btn btn-primary" onclick="saveAllGlobalChanges()" id="btn-global-save" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem; font-weight: 700; font-size: 0.9rem; box-shadow: var(--shadow-gold);">
             <i class="ri-save-3-line" style="font-size: 1.1rem;"></i> Save All Changes
+          </button>
+          <button type="button" class="btn btn-outline" onclick="exportDataToCodebase()" id="btn-export-codebase" title="Export JSON backup for permanent deployment" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; font-weight: 600; font-size: 0.85rem; border-color: var(--color-border-gold); color: var(--color-gold-primary);">
+            <i class="ri-download-cloud-2-line" style="font-size: 1.05rem;"></i> Export JSON
           </button>
           <button class="btn-logout" onclick="performAdminLogout()">
             <i class="ri-logout-box-r-line"></i> Logout
@@ -1770,7 +1773,7 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- Central Store Script & Admin Script -->
-  <script src="store.js?v=20260906_v32"></script>
-  <script src="admin.js?v=20260906_v32"></script>
+  <script src="store.js?v=20260906_v33"></script>
+  <script src="admin.js?v=20260906_v33"></script>
 </body>
 </html>
