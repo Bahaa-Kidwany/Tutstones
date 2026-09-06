@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshAllAdminViews();
 });
 
+function safeImgSrc(url) {
+  if (!url || typeof url !== 'string') return 'assets/images/marble_calacatta.png';
+  return url.trim() || 'assets/images/marble_calacatta.png';
+}
+
 /* ==========================================================================
    UNSAVED CHANGES & DRAFT STATE CONTROLLER
    ========================================================================== */

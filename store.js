@@ -2,8 +2,8 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.06.v27';
-const STORAGE_KEY = 'tut_stones_data_v27';
+const CURRENT_BUILD_VERSION = '2026.09.06.v28';
+const STORAGE_KEY = 'tut_stones_data_v28';
 
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
