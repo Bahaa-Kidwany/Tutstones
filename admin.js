@@ -499,14 +499,14 @@ function renderStoneCards() {
     if (hasTwoImages) {
       thumbStageHTML = `
         <div style="position: relative; width: 100%; height: 160px; background: #0B0C0E; overflow: hidden;">
-          <img id="admin-card-img-${stone.id}" src="${slabUrl}" alt="${stone.name} Full Slab (A)" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='${mainUrl}';">
+          <img id="admin-card-img-${stone.id}" src="${slabUrl}" alt="${stone.name} Full Tile (A)" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='${mainUrl}';">
           <div id="admin-card-badge-${stone.id}" class="badge-tag" style="position: absolute; top: 8px; left: 8px; background: rgba(10, 14, 23, 0.92); color: #DFB77D; border: 1px solid #DFB77D; font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.2rem 0.5rem; z-index: 5;">
-            <i class="ri-aspect-ratio-line"></i> Full Slab (A)
+            <i class="ri-aspect-ratio-line"></i> Full Tile (A)
           </div>
           <div style="position: absolute; top: 8px; right: 8px; background: rgba(16, 185, 129, 0.92); color: #FFF; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 0.2rem 0.5rem; z-index: 5;">
             <i class="ri-checkbox-circle-line"></i> 2 Images Configured
           </div>
-          <button type="button" onclick="event.stopPropagation(); toggleAdminCardImage('${stone.id}')" title="Test image switch (Full Slab / Edge View)" aria-label="Toggle Image" style="position: absolute; bottom: 8px; right: 8px; background: rgba(255, 255, 255, 0.95); color: #000; border: 1.5px solid #8D4F4E; border-radius: 20px; padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 5;">
+          <button type="button" onclick="event.stopPropagation(); toggleAdminCardImage('${stone.id}')" title="Test image switch (Full Tile / Edge View)" aria-label="Toggle Image" style="position: absolute; bottom: 8px; right: 8px; background: rgba(255, 255, 255, 0.95); color: #000; border: 1.5px solid #8D4F4E; border-radius: 20px; padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 5;">
             <i class="ri-swap-line" style="color: #8D4F4E;"></i> Switch View
           </button>
         </div>
@@ -584,7 +584,7 @@ function toggleAdminCardImage(stoneId) {
   const edgeUrl = safeImgSrc(stone.imageEdge);
   if (!edgeUrl) return;
 
-  const isSlab = cardImg.src.includes(encodeURI(stone.imageSlab || stone.image)) || cardImg.alt.includes('Full Slab');
+  const isSlab = cardImg.src.includes(encodeURI(stone.imageSlab || stone.image)) || cardImg.alt.includes('Full Tile') || cardImg.alt.includes('Full Slab');
 
   if (isSlab) {
     cardImg.src = edgeUrl;
@@ -594,9 +594,9 @@ function toggleAdminCardImage(stoneId) {
     }
   } else {
     cardImg.src = slabUrl;
-    cardImg.alt = `${stone.name} Full Slab (A)`;
+    cardImg.alt = `${stone.name} Full Tile (A)`;
     if (cardBadge) {
-      cardBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> Full Slab (A)`;
+      cardBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> Full Tile (A)`;
     }
   }
 }

@@ -822,9 +822,9 @@ function createStoneCardHTML(stone) {
   if (hasSplit) {
     thumbHTML = `
       <div class="stone-thumb" data-stone-id="${stone.id}" data-slab="${slabUrl}" data-edge="${edgeUrl}" data-main="${mainUrl}">
-        <img id="card-img-${stone.id}" src="${slabUrl}" alt="${stone.name} Full Slab" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
+        <img id="card-img-${stone.id}" src="${slabUrl}" alt="${stone.name} Full Tile" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${mainUrl}';">
         <div id="card-badge-${stone.id}" class="card-img-badge">
-          <i class="ri-aspect-ratio-line"></i> Full Slab
+          <i class="ri-aspect-ratio-line"></i> Full Tile
         </div>
         <button type="button" class="card-arrow-btn card-arrow-prev" onclick="event.stopPropagation(); toggleCardImage('${stone.id}', -1)" title="Switch image view (Full / Edge)" aria-label="Previous view">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -869,7 +869,7 @@ function toggleCardImage(stoneId, delta) {
   const edgeUrl = safeImgSrc(stone.imageEdge);
   if (!edgeUrl) return;
 
-  const isCurrentSlab = cardImg.src.includes(encodeURI(stone.imageSlab || stone.image)) || cardImg.alt.includes('Full Slab');
+  const isCurrentSlab = cardImg.src.includes(encodeURI(stone.imageSlab || stone.image)) || cardImg.alt.includes('Full Tile') || cardImg.alt.includes('Full Slab');
 
   if (isCurrentSlab) {
     cardImg.src = edgeUrl;
@@ -879,9 +879,9 @@ function toggleCardImage(stoneId, delta) {
     }
   } else {
     cardImg.src = slabUrl;
-    cardImg.alt = `${stone.name} Full Slab`;
+    cardImg.alt = `${stone.name} Full Tile`;
     if (cardBadge) {
-      cardBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> Full Slab`;
+      cardBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> Full Tile`;
     }
   }
 }
@@ -1287,10 +1287,10 @@ function openStoneModal(stoneId) {
     imageBlock = `
       <div class="modal-image-gallery" style="display: flex !important; flex-direction: column !important; gap: 1rem !important; width: 100% !important; align-items: center !important;">
         <div class="modal-img-stage" id="modal-img-stage" style="position: relative !important; width: 100% !important; height: 380px !important; max-height: 48vh !important; border-radius: 12px !important; overflow: hidden !important; border: 1.5px solid #DFB77D !important; background: #FAF6F0 !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important;">
-          <img id="modal-active-img" src="${fullImg}" alt="${stone.name} Full Slab View" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
+          <img id="modal-active-img" src="${fullImg}" alt="${stone.name} Full Tile View" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
           
           <div id="modal-view-badge" class="modal-view-badge" style="position: absolute !important; top: 0.85rem !important; left: 0.85rem !important; background: rgba(255, 253, 248, 0.96) !important; color: #8D4F4E !important; border: 1.5px solid #8D4F4E !important; padding: 0.35rem 0.85rem !important; border-radius: 20px !important; font-size: 0.82rem !important; font-weight: 700 !important; display: flex !important; align-items: center !important; gap: 0.4rem !important; box-shadow: 0 4px 14px rgba(36, 28, 24, 0.18) !important; z-index: 10 !important; pointer-events: none !important; margin: 0 !important;">
-            <i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>
+            <i class="ri-aspect-ratio-line"></i> <span>Full Tile View (A)</span>
           </div>
 
           <button type="button" class="modal-gallery-arrow arrow-prev" onclick="switchModalImage('${stone.id}', 'prev')" aria-label="Previous view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; left: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
@@ -1303,9 +1303,9 @@ function openStoneModal(stoneId) {
 
         <div class="modal-img-thumbs" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; width: 100% !important; flex-shrink: 0 !important;">
           <button type="button" class="thumb-card active" id="thumb-0" onclick="switchModalImage('${stone.id}', 'full')">
-            <img src="${fullImg}" alt="${stone.name} Full Slab">
+            <img src="${fullImg}" alt="${stone.name} Full Tile">
             <div class="thumb-info">
-              <i class="ri-aspect-ratio-line"></i> <span>Full Slab (A)</span>
+              <i class="ri-aspect-ratio-line"></i> <span>Full Tile (A)</span>
             </div>
           </button>
           <button type="button" class="thumb-card" id="thumb-1" onclick="switchModalImage('${stone.id}', 'edge')">
@@ -1450,9 +1450,9 @@ function switchModalImage(stoneId, action) {
   activeImg.src = targetSrc;
 
   if (currentModalImgIndex === 0) {
-    activeImg.alt = `${stone.name} Full Slab View (A)`;
+    activeImg.alt = `${stone.name} Full Tile View (A)`;
     if (viewBadge) {
-      viewBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> <span>Full Slab View (A)</span>`;
+      viewBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> <span>Full Tile View (A)</span>`;
     }
     thumb0?.classList.add('active');
     thumb1?.classList.remove('active');
