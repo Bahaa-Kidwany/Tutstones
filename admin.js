@@ -391,10 +391,21 @@ function saveCategoryForm() {
     TutStonesStore.addCategory({ id: slug, slug, ...categoryData });
   }
 
-  setUnsavedChanges(true);
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  setUnsavedChanges(false);
   closeAdminModal('category-modal');
   showToast(`Category "${name}" saved!`);
   refreshAllAdminViews();
+}
+
+function deleteCategoryConfirm(id) {
+  if (confirm('Are you sure you want to delete this category?')) {
+    TutStonesStore.deleteCategory(id);
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
+    showToast('Category deleted.');
+    refreshAllAdminViews();
+  }
 }
 
 /* ==========================================================================
@@ -760,6 +771,8 @@ function saveHomePageForm() {
 
   const res = TutStonesStore.saveHomePage(updatedHp);
   if (res !== false) {
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Homepage settings saved successfully!');
   }
 }
@@ -858,6 +871,8 @@ function saveAboutPageForm() {
 
   const res = TutStonesStore.saveAboutPage(updatedAb);
   if (res !== false) {
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('About Us Page settings saved successfully!');
   }
 }
@@ -954,6 +969,8 @@ function saveFactoryPageForm() {
 
   const res = TutStonesStore.saveFactoryPage(updatedFac);
   if (res !== false) {
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Factory Page settings saved successfully!');
   }
 }
@@ -1050,6 +1067,8 @@ function savePackagingPageForm() {
 
   const res = TutStonesStore.savePackagingPage(updatedPkg);
   if (res !== false) {
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Packaging Page settings saved successfully!');
   }
 }
@@ -1106,6 +1125,8 @@ function saveContactPageForm() {
 
   const res = TutStonesStore.saveContactPage(updatedCnt);
   if (res !== false) {
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Contact Page settings saved successfully!');
   }
 }
@@ -1140,6 +1161,8 @@ function saveFooterForm() {
 
   const res = TutStonesStore.saveFooterData(updatedFtr);
   if (res !== false) {
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Footer settings saved successfully!');
   }
 }
@@ -1214,6 +1237,8 @@ function saveShowroomContact() {
   };
 
   TutStonesStore.saveAbout(updatedAbout);
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  setUnsavedChanges(false);
   showToast('Showroom & Office contact information saved successfully!');
   refreshAllAdminViews();
 }
@@ -1466,7 +1491,8 @@ function saveStoneForm() {
   };
 
   TutStonesStore.saveStone(stone);
-  setUnsavedChanges(true);
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  setUnsavedChanges(false);
   closeAdminModal('stone-modal');
   showToast(`Stone "${stone.name}" updated successfully!`);
   refreshAllAdminViews();
@@ -1475,55 +1501,9 @@ function saveStoneForm() {
 function deleteStoneConfirm(id) {
   if (confirm('Are you sure you want to delete this stone item?')) {
     TutStonesStore.deleteStone(id);
-    setUnsavedChanges(true);
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Stone item deleted.');
-    refreshAllAdminViews();
-  }
-}
-
-// --- Category Modal ---
-function openCategoryModal(catId = null) {
-  const modal = document.getElementById('category-modal');
-  if (catId) {
-    const categories = TutStonesStore.getCategories();
-    const cat = categories.find(c => c.id === catId);
-    if (!cat) return;
-    document.getElementById('cat-id').value = cat.id;
-    document.getElementById('cat-name').value = cat.name;
-    document.getElementById('cat-icon').value = cat.icon || 'ri-vip-diamond-line';
-    document.getElementById('cat-desc').value = cat.desc || '';
-  } else {
-    document.getElementById('cat-id').value = '';
-    document.getElementById('cat-name').value = '';
-    document.getElementById('cat-icon').value = 'ri-vip-diamond-line';
-    document.getElementById('cat-desc').value = '';
-  }
-  modal.classList.add('active');
-}
-
-function saveCategoryForm() {
-  const id = document.getElementById('cat-id').value;
-  const name = document.getElementById('cat-name').value;
-  const icon = document.getElementById('cat-icon').value;
-  const desc = document.getElementById('cat-desc').value;
-
-  if (id) {
-    TutStonesStore.updateCategory(id, { name, icon, desc });
-  } else {
-    TutStonesStore.addCategory({ name, icon, desc });
-  }
-
-  setUnsavedChanges(true);
-  closeAdminModal('category-modal');
-  showToast(`Category "${name}" saved!`);
-  refreshAllAdminViews();
-}
-
-function deleteCategoryConfirm(id) {
-  if (confirm('Are you sure you want to delete this category?')) {
-    TutStonesStore.deleteCategory(id);
-    setUnsavedChanges(true);
-    showToast('Category deleted.');
     refreshAllAdminViews();
   }
 }
@@ -1569,6 +1549,8 @@ function saveSliderForm() {
   };
 
   TutStonesStore.saveHeroSlide(slide);
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  setUnsavedChanges(false);
   closeAdminModal('slider-modal');
   showToast('Hero slide saved!');
   refreshAllAdminViews();
@@ -1577,6 +1559,8 @@ function saveSliderForm() {
 function deleteSliderConfirm(id) {
   if (confirm('Are you sure you want to delete this slide?')) {
     TutStonesStore.deleteHeroSlide(id);
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Hero slide deleted.');
     refreshAllAdminViews();
   }
@@ -1617,6 +1601,8 @@ function saveParagraphImageForm() {
     }
   }
 
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  setUnsavedChanges(false);
   closeAdminModal('paragraph-modal');
   showToast('Paragraph image updated!');
   refreshAllAdminViews();
@@ -1655,6 +1641,8 @@ function saveSocialForm() {
   };
 
   TutStonesStore.saveSocialLink(link);
+  sessionStorage.removeItem('tut_stones_draft_backup');
+  setUnsavedChanges(false);
   closeAdminModal('social-modal');
   showToast(`Social link "${link.platform}" saved!`);
   refreshAllAdminViews();
@@ -1663,6 +1651,8 @@ function saveSocialForm() {
 function deleteSocialConfirm(id) {
   if (confirm('Are you sure you want to delete this social link?')) {
     TutStonesStore.deleteSocialLink(id);
+    sessionStorage.removeItem('tut_stones_draft_backup');
+    setUnsavedChanges(false);
     showToast('Social link deleted.');
     refreshAllAdminViews();
   }
