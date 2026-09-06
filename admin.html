@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Admin Stylesheet -->
-  <link rel="stylesheet" href="admin.css?v=20260903_v23">
+  <link rel="stylesheet" href="admin.css?v=20260906_v26">
 </head>
 <body class="mode-editor">
 
@@ -1302,61 +1302,56 @@
             </div>
           </div>
 
-          <div class="form-group" style="background: rgba(0, 0, 0, 0.2); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border-gold); margin-bottom: 1.25rem;">
-            <label style="font-weight: 700; color: var(--color-gold-primary); margin-bottom: 0.5rem; display: block;"><i class="ri-image-2-line"></i> Image Display Mode</label>
-            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
-                <input type="radio" name="stone-split-mode" value="single" id="split-mode-single" onchange="toggleStoneSplitModeFields(this.value)" checked>
-                Single Image (No Split)
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
-                <input type="radio" name="stone-split-mode" value="split" id="split-mode-split" onchange="toggleStoneSplitModeFields(this.value)">
-                Diagonal Split View (Full Slab A + Edge View B)
-              </label>
-            </div>
-          </div>
+          <div class="form-group" style="background: rgba(0, 0, 0, 0.25); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-gold); margin-bottom: 1.25rem;">
+            <label style="font-weight: 700; color: var(--color-gold-primary); font-size: 0.95rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="ri-image-2-line" style="font-size: 1.1rem;"></i> Stone Images (Materials Page Layout)
+            </label>
+            <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">
+              Upload or specify URLs for <strong>Full Slab View (A)</strong> and <strong>Edge View (B)</strong>. Adding both images enables the interactive 2-image arrow switcher & zoom modal on the public Materials & Catalogue pages.
+            </p>
 
-          <!-- Single Image Input Container -->
-          <div id="stone-single-image-group" class="form-group">
-            <label>Main Stone Image (Upload File or Enter Image Path/URL)</label>
-            <div class="image-upload-wrapper">
-              <img id="stone-img-preview" src="" alt="Stone Preview" class="image-preview-thumb" onerror="this.src='assets/images/marble_calacatta.png'">
-              <div class="upload-actions">
-                <label class="upload-btn-label">
-                  <i class="ri-upload-cloud-2-line"></i> Choose File
-                  <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'stone-image-url', 'stone-img-preview'); setUnsavedChanges(true);" hidden>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+              <!-- Image 1: Full Slab View (A) -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label style="color: var(--color-gold-light); font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+                  <i class="ri-aspect-ratio-line" style="color: var(--color-gold-primary);"></i> Image 1: Full Slab View (A) *
                 </label>
-                <input type="text" id="stone-image-url" class="form-control" placeholder="assets/images/marble_calacatta.png or URL" oninput="document.getElementById('stone-img-preview').src=this.value; setUnsavedChanges(true);">
-              </div>
-            </div>
-          </div>
-
-          <!-- Diagonal Split Image Input Container -->
-          <div id="stone-split-image-group" style="display: none; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-            <div class="form-group">
-              <label><i class="ri-aspect-ratio-line" style="color: var(--color-gold-primary);"></i> Full Slab Image (A)</label>
-              <div class="image-upload-wrapper">
-                <img id="stone-img-slab-preview" src="" alt="Full Slab Preview" class="image-preview-thumb" onerror="this.src='assets/images/marble_calacatta.png'">
-                <div class="upload-actions">
-                  <label class="upload-btn-label">
-                    <i class="ri-upload-cloud-2-line"></i> Choose File
-                    <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'stone-image-slab', 'stone-img-slab-preview'); setUnsavedChanges(true);" hidden>
-                  </label>
-                  <input type="text" id="stone-image-slab" class="form-control" placeholder="Full Slab (A) URL or path..." oninput="document.getElementById('stone-img-slab-preview').src=this.value; setUnsavedChanges(true);">
+                <div class="image-upload-wrapper" style="margin-top: 0.4rem;">
+                  <img id="stone-img-slab-preview" src="" alt="Full Slab Preview" class="image-preview-thumb" onerror="this.src='assets/images/marble_calacatta.png'">
+                  <div class="upload-actions">
+                    <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                      <label class="upload-btn-label">
+                        <i class="ri-upload-cloud-2-line"></i> Upload
+                        <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'stone-image-slab', 'stone-img-slab-preview'); setUnsavedChanges(true);" hidden>
+                      </label>
+                      <button type="button" class="crop-btn-label" onclick="openImageCropModal('stone-image-slab', 'stone-img-slab-preview')">
+                        <i class="ri-crop-2-line"></i> Frame
+                      </button>
+                    </div>
+                    <input type="text" id="stone-image-slab" class="form-control" placeholder="assets/images/... or URL" oninput="document.getElementById('stone-img-slab-preview').src=this.value; setUnsavedChanges(true);" required>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="form-group">
-              <label><i class="ri-stack-line" style="color: var(--color-gold-primary);"></i> Edge View Image (B)</label>
-              <div class="image-upload-wrapper">
-                <img id="stone-img-edge-preview" src="" alt="Edge View Preview" class="image-preview-thumb" onerror="this.src='assets/images/marble_calacatta.png'">
-                <div class="upload-actions">
-                  <label class="upload-btn-label">
-                    <i class="ri-upload-cloud-2-line"></i> Choose File
-                    <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'stone-image-edge', 'stone-img-edge-preview'); setUnsavedChanges(true);" hidden>
-                  </label>
-                  <input type="text" id="stone-image-edge" class="form-control" placeholder="Edge View (B) URL or path..." oninput="document.getElementById('stone-img-edge-preview').src=this.value; setUnsavedChanges(true);">
+              <!-- Image 2: Edge View (B) -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label style="color: var(--color-gold-light); font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+                  <i class="ri-stack-line" style="color: var(--color-gold-primary);"></i> Image 2: Edge View (B) <span style="font-weight: 400; color: var(--color-text-dim);">(Optional)</span>
+                </label>
+                <div class="image-upload-wrapper" style="margin-top: 0.4rem;">
+                  <img id="stone-img-edge-preview" src="" alt="Edge View Preview" class="image-preview-thumb" onerror="this.src='assets/images/marble_calacatta.png'">
+                  <div class="upload-actions">
+                    <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                      <label class="upload-btn-label">
+                        <i class="ri-upload-cloud-2-line"></i> Upload
+                        <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'stone-image-edge', 'stone-img-edge-preview'); setUnsavedChanges(true);" hidden>
+                      </label>
+                      <button type="button" class="crop-btn-label" onclick="openImageCropModal('stone-image-edge', 'stone-img-edge-preview')">
+                        <i class="ri-crop-2-line"></i> Frame
+                      </button>
+                    </div>
+                    <input type="text" id="stone-image-edge" class="form-control" placeholder="assets/images/... or URL" oninput="document.getElementById('stone-img-edge-preview').src=this.value; setUnsavedChanges(true);">
+                  </div>
                 </div>
               </div>
             </div>
@@ -1775,7 +1770,7 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- Central Store Script & Admin Script -->
-  <script src="store.js?v=20260903_v25"></script>
-  <script src="admin.js?v=20260903_v25"></script>
+  <script src="store.js?v=20260906_v26"></script>
+  <script src="admin.js?v=20260906_v26"></script>
 </body>
 </html>

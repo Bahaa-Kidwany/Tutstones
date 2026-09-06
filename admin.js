@@ -438,9 +438,41 @@ function renderStoneCards() {
     const catObj = categories.find(c => c.id === stone.category || c.slug === stone.category);
     const catName = catObj ? catObj.name : stone.category.toUpperCase();
 
+    const hasTwoImages = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
+    const slabUrl = safeImgSrc(stone.imageSlab || stone.image);
+    const edgeUrl = safeImgSrc(stone.imageEdge || stone.image);
+    const mainUrl = safeImgSrc(stone.image);
+
+    let thumbStageHTML = '';
+    if (hasTwoImages) {
+      thumbStageHTML = `
+        <div style="position: relative; width: 100%; height: 160px; background: #0B0C0E; overflow: hidden;">
+          <img id="admin-card-img-${stone.id}" src="${slabUrl}" alt="${stone.name} Full Slab (A)" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='${mainUrl}';">
+          <div id="admin-card-badge-${stone.id}" class="badge-tag" style="position: absolute; top: 8px; left: 8px; background: rgba(10, 14, 23, 0.92); color: #DFB77D; border: 1px solid #DFB77D; font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.2rem 0.5rem; z-index: 5;">
+            <i class="ri-aspect-ratio-line"></i> Full Slab (A)
+          </div>
+          <div style="position: absolute; top: 8px; right: 8px; background: rgba(16, 185, 129, 0.92); color: #FFF; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 0.2rem 0.5rem; z-index: 5;">
+            <i class="ri-checkbox-circle-line"></i> 2 Images Configured
+          </div>
+          <button type="button" onclick="event.stopPropagation(); toggleAdminCardImage('${stone.id}')" title="Test image switch (Full Slab / Edge View)" aria-label="Toggle Image" style="position: absolute; bottom: 8px; right: 8px; background: rgba(255, 255, 255, 0.95); color: #000; border: 1.5px solid #8D4F4E; border-radius: 20px; padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; box-shadow: 0 4px 10px rgba(0,0,0,0.4); z-index: 5;">
+            <i class="ri-swap-line" style="color: #8D4F4E;"></i> Switch View
+          </button>
+        </div>
+      `;
+    } else {
+      thumbStageHTML = `
+        <div style="position: relative; width: 100%; height: 160px; background: #0B0C0E; overflow: hidden;">
+          <img src="${mainUrl}" alt="${stone.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='assets/images/marble_calacatta.png'">
+          <div class="badge-tag" style="position: absolute; top: 8px; left: 8px; background: rgba(10, 14, 23, 0.92); color: var(--color-gold-primary); border: 1px solid var(--color-border-gold); font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.2rem 0.5rem; z-index: 5;">
+            <i class="ri-image-line"></i> 1 Image Configured
+          </div>
+        </div>
+      `;
+    }
+
     return `
       <div class="stone-admin-card">
-        <img src="${stone.image}" alt="${stone.name}" class="stone-admin-img" onerror="this.src='assets/images/marble_calacatta.png'">
+        ${thumbStageHTML}
         <div class="stone-admin-body">
           <div class="stone-admin-header">
             <h3 class="stone-admin-title">${stone.name}</h3>
@@ -478,7 +510,7 @@ function renderStoneCards() {
           <div class="stone-admin-footer">
             <span style="font-size: 0.75rem; color: var(--color-gold-primary); text-transform: uppercase;">${catName}</span>
             <div>
-              <button class="btn btn-outline btn-sm" onclick="openStoneModal('${stone.id}')"><i class="ri-edit-line"></i> Edit Specs & Image</button>
+              <button class="btn btn-outline btn-sm" onclick="openStoneModal('${stone.id}')"><i class="ri-edit-line"></i> Edit Specs & Images</button>
               <button class="btn btn-danger btn-sm" onclick="deleteStoneConfirm('${stone.id}')"><i class="ri-delete-bin-line"></i></button>
             </div>
           </div>
@@ -486,6 +518,35 @@ function renderStoneCards() {
       </div>
     `;
   }).join('');
+}
+
+function toggleAdminCardImage(stoneId) {
+  const stone = TutStonesStore.getStone(stoneId);
+  if (!stone) return;
+
+  const cardImg = document.getElementById(`admin-card-img-${stoneId}`);
+  const cardBadge = document.getElementById(`admin-card-badge-${stoneId}`);
+  if (!cardImg) return;
+
+  const slabUrl = safeImgSrc(stone.imageSlab || stone.image);
+  const edgeUrl = safeImgSrc(stone.imageEdge);
+  if (!edgeUrl) return;
+
+  const isSlab = cardImg.src.includes(encodeURI(stone.imageSlab || stone.image)) || cardImg.alt.includes('Full Slab');
+
+  if (isSlab) {
+    cardImg.src = edgeUrl;
+    cardImg.alt = `${stone.name} Edge View (B)`;
+    if (cardBadge) {
+      cardBadge.innerHTML = `<i class="ri-stack-line"></i> Edge View (B)`;
+    }
+  } else {
+    cardImg.src = slabUrl;
+    cardImg.alt = `${stone.name} Full Slab (A)`;
+    if (cardBadge) {
+      cardBadge.innerHTML = `<i class="ri-aspect-ratio-line"></i> Full Slab (A)`;
+    }
+  }
 }
 
 function filterStoneCards() {
@@ -1339,22 +1400,14 @@ function openStoneModal(stoneId = null) {
     document.getElementById('stone-id').value = stone.id;
     document.getElementById('stone-name').value = stone.name;
     document.getElementById('stone-category').value = stone.category;
-    document.getElementById('stone-image-url').value = stone.image || '';
-    document.getElementById('stone-img-preview').src = stone.image || '';
 
-    document.getElementById('stone-image-slab').value = stone.imageSlab || '';
-    document.getElementById('stone-img-slab-preview').src = stone.imageSlab || '';
-    document.getElementById('stone-image-edge').value = stone.imageEdge || '';
-    document.getElementById('stone-img-edge-preview').src = stone.imageEdge || '';
+    const slabVal = stone.imageSlab || stone.image || '';
+    const edgeVal = stone.imageEdge || '';
 
-    const isSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
-    if (isSplit) {
-      document.getElementById('split-mode-split').checked = true;
-      toggleStoneSplitModeFields('split');
-    } else {
-      document.getElementById('split-mode-single').checked = true;
-      toggleStoneSplitModeFields('single');
-    }
+    document.getElementById('stone-image-slab').value = slabVal;
+    document.getElementById('stone-img-slab-preview').src = slabVal;
+    document.getElementById('stone-image-edge').value = edgeVal;
+    document.getElementById('stone-img-edge-preview').src = edgeVal;
 
     document.getElementById('stone-origin').value = stone.origin || '';
     document.getElementById('stone-tag').value = stone.tag || '';
@@ -1368,15 +1421,10 @@ function openStoneModal(stoneId = null) {
     title.innerText = "Add New Stone Item";
     document.getElementById('stone-id').value = '';
     document.getElementById('stone-name').value = '';
-    document.getElementById('stone-image-url').value = '';
-    document.getElementById('stone-img-preview').src = '';
     document.getElementById('stone-image-slab').value = '';
     document.getElementById('stone-img-slab-preview').src = '';
     document.getElementById('stone-image-edge').value = '';
     document.getElementById('stone-img-edge-preview').src = '';
-
-    document.getElementById('split-mode-single').checked = true;
-    toggleStoneSplitModeFields('single');
 
     document.getElementById('stone-origin').value = '';
     document.getElementById('stone-tag').value = '';
@@ -1392,34 +1440,20 @@ function openStoneModal(stoneId = null) {
 }
 
 function saveStoneForm() {
-  const splitModeRadio = document.querySelector('input[name="stone-split-mode"]:checked');
-  const splitMode = splitModeRadio ? splitModeRadio.value : 'single';
+  const slabImg = (document.getElementById('stone-image-slab')?.value || '').trim();
+  const edgeImg = (document.getElementById('stone-image-edge')?.value || '').trim();
 
-  const singleImg = document.getElementById('stone-image-url').value.trim();
-  const slabImg = document.getElementById('stone-image-slab').value.trim();
-  const edgeImg = document.getElementById('stone-image-edge').value.trim();
-
-  let finalImage = singleImg;
-  let finalSlab = null;
-  let finalEdge = null;
-
-  if (splitMode === 'split' && slabImg && edgeImg && slabImg !== edgeImg) {
-    finalSlab = slabImg;
-    finalEdge = edgeImg;
-    finalImage = slabImg || singleImg;
-  } else {
-    finalImage = singleImg || slabImg || edgeImg;
-    finalSlab = null;
-    finalEdge = null;
-  }
+  const primaryImage = slabImg || edgeImg;
+  const imageSlab = slabImg || null;
+  const imageEdge = edgeImg || null;
 
   const stone = {
     id: document.getElementById('stone-id').value,
     name: document.getElementById('stone-name').value,
     category: document.getElementById('stone-category').value,
-    image: finalImage,
-    imageSlab: finalSlab,
-    imageEdge: finalEdge,
+    image: primaryImage,
+    imageSlab: imageSlab,
+    imageEdge: imageEdge,
     origin: document.getElementById('stone-origin').value,
     tag: document.getElementById('stone-tag').value,
     finish: document.getElementById('stone-finish').value,
