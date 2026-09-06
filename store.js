@@ -1,5 +1,7 @@
 /**
- * TUT STONES - Central Data Store with localStorage Persistence
+ * TUT STONES - Central Data Store with localStorage + Server-Side Persistence
+ * Save flow: admin edits → localStorage + POST /api/save-data → data.json
+ * Load flow: GET /api/load-data (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
 const CURRENT_BUILD_VERSION = '2026.09.06.v35';
@@ -824,7 +826,7 @@ const DEFAULT_DATA = {
   // 14. Global Footer Data
   footerData: {
     brandDesc: 'Distinguished Egyptian exporter of premium marble and granite. Delivering timeless natural stone from Egypt to global markets.',
-    address: 'D461 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
+    address: 'D461, Shak El Thoaban, Cairo, Egypt',
     addressLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
     emailPrimary: 'info@tutstones.com',
     emailSecondary: 'sales@tutstones.com',
@@ -839,6 +841,37 @@ class Store {
     this.data = this.loadData();
     // Ensure default admin account has requested password tutstones123
     this.ensureDefaultPassword();
+    // Kick off async server load — pages re-render when server data arrives
+    this._serverSaveInFlight = false;
+    this.initFromServer();
+  }
+
+  /**
+   * Fetch persisted data.json from the server and merge into this.data.
+   * Fires 'tutstones:server-data-ready' on window when done so pages can re-render.
+   */
+  async initFromServer() {
+    try {
+      let res = await fetch('/api/load-data', { cache: 'no-store' });
+      if (!res || !res.ok) {
+        res = await fetch('data.json', { cache: 'no-store' });
+      }
+      if (!res || !res.ok) return; // no server data.json yet, use localStorage/defaults
+      const serverData = await res.json();
+      if (!serverData || typeof serverData !== 'object' || Object.keys(serverData).length === 0) return;
+
+      // Merge server data as the source of truth (server overrides localStorage)
+      this.data = { ...this.data, ...serverData };
+
+      // Also sync to localStorage so it stays warm for next fast load
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
+
+      // Notify pages so they can re-render with fresh server content
+      window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
+    } catch (e) {
+      // Server offline or network error — continue with localStorage data
+      console.info('[TutStones] Server offline, using localStorage data.');
+    }
   }
 
   ensureDefaultPassword() {
@@ -892,16 +925,57 @@ class Store {
   }
 
   save() {
+    // 1. Save to localStorage immediately (fast, synchronous)
+    let localOk = false;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
-      return true;
+      localOk = true;
     } catch (e) {
       console.error('Failed to save to localStorage', e);
       if (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014) {
         alert('Warning: Local browser storage limit exceeded! Please use smaller image files or direct image URLs so your changes can be saved permanently.');
       }
-      return false;
     }
+
+    // 2. Push to server in the background (async, non-blocking)
+    this._pushToServer();
+
+    return localOk;
+  }
+
+  /**
+   * Fire-and-forget: POST current data to the server's /api/save-data endpoint.
+   * Fires 'tutstones:server-save-ok' or 'tutstones:server-save-fail' events.
+   */
+  _pushToServer() {
+    if (typeof fetch === 'undefined') return;
+    if (this._serverSaveInFlight) return; // debounce concurrent saves
+    this._serverSaveInFlight = true;
+    fetch('/api/save-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.data)
+    })
+    .then(res => res.json())
+    .then(json => {
+      this._serverSaveInFlight = false;
+      if (json && json.success) {
+        if (typeof window !== 'undefined' && window.dispatchEvent) {
+          window.dispatchEvent(new CustomEvent('tutstones:server-save-ok'));
+        }
+      } else {
+        if (typeof window !== 'undefined' && window.dispatchEvent) {
+          window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: json }));
+        }
+      }
+    })
+    .catch(err => {
+      this._serverSaveInFlight = false;
+      console.info('[TutStones] Server save failed (server offline?). Data is in localStorage only.', err);
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: { error: err ? err.message : '' } }));
+      }
+    });
   }
 
   resetToDefaults() {

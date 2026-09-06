@@ -9,6 +9,23 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshAllAdminViews();
 });
 
+// --- Server-Side Persistence Feedback ---
+// Show contextual toasts when server save completes or fails
+window.addEventListener('tutstones:server-save-ok', () => {
+  showToast('✓ Saved to server successfully — all devices will see your changes.', 'success');
+});
+
+window.addEventListener('tutstones:server-save-fail', () => {
+  showToast('⚠ Saved to browser only — server is offline. Restart server.ps1 for permanent saves.', 'warning');
+});
+
+// When server data loads on admin startup, refresh all form views with server data
+window.addEventListener('tutstones:server-data-ready', () => {
+  refreshAllAdminViews();
+});
+
+
+
 function safeImgSrc(url) {
   if (!url || typeof url !== 'string') return 'assets/images/marble_calacatta.png';
   return url.trim() || 'assets/images/marble_calacatta.png';
@@ -1714,23 +1731,41 @@ function exportStoreJSON() {
 /* ==========================================================================
    15. TOAST NOTIFICATION GENERATOR
    ========================================================================== */
-function showToast(message) {
+function showToast(message, type = 'default') {
   const container = document.getElementById('toast-container');
   if (!container) return;
 
+  const iconMap = {
+    success: 'ri-checkbox-circle-fill',
+    warning: 'ri-alert-line',
+    error: 'ri-close-circle-fill',
+    default: 'ri-checkbox-circle-fill'
+  };
+  const colorMap = {
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    default: 'var(--color-gold-primary)'
+  };
+
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `<i class="ri-checkbox-circle-fill" style="color: var(--color-gold-primary);"></i> <span>${message}</span>`;
-  
+  if (type !== 'default') {
+    toast.style.borderLeft = `3px solid ${colorMap[type] || colorMap.default}`;
+  }
+  toast.innerHTML = `<i class="${iconMap[type] || iconMap.default}" style="color: ${colorMap[type] || colorMap.default};"></i> <span>${message}</span>`;
+
   container.appendChild(toast);
 
+  const duration = type === 'warning' ? 5000 : 3500;
   setTimeout(() => {
     toast.style.opacity = '0';
     toast.style.transform = 'translateX(50px)';
     toast.style.transition = 'all 0.3s ease';
     setTimeout(() => toast.remove(), 300);
-  }, 3500);
+  }, duration);
 }
+
 
 /* ==========================================================================
    16. AUTHENTICATION & SECURITY CONTROLLER

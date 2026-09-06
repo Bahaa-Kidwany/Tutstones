@@ -37,6 +37,31 @@ document.addEventListener('DOMContentLoaded', () => {
   try { initStoneImagePopup(); } catch (e) { console.error('Error initStoneImagePopup:', e); }
 });
 
+// Re-render page content when server data.json is fetched (async after initial DOM render).
+// This ensures admin edits persisted server-side appear on all pages without a full reload.
+window.addEventListener('tutstones:server-data-ready', () => {
+  const page = document.body.dataset.page || 'home';
+  try { renderSocialLinks(); } catch (e) {}
+  try { renderFooterContent(); } catch (e) {}
+  if (page === 'home') {
+    try { renderHomePageContent(); } catch (e) {}
+    try { initHeroSlider(); } catch (e) {}
+    try { initAboutSlider(); } catch (e) {}
+  } else if (page === 'about') {
+    try { renderAboutPageContent(); } catch (e) {}
+  } else if (page === 'factory') {
+    try { renderFactoryPageContent(); } catch (e) {}
+  } else if (page === 'packaging') {
+    try { renderPackagingPageContent(); } catch (e) {}
+  } else if (page === 'contact') {
+    try { renderContactPageContent(); } catch (e) {}
+  }
+  try { renderFeaturedSections(); } catch (e) {}
+  try { initCatalogue(); } catch (e) {}
+});
+
+
+
 /* ==========================================================================
    0. Theme & Palette Switcher Logic
    ========================================================================== */
