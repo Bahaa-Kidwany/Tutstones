@@ -2,8 +2,8 @@
  * TUT STONES - Central Data Store with localStorage Persistence
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.06.v33';
-const STORAGE_KEY = 'tut_stones_data_v33';
+const CURRENT_BUILD_VERSION = '2026.09.06.v34';
+const STORAGE_KEY = 'tut_stones_data_v34';
 
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
@@ -561,7 +561,7 @@ const DEFAULT_DATA = {
     emailVisible: true,
     emailSecondary: 'sales@tutstones.com',
     emailSecondaryVisible: true,
-    address: 'Plot D1 & D2 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
+    address: 'D461 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
     addressLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
     addressVisible: true,
     hours: 'Mon - Sat: 8:00 AM - 6:00 PM',
@@ -824,7 +824,7 @@ const DEFAULT_DATA = {
   // 14. Global Footer Data
   footerData: {
     brandDesc: 'Distinguished Egyptian exporter of premium marble and granite. Delivering timeless natural stone from Egypt to global markets.',
-    address: 'Shak El Thoaban, Cairo, Egypt',
+    address: 'D461 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
     addressLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
     emailPrimary: 'info@tutstones.com',
     emailSecondary: 'sales@tutstones.com',
