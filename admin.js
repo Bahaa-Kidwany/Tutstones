@@ -1724,11 +1724,17 @@ function initAuthSession() {
   const userDisplayName = document.getElementById('user-display-name');
 
   if (!session) {
-    authOverlay?.classList.remove('hidden');
+    if (authOverlay) {
+      authOverlay.classList.remove('hidden');
+      authOverlay.style.display = 'flex';
+    }
     return;
   }
 
-  authOverlay?.classList.add('hidden');
+  if (authOverlay) {
+    authOverlay.classList.add('hidden');
+    authOverlay.style.display = 'none';
+  }
 
   if (userDisplayName) {
     const isSuperAdmin = session.role === 'admin';
@@ -1801,7 +1807,10 @@ function handleAdminLogin() {
 function performAdminLogout() {
   TutStonesStore.logout();
   const authOverlay = document.getElementById('admin-auth-overlay');
-  authOverlay?.classList.remove('hidden');
+  if (authOverlay) {
+    authOverlay.classList.remove('hidden');
+    authOverlay.style.display = 'flex';
+  }
   const alertBox = document.getElementById('auth-alert-box');
   if (alertBox) alertBox.style.display = 'none';
   showToast('Logged out of Admin Portal.');
