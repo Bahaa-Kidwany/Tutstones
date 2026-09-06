@@ -141,21 +141,20 @@ function collectAllPageFormsToStoreData() {
   }
 
   if (document.getElementById('ftr-brand-desc')) {
-    TutStonesStore.saveFooter({
+    TutStonesStore.saveFooterData({
       brandDesc: document.getElementById('ftr-brand-desc').value,
-      address: document.getElementById('ftr-address').value,
-      phone: document.getElementById('ftr-phone').value,
-      whatsapp: document.getElementById('ftr-whatsapp').value,
-      email: document.getElementById('ftr-email').value,
-      hours: document.getElementById('ftr-hours').value,
-      copyright: document.getElementById('ftr-copyright').value
+      address: document.getElementById('ftr-address') ? document.getElementById('ftr-address').value : '',
+      phonePrimary: document.getElementById('ftr-phone') ? document.getElementById('ftr-phone').value : '',
+      whatsappNumber: document.getElementById('ftr-whatsapp') ? document.getElementById('ftr-whatsapp').value : '',
+      emailPrimary: document.getElementById('ftr-email') ? document.getElementById('ftr-email').value : '',
+      hours: document.getElementById('ftr-hours') ? document.getElementById('ftr-hours').value : ''
     });
   }
 }
 
 function saveAllGlobalChanges() {
   collectAllPageFormsToStoreData();
-  TutStonesStore.saveData();
+  TutStonesStore.save();
   sessionStorage.removeItem('tut_stones_draft_backup');
   setUnsavedChanges(false);
   refreshAllAdminViews();
@@ -179,7 +178,7 @@ function undoCurrentPageEdits(pageKey) {
   const pageName = pageNamesMap[pageKey] || pageKey;
 
   if (confirm(`Are you sure you want to undo unsaved edits for ${pageName} only?`)) {
-    const originalSavedData = TutStonesStore.loadData();
+    const originalSavedData = TutStonesStore.load();
     if (originalSavedData && originalSavedData[pageKey] !== undefined) {
       TutStonesStore.data[pageKey] = JSON.parse(JSON.stringify(originalSavedData[pageKey]));
       saveDraftStateToClient();
@@ -198,7 +197,7 @@ function openGlobalUndoWarningModal() {
 
 function confirmGlobalUndoAllPages() {
   sessionStorage.removeItem('tut_stones_draft_backup');
-  TutStonesStore.data = TutStonesStore.loadData();
+  TutStonesStore.data = TutStonesStore.load();
   setUnsavedChanges(false);
   closeAdminModal('global-undo-modal');
   refreshAllAdminViews();
