@@ -1,11 +1,16 @@
 /**
  * TUT STONES - Central Data Store with localStorage + Server-Side Persistence
- * Save flow: admin edits → localStorage + POST /api/save-data → data.json
- * Load flow: GET /api/load-data (data.json) → localStorage fallback → DEFAULT_DATA
+ * Save flow: admin edits → localStorage + POST /api.php → data.json
+ * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
 const CURRENT_BUILD_VERSION = '2026.09.06.v35';
 const STORAGE_KEY = 'tut_stones_data_v35';
+
+// --- Server-Side API Config ---
+// /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
+const SERVER_API_ENDPOINT = '/api.php';
+const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.php
 
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
@@ -847,18 +852,17 @@ class Store {
   }
 
   /**
-   * Fetch persisted data.json from the server and merge into this.data.
+   * Fetch persisted data from the server API and merge into this.data.
    * Fires 'tutstones:server-data-ready' on window when done so pages can re-render.
    */
   async initFromServer() {
     try {
-      let res = await fetch('/api/load-data', { cache: 'no-store' });
-      if (!res || !res.ok) {
-        res = await fetch('data.json', { cache: 'no-store' });
-      }
-      if (!res || !res.ok) return; // no server data.json yet, use localStorage/defaults
+      const res = await fetch(SERVER_API_ENDPOINT, { cache: 'no-store' });
+      if (!res.ok) return; // 404 = no data.json yet, use localStorage/defaults
       const serverData = await res.json();
       if (!serverData || typeof serverData !== 'object' || Object.keys(serverData).length === 0) return;
+      // Reject error-only responses from the API
+      if (serverData.error && Object.keys(serverData).length === 1) return;
 
       // Merge server data as the source of truth (server overrides localStorage)
       this.data = { ...this.data, ...serverData };
@@ -870,7 +874,7 @@ class Store {
       window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
     } catch (e) {
       // Server offline or network error — continue with localStorage data
-      console.info('[TutStones] Server offline, using localStorage data.');
+      console.info('[TutStones] Server API unreachable, using localStorage data.');
     }
   }
 
@@ -944,37 +948,34 @@ class Store {
   }
 
   /**
-   * Fire-and-forget: POST current data to the server's /api/save-data endpoint.
+   * Fire-and-forget: POST current data to the server API endpoint.
+   * Sends X-Api-Key header for authentication.
    * Fires 'tutstones:server-save-ok' or 'tutstones:server-save-fail' events.
    */
   _pushToServer() {
-    if (typeof fetch === 'undefined') return;
     if (this._serverSaveInFlight) return; // debounce concurrent saves
     this._serverSaveInFlight = true;
-    fetch('/api/save-data', {
+    fetch(SERVER_API_ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': SERVER_API_KEY
+      },
       body: JSON.stringify(this.data)
     })
     .then(res => res.json())
     .then(json => {
       this._serverSaveInFlight = false;
       if (json && json.success) {
-        if (typeof window !== 'undefined' && window.dispatchEvent) {
-          window.dispatchEvent(new CustomEvent('tutstones:server-save-ok'));
-        }
+        window.dispatchEvent(new CustomEvent('tutstones:server-save-ok'));
       } else {
-        if (typeof window !== 'undefined' && window.dispatchEvent) {
-          window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: json }));
-        }
+        window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: json }));
       }
     })
     .catch(err => {
       this._serverSaveInFlight = false;
-      console.info('[TutStones] Server save failed (server offline?). Data is in localStorage only.', err);
-      if (typeof window !== 'undefined' && window.dispatchEvent) {
-        window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: { error: err ? err.message : '' } }));
-      }
+      console.info('[TutStones] Server save failed (API unreachable?). Data is in localStorage only.', err);
+      window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: { error: err.message } }));
     });
   }
 

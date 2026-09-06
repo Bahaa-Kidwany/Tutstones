@@ -6,6 +6,7 @@ Write-Host "Server running at http://localhost:$port/"
 
 $root = (Get-Location).Path
 $dataFile = [System.IO.Path]::Combine($root, "data.json")
+$API_KEY = "tutstones_api_key_2026"   # Must match api.php and store.js
 
 while ($listener.IsListening) {
     try {
@@ -13,38 +14,70 @@ while ($listener.IsListening) {
         $request = $context.Request
         $response = $context.Response
 
-        # CORS headers for local dev
+        # CORS headers
         $response.Headers.Add("Access-Control-Allow-Origin", "*")
         $response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        $response.Headers.Add("Access-Control-Allow-Headers", "Content-Type")
+        $response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, X-Api-Key")
 
         $rawPath = [System.Uri]::UnescapeDataString($request.Url.LocalPath)
 
-        # --- API: OPTIONS preflight ---
+        # --- OPTIONS preflight ---
         if ($request.HttpMethod -eq "OPTIONS") {
             $response.StatusCode = 204
             $response.Close()
             continue
         }
 
-        # --- API: POST /api/save-data ---
-        if ($rawPath -eq "/api/save-data" -and $request.HttpMethod -eq "POST") {
+        # --- /api.php  GET: load data.json ---
+        if ($rawPath -eq "/api.php" -and $request.HttpMethod -eq "GET") {
+            if (Test-Path $dataFile -PathType Leaf) {
+                $json = [System.IO.File]::ReadAllText($dataFile, [System.Text.Encoding]::UTF8)
+                $buffer = [System.Text.Encoding]::UTF8.GetBytes($json)
+                $response.ContentType = "application/json; charset=utf-8"
+                $response.StatusCode = 200
+                $response.ContentLength64 = $buffer.Length
+                $response.OutputStream.Write($buffer, 0, $buffer.Length)
+            } else {
+                $notFound = '{"error":"No saved data found. Admin has not saved yet."}'
+                $buffer = [System.Text.Encoding]::UTF8.GetBytes($notFound)
+                $response.ContentType = "application/json; charset=utf-8"
+                $response.StatusCode = 404
+                $response.ContentLength64 = $buffer.Length
+                $response.OutputStream.Write($buffer, 0, $buffer.Length)
+            }
+            $response.Close()
+            continue
+        }
+
+        # --- /api.php  POST: save data.json ---
+        if ($rawPath -eq "/api.php" -and $request.HttpMethod -eq "POST") {
             try {
+                # Check API key
+                $receivedKey = $request.Headers["X-Api-Key"]
+                if ($receivedKey -ne $API_KEY) {
+                    $forbidden = '{"success":false,"message":"Unauthorized: Invalid API key."}'
+                    $buffer = [System.Text.Encoding]::UTF8.GetBytes($forbidden)
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $response.StatusCode = 403
+                    $response.ContentLength64 = $buffer.Length
+                    $response.OutputStream.Write($buffer, 0, $buffer.Length)
+                    $response.Close()
+                    continue
+                }
+
                 $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
                 $body = $reader.ReadToEnd()
                 $reader.Close()
 
-                # Basic validation: must start with { and end with } (JSON object)
                 $trimmed = $body.Trim()
                 if (-not ($trimmed.StartsWith('{') -and $trimmed.EndsWith('}'))) {
                     throw "Invalid JSON: body must be a JSON object"
                 }
 
-                # Write to data.json
                 [System.IO.File]::WriteAllText($dataFile, $trimmed, [System.Text.Encoding]::UTF8)
 
-                $responseJson = '{"success":true,"message":"Data saved successfully."}'
-                $buffer = [System.Text.Encoding]::UTF8.GetBytes($responseJson)
+                $ok = '{"success":true,"message":"Data saved successfully."}'
+                $buffer = [System.Text.Encoding]::UTF8.GetBytes($ok)
                 $response.ContentType = "application/json; charset=utf-8"
                 $response.StatusCode = 200
                 $response.ContentLength64 = $buffer.Length
@@ -55,27 +88,6 @@ while ($listener.IsListening) {
                 $buffer = [System.Text.Encoding]::UTF8.GetBytes($errJson)
                 $response.ContentType = "application/json; charset=utf-8"
                 $response.StatusCode = 500
-                $response.ContentLength64 = $buffer.Length
-                $response.OutputStream.Write($buffer, 0, $buffer.Length)
-            }
-            $response.Close()
-            continue
-        }
-
-
-        # --- API: GET /api/load-data ---
-        if ($rawPath -eq "/api/load-data" -and $request.HttpMethod -eq "GET") {
-            if (Test-Path $dataFile -PathType Leaf) {
-                $json = [System.IO.File]::ReadAllText($dataFile, [System.Text.Encoding]::UTF8)
-                $buffer = [System.Text.Encoding]::UTF8.GetBytes($json)
-                $response.ContentType = "application/json; charset=utf-8"
-                $response.StatusCode = 200
-                $response.ContentLength64 = $buffer.Length
-                $response.OutputStream.Write($buffer, 0, $buffer.Length)
-            } else {
-                $buffer = [System.Text.Encoding]::UTF8.GetBytes("{}")
-                $response.ContentType = "application/json; charset=utf-8"
-                $response.StatusCode = 404
                 $response.ContentLength64 = $buffer.Length
                 $response.OutputStream.Write($buffer, 0, $buffer.Length)
             }
@@ -116,6 +128,6 @@ while ($listener.IsListening) {
         }
         $response.Close()
     } catch {
-        # ignore broken pipe or stream closed errors and keep serving
+        # ignore broken pipe / stream errors and keep serving
     }
 }
