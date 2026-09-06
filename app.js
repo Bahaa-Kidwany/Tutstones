@@ -123,7 +123,7 @@ function renderFooterContent() {
   const ftr = TutStonesStore.getFooterData();
   if (!ftr) return;
 
-  const footer = document.querySelector('footer.footer');
+  const footer = document.querySelector('footer.footer') || document.querySelector('footer');
   if (!footer) return;
 
   // Brand paragraph
@@ -134,12 +134,12 @@ function renderFooterContent() {
   const hqCols = footer.querySelectorAll('.footer-col');
   hqCols.forEach(col => {
     const h5 = col.querySelector('h5');
-    if (h5 && (h5.textContent.includes('Headquarters') || h5.textContent.includes('Showroom'))) {
+    if (h5 && (h5.textContent.includes('Headquarters') || h5.textContent.includes('Export') || h5.textContent.includes('Showroom') || h5.textContent.includes('Contact'))) {
       const ul = col.querySelector('.footer-links');
       if (ul) {
         let items = [];
-        if (ftr.address) items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> <a href="${ftr.addressLink || '#'}" target="_blank" rel="noopener noreferrer" style="color: inherit;">${ftr.address}</a></li>`);
-        if (ftr.emailPrimary || ftr.emailSecondary) items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> ${ftr.emailPrimary || ''} ${ftr.emailSecondary ? '| ' + ftr.emailSecondary : ''}</li>`);
+        if (ftr.address) items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> <a href="${ftr.addressLink || 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7'}" target="_blank" rel="noopener noreferrer" style="color: inherit;">${ftr.address}</a></li>`);
+        if (ftr.emailPrimary || ftr.emailSecondary) items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${ftr.emailPrimary || 'info@tutstones.com'}" style="color: inherit;">${ftr.emailPrimary || 'info@tutstones.com'}</a> ${ftr.emailSecondary ? '| <a href="mailto:' + ftr.emailSecondary + '" style="color: inherit;">' + ftr.emailSecondary + '</a>' : ''}</li>`);
         if (ftr.phonePrimary) items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${ftr.phonePrimary}" style="color: inherit;">${ftr.phonePrimary}</a></li>`);
         if (ftr.whatsappNumber) items.push(`<li><i class="ri-whatsapp-line" style="color: #25D366;"></i> <a href="https://wa.me/${ftr.whatsappNumber.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener noreferrer" style="color: inherit;">WhatsApp: ${ftr.whatsappNumber}</a></li>`);
         if (ftr.hours) items.push(`<li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> ${ftr.hours}</li>`);
