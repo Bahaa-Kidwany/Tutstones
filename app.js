@@ -1377,6 +1377,12 @@ function initModalZoomEvents() {
   if (!stage || !activeImg) return;
 
   function handleZoomPointer(clientX, clientY, target) {
+    // Disable zoom popup completely on mobile screens (width <= 768px)
+    if (window.innerWidth <= 768) {
+      hideModalZoomPopup();
+      return;
+    }
+
     if (target && (target.closest('.modal-gallery-arrow') || target.closest('.modal-view-badge'))) {
       hideModalZoomPopup();
       return;
@@ -1398,62 +1404,33 @@ function initModalZoomEvents() {
       modalZoomPopupEl.style.backgroundImage = `url("${activeImg.src}")`;
       modalZoomPopupEl.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
 
-      const isMobile = window.innerWidth <= 768;
-      if (!isMobile) {
-        let popupLeft = clientX + 25;
-        let popupTop = clientY - 160;
-        const popupW = 330;
-        const popupH = 330;
+      let popupLeft = clientX + 25;
+      let popupTop = clientY - 160;
+      const popupW = 330;
+      const popupH = 330;
 
-        if (popupLeft + popupW > window.innerWidth) {
-          popupLeft = clientX - popupW - 15;
-        }
-        if (popupLeft < 10) popupLeft = 10;
+      if (popupLeft + popupW > window.innerWidth) {
+        popupLeft = clientX - popupW - 15;
+      }
+      if (popupLeft < 10) popupLeft = 10;
 
-        if (popupTop < 10) popupTop = 10;
-        if (popupTop + popupH > window.innerHeight) {
-          popupTop = window.innerHeight - popupH - 10;
-        }
-
-        modalZoomPopupEl.style.left = `${popupLeft}px`;
-        modalZoomPopupEl.style.top = `${popupTop}px`;
-      } else {
-        // Mobile view centering handled via CSS translate(-50%, -50%)
-        modalZoomPopupEl.style.left = '50%';
-        modalZoomPopupEl.style.top = '50%';
+      if (popupTop < 10) popupTop = 10;
+      if (popupTop + popupH > window.innerHeight) {
+        popupTop = window.innerHeight - popupH - 10;
       }
 
+      modalZoomPopupEl.style.left = `${popupLeft}px`;
+      modalZoomPopupEl.style.top = `${popupTop}px`;
       modalZoomPopupEl.classList.add('active');
     }
   }
 
-  // Desktop Mouse Listeners
+  // Desktop Mouse Listeners ONLY
   stage.onmousemove = function(e) {
     handleZoomPointer(e.clientX, e.clientY, e.target);
   };
 
   stage.onmouseleave = function() {
-    hideModalZoomPopup();
-  };
-
-  // Mobile Touch Listeners
-  stage.ontouchstart = function(e) {
-    if (e.touches && e.touches.length > 0) {
-      handleZoomPointer(e.touches[0].clientX, e.touches[0].clientY, e.target);
-    }
-  };
-
-  stage.ontouchmove = function(e) {
-    if (e.touches && e.touches.length > 0) {
-      handleZoomPointer(e.touches[0].clientX, e.touches[0].clientY, e.target);
-    }
-  };
-
-  stage.ontouchend = function() {
-    hideModalZoomPopup();
-  };
-
-  stage.ontouchcancel = function() {
     hideModalZoomPopup();
   };
 }

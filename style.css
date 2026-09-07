@@ -1512,16 +1512,12 @@ button {
 }
 
 @media (max-width: 768px) {
-  .modal-zoom-popup {
-    width: min(84vw, 290px) !important;
-    height: min(84vw, 290px) !important;
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) scale(0.95) !important;
-  }
+  .modal-zoom-popup,
   .modal-zoom-popup.active {
-    transform: translate(-50%, -50%) scale(1) !important;
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 }
 
