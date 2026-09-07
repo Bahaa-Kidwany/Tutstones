@@ -1445,6 +1445,11 @@ button {
 /* ==========================================================================
    Modal Specification Viewer
    ========================================================================== */
+body.modal-open {
+  touch-action: pan-x pan-y pinch-zoom !important;
+  overscroll-behavior: contain !important;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1459,6 +1464,10 @@ button {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s ease, visibility 0.2s ease;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: opacity;
+  touch-action: pan-x pan-y pinch-zoom !important;
 }
 
 .modal-overlay.active {
@@ -1481,6 +1490,11 @@ button {
   box-shadow: 0 20px 60px rgba(36, 28, 24, 0.3) !important;
   display: flex !important;
   flex-direction: column !important;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  touch-action: pan-x pan-y pinch-zoom !important;
 }
 
 /* Modal Image Zoomed-In Inspection Popup */

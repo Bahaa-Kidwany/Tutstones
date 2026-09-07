@@ -1346,9 +1346,10 @@ function openStoneModal(stoneId) {
     overlay.classList.add('active');
     const container = overlay.querySelector('.modal-container');
     if (container) {
-      container.style.cssText = "background: rgba(253, 249, 243, 0.96) !important; border: 2.5px solid #8D4F4E !important; outline: 1.5px solid #DFB77D !important; border-radius: 16px !important; max-width: 650px !important; width: 92vw !important; max-height: 90vh !important; overflow: hidden !important; position: relative !important; box-shadow: 0 20px 60px rgba(36, 28, 24, 0.3) !important; display: flex !important; flex-direction: column !important;";
+      container.style.cssText = "background: rgba(253, 249, 243, 0.96) !important; border: 2.5px solid #8D4F4E !important; outline: 1.5px solid #DFB77D !important; border-radius: 16px !important; max-width: 650px !important; width: 92vw !important; max-height: 90vh !important; overflow: hidden !important; position: relative !important; box-shadow: 0 20px 60px rgba(36, 28, 24, 0.3) !important; display: flex !important; flex-direction: column !important; transform: translateZ(0) !important; -webkit-transform: translateZ(0) !important; touch-action: pan-x pan-y pinch-zoom !important;";
     }
   }
+  document.body.classList.add('modal-open');
   document.body.style.overflow = 'hidden';
 
   // Initialize zoomed-in popup inspection on image hover
@@ -1491,6 +1492,7 @@ function closeModal() {
   hideModalZoomPopup();
   const overlay = document.getElementById('spec-modal');
   overlay?.classList.remove('active');
+  document.body.classList.remove('modal-open');
   document.body.style.overflow = '';
 }
 
