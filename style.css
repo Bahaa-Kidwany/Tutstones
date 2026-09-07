@@ -1488,16 +1488,16 @@ button {
   position: fixed;
   width: 320px;
   height: 320px;
-  border-radius: var(--radius-md);
-  border: 2px solid var(--color-gold-primary);
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.85), 0 0 25px rgba(212, 175, 55, 0.35);
+  border-radius: 14px;
+  border: 2px solid #DFB77D;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.85), 0 0 25px rgba(223, 183, 125, 0.35);
   background-repeat: no-repeat;
   background-size: 280% 280%;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.15s ease, transform 0.15s ease;
-  z-index: 2500;
+  z-index: 3000;
   background-color: #06090F;
   overflow: hidden;
 }
@@ -1509,6 +1509,20 @@ button {
 
 .modal-zoom-popup .zoom-label {
   display: none !important;
+}
+
+@media (max-width: 768px) {
+  .modal-zoom-popup {
+    width: min(84vw, 290px) !important;
+    height: min(84vw, 290px) !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(0.95) !important;
+  }
+  .modal-zoom-popup.active {
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
 }
 
 .modal-close {

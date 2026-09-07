@@ -1376,40 +1376,84 @@ function initModalZoomEvents() {
   const activeImg = document.getElementById('modal-active-img');
   if (!stage || !activeImg) return;
 
-  stage.onmousemove = function(e) {
-    if (e.target.closest('.modal-gallery-arrow') || e.target.closest('.modal-view-badge')) {
+  function handleZoomPointer(clientX, clientY, target) {
+    if (target && (target.closest('.modal-gallery-arrow') || target.closest('.modal-view-badge'))) {
       hideModalZoomPopup();
       return;
     }
 
     const rect = stage.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const xPercent = (x / rect.width) * 100;
-    const yPercent = (y / rect.height) * 100;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
+      hideModalZoomPopup();
+      return;
+    }
+
+    const xPercent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    const yPercent = Math.max(0, Math.min(100, (y / rect.height) * 100));
 
     if (modalZoomPopupEl) {
       modalZoomPopupEl.style.backgroundImage = `url("${activeImg.src}")`;
       modalZoomPopupEl.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
 
-      let popupLeft = e.clientX + 25;
-      let popupTop = e.clientY - 160;
+      const isMobile = window.innerWidth <= 768;
+      if (!isMobile) {
+        let popupLeft = clientX + 25;
+        let popupTop = clientY - 160;
+        const popupW = 330;
+        const popupH = 330;
 
-      if (popupLeft + 330 > window.innerWidth) {
-        popupLeft = e.clientX - 345;
-      }
-      if (popupTop < 10) popupTop = 10;
-      if (popupTop + 330 > window.innerHeight) {
-        popupTop = window.innerHeight - 340;
+        if (popupLeft + popupW > window.innerWidth) {
+          popupLeft = clientX - popupW - 15;
+        }
+        if (popupLeft < 10) popupLeft = 10;
+
+        if (popupTop < 10) popupTop = 10;
+        if (popupTop + popupH > window.innerHeight) {
+          popupTop = window.innerHeight - popupH - 10;
+        }
+
+        modalZoomPopupEl.style.left = `${popupLeft}px`;
+        modalZoomPopupEl.style.top = `${popupTop}px`;
+      } else {
+        // Mobile view centering handled via CSS translate(-50%, -50%)
+        modalZoomPopupEl.style.left = '50%';
+        modalZoomPopupEl.style.top = '50%';
       }
 
-      modalZoomPopupEl.style.left = `${popupLeft}px`;
-      modalZoomPopupEl.style.top = `${popupTop}px`;
       modalZoomPopupEl.classList.add('active');
     }
+  }
+
+  // Desktop Mouse Listeners
+  stage.onmousemove = function(e) {
+    handleZoomPointer(e.clientX, e.clientY, e.target);
   };
 
   stage.onmouseleave = function() {
+    hideModalZoomPopup();
+  };
+
+  // Mobile Touch Listeners
+  stage.ontouchstart = function(e) {
+    if (e.touches && e.touches.length > 0) {
+      handleZoomPointer(e.touches[0].clientX, e.touches[0].clientY, e.target);
+    }
+  };
+
+  stage.ontouchmove = function(e) {
+    if (e.touches && e.touches.length > 0) {
+      handleZoomPointer(e.touches[0].clientX, e.touches[0].clientY, e.target);
+    }
+  };
+
+  stage.ontouchend = function() {
+    hideModalZoomPopup();
+  };
+
+  stage.ontouchcancel = function() {
     hideModalZoomPopup();
   };
 }
