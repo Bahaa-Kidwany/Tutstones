@@ -1286,11 +1286,15 @@ function openStoneModal(stoneId) {
   if (hasTwoImages) {
     imageBlock = `
       <div class="modal-image-gallery" style="display: flex !important; flex-direction: column !important; gap: 1rem !important; width: 100% !important; align-items: center !important;">
-        <div class="modal-img-stage" id="modal-img-stage" style="position: relative !important; width: 100% !important; height: 380px !important; max-height: 48vh !important; border-radius: 12px !important; overflow: hidden !important; border: 1.5px solid #DFB77D !important; background: #FAF6F0 !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important;">
-          <img id="modal-active-img" src="${fullImg}" alt="${stone.name} Full Tile View" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
+        <div class="modal-img-stage" id="modal-img-stage" style="position: relative !important; width: 100% !important; height: 380px !important; max-height: 48vh !important; border-radius: 12px !important; overflow: hidden !important; border: 1.5px solid #DFB77D !important; background: #FAF6F0 !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important; cursor: pointer !important;">
+          <img id="modal-active-img" src="${fullImg}" alt="${stone.name} Full Tile View" onclick="openImageLightbox(this.src, this.alt)" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important; cursor: zoom-in !important;" onerror="this.onerror=null; this.src='${safeImgSrc(stone.image)}';">
           
           <div id="modal-view-badge" class="modal-view-badge" style="position: absolute !important; top: 0.85rem !important; left: 0.85rem !important; background: rgba(255, 253, 248, 0.96) !important; color: #8D4F4E !important; border: 1.5px solid #8D4F4E !important; padding: 0.35rem 0.85rem !important; border-radius: 20px !important; font-size: 0.82rem !important; font-weight: 700 !important; display: flex !important; align-items: center !important; gap: 0.4rem !important; box-shadow: 0 4px 14px rgba(36, 28, 24, 0.18) !important; z-index: 10 !important; pointer-events: none !important; margin: 0 !important;">
             <i class="ri-aspect-ratio-line"></i> <span>Full Tile View (A)</span>
+          </div>
+
+          <div class="zoom-tap-hint" onclick="openImageLightbox(document.getElementById('modal-active-img')?.src, document.getElementById('modal-active-img')?.alt)">
+            <i class="ri-fullscreen-line"></i> <span>Fullscreen</span>
           </div>
 
           <button type="button" class="modal-gallery-arrow arrow-prev" onclick="switchModalImage('${stone.id}', 'prev')" aria-label="Previous view" title="Switch image view (Click Arrow)" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; left: 0.75rem !important; width: 46px !important; height: 46px !important; border-radius: 50% !important; background: #FFFFFF !important; border: 2px solid #8D4F4E !important; color: #000000 !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 15 !important; box-shadow: 0 4px 15px rgba(36, 28, 24, 0.2) !important; margin: 0 !important; padding: 0 !important;">
@@ -1320,10 +1324,13 @@ function openStoneModal(stoneId) {
   } else {
     imageBlock = `
       <div class="modal-image-gallery" style="display: flex !important; flex-direction: column !important; gap: 1rem !important; width: 100% !important; align-items: center !important;">
-        <div class="modal-img-stage" style="position: relative !important; width: 100% !important; height: 380px !important; max-height: 48vh !important; border-radius: 12px !important; overflow: hidden !important; border: 1.5px solid #DFB77D !important; background: #FAF6F0 !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important;">
-          <img id="modal-active-img" src="${fullImg}" alt="${stone.name}" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important;" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
+        <div class="modal-img-stage" style="position: relative !important; width: 100% !important; height: 380px !important; max-height: 48vh !important; border-radius: 12px !important; overflow: hidden !important; border: 1.5px solid #DFB77D !important; background: #FAF6F0 !important; display: flex !important; align-items: center !important; justify-content: center !important; flex-shrink: 0 !important; cursor: pointer !important;">
+          <img id="modal-active-img" src="${fullImg}" alt="${stone.name}" onclick="openImageLightbox(this.src, this.alt)" style="width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; display: block !important; cursor: zoom-in !important;" onerror="this.onerror=null; this.src='assets/images/marble_calacatta.png';">
           <div class="modal-view-badge" style="position: absolute !important; top: 0.85rem !important; left: 0.85rem !important; background: rgba(255, 253, 248, 0.96) !important; color: #8D4F4E !important; border: 1.5px solid #8D4F4E !important; padding: 0.35rem 0.85rem !important; border-radius: 20px !important; font-size: 0.82rem !important; font-weight: 700 !important; display: flex !important; align-items: center !important; gap: 0.4rem !important; box-shadow: 0 4px 14px rgba(36, 28, 24, 0.18) !important; z-index: 10 !important; pointer-events: none !important; margin: 0 !important;">
             <i class="ri-image-line"></i> <span>Full View</span>
+          </div>
+          <div class="zoom-tap-hint" onclick="openImageLightbox(document.getElementById('modal-active-img')?.src, document.getElementById('modal-active-img')?.alt)">
+            <i class="ri-fullscreen-line"></i> <span>Fullscreen</span>
           </div>
         </div>
       </div>
@@ -1486,6 +1493,49 @@ function closeModal() {
   hideModalZoomPopup();
   const overlay = document.getElementById('spec-modal');
   overlay?.classList.remove('active');
+}
+
+/* ==========================================================================
+   Clean Fullscreen Image Lightbox (Zero-Flash Native Zoom)
+   ========================================================================== */
+function openImageLightbox(src, alt) {
+  if (!src) return;
+  hideModalZoomPopup();
+
+  let lightbox = document.getElementById('image-lightbox');
+  if (!lightbox) {
+    lightbox = document.createElement('div');
+    lightbox.id = 'image-lightbox';
+    lightbox.className = 'lightbox-overlay';
+    lightbox.onclick = function(e) {
+      if (e.target === lightbox || e.target.closest('.lightbox-close') || e.target.classList.contains('lightbox-content')) {
+        closeImageLightbox();
+      }
+    };
+    lightbox.innerHTML = `
+      <button type="button" class="lightbox-close" onclick="closeImageLightbox()" aria-label="Close fullscreen view">
+        <i class="ri-close-line"></i>
+      </button>
+      <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="">
+      </div>
+    `;
+    document.body.appendChild(lightbox);
+  }
+
+  const imgEl = document.getElementById('lightbox-img');
+  if (imgEl) {
+    imgEl.src = src;
+    imgEl.alt = alt || 'Fullscreen Stone Image View';
+  }
+  lightbox.classList.add('active');
+}
+
+function closeImageLightbox() {
+  const lightbox = document.getElementById('image-lightbox');
+  if (lightbox) {
+    lightbox.classList.remove('active');
+  }
 }
 
 function handleInquirySubmit(e, stoneName) {
