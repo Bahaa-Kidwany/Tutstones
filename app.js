@@ -175,10 +175,21 @@ function renderFooterContent() {
       if (ul) {
         let items = [];
         if (ftr.address && isFieldVisible(ftr, 'ftr-address')) {
-          items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> <a href="${ftr.addressLink || 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7'}" target="_blank" rel="noopener noreferrer" style="color: inherit;">${ftr.address}</a></li>`);
+          const hasLink = ftr.addressLink && isFieldVisible(ftr, 'ftr-address-link');
+          const addrHTML = hasLink
+            ? `<a href="${ftr.addressLink}" target="_blank" rel="noopener noreferrer" style="color: inherit;">${ftr.address}</a>`
+            : `${ftr.address}`;
+          items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> ${addrHTML}</li>`);
         }
-        if ((ftr.emailPrimary || ftr.emailSecondary) && isFieldVisible(ftr, 'ftr-email-primary')) {
-          items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${ftr.emailPrimary || 'info@tutstones.com'}" style="color: inherit;">${ftr.emailPrimary || 'info@tutstones.com'}</a> ${ftr.emailSecondary ? '| <a href="mailto:' + ftr.emailSecondary + '" style="color: inherit;">' + ftr.emailSecondary + '</a>' : ''}</li>`);
+        let emails = [];
+        if (ftr.emailPrimary && isFieldVisible(ftr, 'ftr-email-primary')) {
+          emails.push(`<a href="mailto:${ftr.emailPrimary}" style="color: inherit;">${ftr.emailPrimary}</a>`);
+        }
+        if (ftr.emailSecondary && isFieldVisible(ftr, 'ftr-email-secondary')) {
+          emails.push(`<a href="mailto:${ftr.emailSecondary}" style="color: inherit;">${ftr.emailSecondary}</a>`);
+        }
+        if (emails.length > 0) {
+          items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> ${emails.join(' | ')}</li>`);
         }
         if (ftr.phonePrimary && isFieldVisible(ftr, 'ftr-phone-primary')) {
           items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${ftr.phonePrimary}" style="color: inherit;">${ftr.phonePrimary}</a></li>`);

@@ -133,6 +133,11 @@ function restoreDraftStateFromClient() {
     const raw = sessionStorage.getItem('tut_stones_draft_backup');
     if (raw) {
       const parsed = JSON.parse(raw);
+      if (parsed.footerData) {
+        if (!parsed.footerData.emailPrimary) delete parsed.footerData.emailPrimary;
+        if (!parsed.footerData.phonePrimary) delete parsed.footerData.phonePrimary;
+        if (!parsed.footerData.whatsappNumber) delete parsed.footerData.whatsappNumber;
+      }
       TutStonesStore.data = { ...TutStonesStore.data, ...parsed };
       setUnsavedChanges(true);
     }
@@ -243,12 +248,14 @@ function collectAllPageFormsToStoreData() {
   if (document.getElementById('ftr-brand-desc')) {
     const formEl = document.getElementById('tab-footer');
     TutStonesStore.saveFooterData({
-      brandDesc: document.getElementById('ftr-brand-desc').value,
-      address: document.getElementById('ftr-address') ? document.getElementById('ftr-address').value : '',
-      phonePrimary: document.getElementById('ftr-phone') ? document.getElementById('ftr-phone').value : '',
-      whatsappNumber: document.getElementById('ftr-whatsapp') ? document.getElementById('ftr-whatsapp').value : '',
-      emailPrimary: document.getElementById('ftr-email') ? document.getElementById('ftr-email').value : '',
-      hours: document.getElementById('ftr-hours') ? document.getElementById('ftr-hours').value : '',
+      brandDesc: document.getElementById('ftr-brand-desc')?.value || '',
+      address: document.getElementById('ftr-address')?.value || '',
+      addressLink: document.getElementById('ftr-address-link')?.value || '',
+      emailPrimary: document.getElementById('ftr-email-primary')?.value || '',
+      emailSecondary: document.getElementById('ftr-email-secondary')?.value || '',
+      phonePrimary: document.getElementById('ftr-phone-primary')?.value || '',
+      whatsappNumber: document.getElementById('ftr-whatsapp-num')?.value || '',
+      hours: document.getElementById('ftr-hours')?.value || '',
       fieldVisibility: collectFieldVisibility(formEl)
     });
   }

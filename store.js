@@ -1443,7 +1443,18 @@ class Store {
 
   // --- Footer Data ---
   getFooterData() {
-    return this.data.footerData || DEFAULT_DATA.footerData;
+    const d = this.data.footerData || DEFAULT_DATA.footerData;
+    return {
+      brandDesc: (d.brandDesc !== undefined && d.brandDesc !== '') ? d.brandDesc : DEFAULT_DATA.footerData.brandDesc,
+      address: (d.address !== undefined && d.address !== '') ? d.address : DEFAULT_DATA.footerData.address,
+      addressLink: (d.addressLink !== undefined && d.addressLink !== '') ? d.addressLink : DEFAULT_DATA.footerData.addressLink,
+      emailPrimary: (d.emailPrimary !== undefined && d.emailPrimary !== '') ? d.emailPrimary : DEFAULT_DATA.footerData.emailPrimary,
+      emailSecondary: (d.emailSecondary !== undefined && d.emailSecondary !== '') ? d.emailSecondary : DEFAULT_DATA.footerData.emailSecondary,
+      phonePrimary: (d.phonePrimary !== undefined && d.phonePrimary !== '') ? d.phonePrimary : DEFAULT_DATA.footerData.phonePrimary,
+      whatsappNumber: (d.whatsappNumber !== undefined && d.whatsappNumber !== '') ? d.whatsappNumber : DEFAULT_DATA.footerData.whatsappNumber,
+      hours: (d.hours !== undefined && d.hours !== '') ? d.hours : DEFAULT_DATA.footerData.hours,
+      fieldVisibility: d.fieldVisibility || {}
+    };
   }
 
   saveFooterData(data) {
