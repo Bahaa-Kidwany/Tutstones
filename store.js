@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.06.v35';
-const STORAGE_KEY = 'tut_stones_data_v35';
+const CURRENT_BUILD_VERSION = '2026.09.09.v50';
+const STORAGE_KEY = 'tut_stones_data_v50';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
@@ -23,7 +23,20 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
         dataKeys.sort();
         const latestDataRaw = localStorage.getItem(dataKeys[dataKeys.length - 1]);
         if (latestDataRaw) {
-          localStorage.setItem(STORAGE_KEY, latestDataRaw);
+          try {
+            const parsed = JSON.parse(latestDataRaw);
+            // Upgrade legacy logo path if present
+            if (Array.isArray(parsed.imagesData)) {
+              parsed.imagesData.forEach(img => {
+                if (img.id === 'img-brand-logo' || (img.url && img.url.includes('tut_stones_logo.png'))) {
+                  img.url = 'assets/images/TUTSTONES.png?v=20260909_v50';
+                }
+              });
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+          } catch(e) {
+            localStorage.setItem(STORAGE_KEY, latestDataRaw);
+          }
         }
       }
 
@@ -614,7 +627,7 @@ const DEFAULT_DATA = {
       id: 'img-brand-logo',
       keyName: 'Winged Obelisk Brand Logo',
       section: 'Header & Footer Brand',
-      url: 'assets/images/tut_stones_logo.png',
+      url: 'assets/images/TUTSTONES.png?v=20260909_v50',
       description: 'Official header and footer emblem logo for TutStones.'
     }
   ],
@@ -864,14 +877,18 @@ class Store {
       // Reject error-only responses from the API
       if (serverData.error && Object.keys(serverData).length === 1) return;
 
-      // Merge server data as the source of truth (server overrides localStorage)
-      this.data = { ...this.data, ...serverData };
+      const localTime = Number(this.data?.lastModified) || 0;
+      const serverTime = Number(serverData?.lastModified) || 0;
 
-      // Also sync to localStorage so it stays warm for next fast load
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
-
-      // Notify pages so they can re-render with fresh server content
-      window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
+      // If server data is newer or equal, merge server data into local
+      if (serverTime >= localTime) {
+        this.data = { ...this.data, ...serverData };
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
+        window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
+      } else {
+        // Local data is newer than server data: sync server up with local data
+        this._pushToServer();
+      }
     } catch (e) {
       // Server offline or network error — continue with localStorage data
       console.info('[TutStones] Server API unreachable, using localStorage data.');
@@ -929,6 +946,7 @@ class Store {
   }
 
   save() {
+    this.data.lastModified = Date.now();
     // 1. Save to localStorage immediately (fast, synchronous)
     let localOk = false;
     try {
