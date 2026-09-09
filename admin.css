@@ -1349,3 +1349,67 @@ textarea.form-control {
   color: var(--color-gold-primary);
 }
 
+/* ==========================================================================
+   Per-Field Visibility Controls in Admin
+   ========================================================================== */
+.form-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
+}
+
+.form-label-row label {
+  margin-bottom: 0 !important;
+}
+
+.field-vis-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--color-gold-light);
+  cursor: pointer;
+  user-select: none;
+  background: rgba(223, 183, 125, 0.08);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid rgba(223, 183, 125, 0.25);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  font-weight: 500;
+  margin-bottom: 0 !important;
+}
+
+.field-vis-toggle:hover {
+  background: rgba(223, 183, 125, 0.18);
+  border-color: rgba(223, 183, 125, 0.4);
+}
+
+.field-vis-checkbox {
+  accent-color: var(--color-gold-primary);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.field-hidden-admin {
+  opacity: 0.52;
+  transition: opacity 0.25s ease;
+  position: relative;
+}
+
+.field-hidden-admin .form-control {
+  border-style: dashed !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  background: rgba(239, 68, 68, 0.03) !important;
+}
+
+.field-hidden-admin .field-vis-toggle {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #F87171;
+}
+
+

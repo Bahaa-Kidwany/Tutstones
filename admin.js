@@ -32,6 +32,79 @@ function safeImgSrc(url) {
 }
 
 /* ==========================================================================
+   Per-Field Visibility Control Engine
+   ========================================================================== */
+function isFieldVisible(obj, fieldId) {
+  if (!obj || !obj.fieldVisibility) return true;
+  return obj.fieldVisibility[fieldId] !== false;
+}
+
+function initFieldVisibilityControls(container, fieldVisibility = {}) {
+  if (!container) return;
+  const groups = container.querySelectorAll('.form-group');
+  groups.forEach(group => {
+    // Exclude checkboxes themselves, hidden inputs, file inputs
+    const input = group.querySelector('input:not([type="hidden"]):not([type="file"]):not(.field-vis-checkbox), textarea, select');
+    if (!input || !input.id) return;
+
+    const fieldId = input.id;
+    let label = group.querySelector(':scope > label, :scope > .form-label-row > label');
+    if (!label) return;
+
+    // Wrap label into .form-label-row if not already wrapped
+    let labelRow = group.querySelector(':scope > .form-label-row');
+    if (!labelRow) {
+      labelRow = document.createElement('div');
+      labelRow.className = 'form-label-row';
+      label.parentNode.insertBefore(labelRow, label);
+      labelRow.appendChild(label);
+    }
+
+    // Check if toggle already exists for this field
+    let toggle = labelRow.querySelector(`.field-vis-toggle[data-target="${fieldId}"]`);
+    if (!toggle) {
+      toggle = document.createElement('label');
+      toggle.className = 'field-vis-toggle';
+      toggle.setAttribute('data-target', fieldId);
+      toggle.title = 'Check to show on public website, uncheck to hide completely';
+      toggle.innerHTML = `
+        <input type="checkbox" class="field-vis-checkbox" data-field-id="${fieldId}">
+        <span class="field-vis-text">Visible</span>
+      `;
+      labelRow.appendChild(toggle);
+    }
+
+    const checkbox = toggle.querySelector('.field-vis-checkbox');
+    const textSpan = toggle.querySelector('.field-vis-text');
+
+    const isVis = (fieldVisibility && fieldVisibility[fieldId] === false) ? false : true;
+    checkbox.checked = isVis;
+    group.classList.toggle('field-hidden-admin', !isVis);
+    textSpan.innerText = isVis ? 'Visible' : 'Hidden on Site';
+
+    checkbox.onchange = function() {
+      const checked = this.checked;
+      group.classList.toggle('field-hidden-admin', !checked);
+      textSpan.innerText = checked ? 'Visible' : 'Hidden on Site';
+      setUnsavedChanges(true);
+    };
+  });
+}
+
+function collectFieldVisibility(container) {
+  if (!container) return {};
+  const visibility = {};
+  const checkboxes = container.querySelectorAll('.field-vis-checkbox');
+  checkboxes.forEach(cb => {
+    const fieldId = cb.getAttribute('data-field-id');
+    if (fieldId) {
+      visibility[fieldId] = cb.checked;
+    }
+  });
+  return visibility;
+}
+
+/* ==========================================================================
    UNSAVED CHANGES & DRAFT STATE CONTROLLER
    ========================================================================== */
 let hasUnsavedChanges = false;
@@ -70,6 +143,7 @@ function restoreDraftStateFromClient() {
 
 function collectAllPageFormsToStoreData() {
   if (document.getElementById('hp-about-tag')) {
+    const formEl = document.getElementById('home-page-form');
     TutStonesStore.saveHomePage({
       aboutTag: document.getElementById('hp-about-tag').value,
       aboutTitle: document.getElementById('hp-about-title').value,
@@ -79,11 +153,13 @@ function collectAllPageFormsToStoreData() {
       aboutExpNumber: document.getElementById('hp-about-exp-num').value,
       aboutExpText: document.getElementById('hp-about-exp-text').value,
       boxesTag: document.getElementById('hp-boxes-tag').value,
-      boxesTitle: document.getElementById('hp-boxes-title').value
+      boxesTitle: document.getElementById('hp-boxes-title').value,
+      fieldVisibility: collectFieldVisibility(formEl)
     });
   }
 
   if (document.getElementById('abp-banner-tag')) {
+    const formEl = document.getElementById('about-page-form');
     TutStonesStore.saveAboutPage({
       bannerTag: document.getElementById('abp-banner-tag').value,
       bannerTitle: document.getElementById('abp-banner-title').value,
@@ -97,11 +173,13 @@ function collectAllPageFormsToStoreData() {
       expNumber: document.getElementById('abp-exp-num').value,
       expText: document.getElementById('abp-exp-text').value,
       bottomTag: document.getElementById('abp-bottom-tag').value,
-      bottomTitle: document.getElementById('abp-bottom-title').value
+      bottomTitle: document.getElementById('abp-bottom-title').value,
+      fieldVisibility: collectFieldVisibility(formEl)
     });
   }
 
   if (document.getElementById('fac-banner-tag')) {
+    const formEl = document.getElementById('factory-page-form');
     TutStonesStore.saveFactoryPage({
       bannerTag: document.getElementById('fac-banner-tag').value,
       bannerTitle: document.getElementById('fac-banner-title').value,
@@ -114,11 +192,13 @@ function collectAllPageFormsToStoreData() {
       expNumber: document.getElementById('fac-exp-num').value,
       expText: document.getElementById('fac-exp-text').value,
       workflowTag: document.getElementById('fac-workflow-tag').value,
-      workflowTitle: document.getElementById('fac-workflow-title').value
+      workflowTitle: document.getElementById('fac-workflow-title').value,
+      fieldVisibility: collectFieldVisibility(formEl)
     });
   }
 
   if (document.getElementById('pkg-banner-tag')) {
+    const formEl = document.getElementById('packaging-page-form');
     TutStonesStore.savePackagingPage({
       bannerTag: document.getElementById('pkg-banner-tag').value,
       bannerTitle: document.getElementById('pkg-banner-title').value,
@@ -131,11 +211,13 @@ function collectAllPageFormsToStoreData() {
       expNumber: document.getElementById('pkg-exp-num').value,
       expText: document.getElementById('pkg-exp-text').value,
       specsTag: document.getElementById('pkg-specs-tag').value,
-      specsTitle: document.getElementById('pkg-specs-title').value
+      specsTitle: document.getElementById('pkg-specs-title').value,
+      fieldVisibility: collectFieldVisibility(formEl)
     });
   }
 
   if (document.getElementById('cnt-banner-tag')) {
+    const formEl = document.getElementById('contact-page-form');
     TutStonesStore.saveContactPage({
       bannerTag: document.getElementById('cnt-banner-tag').value,
       bannerTitle: document.getElementById('cnt-banner-title').value,
@@ -153,18 +235,21 @@ function collectAllPageFormsToStoreData() {
       emailSecondary: document.getElementById('cnt-email-secondary').value,
       phoneTitle: document.getElementById('cnt-phone-title').value,
       phonePrimary: document.getElementById('cnt-phone-primary').value,
-      whatsappNumber: document.getElementById('cnt-whatsapp-num').value
+      whatsappNumber: document.getElementById('cnt-whatsapp-num').value,
+      fieldVisibility: collectFieldVisibility(formEl)
     });
   }
 
   if (document.getElementById('ftr-brand-desc')) {
+    const formEl = document.getElementById('tab-footer');
     TutStonesStore.saveFooterData({
       brandDesc: document.getElementById('ftr-brand-desc').value,
       address: document.getElementById('ftr-address') ? document.getElementById('ftr-address').value : '',
       phonePrimary: document.getElementById('ftr-phone') ? document.getElementById('ftr-phone').value : '',
       whatsappNumber: document.getElementById('ftr-whatsapp') ? document.getElementById('ftr-whatsapp').value : '',
       emailPrimary: document.getElementById('ftr-email') ? document.getElementById('ftr-email').value : '',
-      hours: document.getElementById('ftr-hours') ? document.getElementById('ftr-hours').value : ''
+      hours: document.getElementById('ftr-hours') ? document.getElementById('ftr-hours').value : '',
+      fieldVisibility: collectFieldVisibility(formEl)
     });
   }
 }
@@ -528,35 +613,17 @@ function renderStoneCards() {
         <div class="stone-admin-body">
           <div class="stone-admin-header">
             <h3 class="stone-admin-title">${stone.name}</h3>
-            <span class="badge-tag">${stone.tag || catName}</span>
+            ${isFieldVisible(stone, 'stone-tag') ? `<span class="badge-tag">${stone.tag || catName}</span>` : ''}
           </div>
-          <p class="stone-admin-desc">${stone.desc || 'No description provided.'}</p>
+          ${isFieldVisible(stone, 'stone-desc') ? `<p class="stone-admin-desc">${stone.desc || 'No description provided.'}</p>` : ''}
           
           <table class="card-spec-table" style="margin: 0.5rem 0;">
-            <tr>
-              <td>Origin</td>
-              <td>${stone.origin || 'N/A'}</td>
-            </tr>
-            <tr>
-              <td>Finishes</td>
-              <td>${stone.finish || 'Polished'}</td>
-            </tr>
-            <tr>
-              <td>Density</td>
-              <td>${stone.density || '2.70 g/cm³'}</td>
-            </tr>
-            <tr>
-              <td>Water Abs.</td>
-              <td>${stone.waterAbs || '0.15%'}</td>
-            </tr>
-            <tr>
-              <td>Flexural Str.</td>
-              <td>${stone.flexural || '14.8 MPa'}</td>
-            </tr>
-            <tr>
-              <td>Uses</td>
-              <td>${stone.applications || 'Flooring, Countertops'}</td>
-            </tr>
+            ${isFieldVisible(stone, 'stone-origin') ? `<tr><td>Origin</td><td>${stone.origin || 'N/A'}</td></tr>` : ''}
+            ${isFieldVisible(stone, 'stone-finish') ? `<tr><td>Finishes</td><td>${stone.finish || 'Polished'}</td></tr>` : ''}
+            ${isFieldVisible(stone, 'stone-density') ? `<tr><td>Density</td><td>${stone.density || '2.70 g/cm³'}</td></tr>` : ''}
+            ${isFieldVisible(stone, 'stone-water') ? `<tr><td>Water Abs.</td><td>${stone.waterAbs || '0.15%'}</td></tr>` : ''}
+            ${isFieldVisible(stone, 'stone-flexural') ? `<tr><td>Flexural Str.</td><td>${stone.flexural || '14.8 MPa'}</td></tr>` : ''}
+            ${isFieldVisible(stone, 'stone-applications') ? `<tr><td>Uses</td><td>${stone.applications || 'Flooring, Countertops'}</td></tr>` : ''}
           </table>
 
           <div class="stone-admin-footer">
@@ -681,6 +748,7 @@ function renderHomePageForm() {
 
   renderHpAboutSliderImages();
   renderHpBoxes();
+  initFieldVisibilityControls(document.getElementById('home-page-form'), hp.fieldVisibility);
 }
 
 function renderHpAboutSliderImages() {
@@ -807,7 +875,8 @@ function saveHomePageForm() {
     aboutSliderImages: aboutSliderImages.length > 0 ? aboutSliderImages : hp.aboutSliderImages,
     boxesTag: document.getElementById('hp-boxes-tag')?.value || hp.boxesTag,
     boxesTitle: document.getElementById('hp-boxes-title')?.value || hp.boxesTitle,
-    boxes: boxes
+    boxes: boxes,
+    fieldVisibility: collectFieldVisibility(document.getElementById('home-page-form'))
   };
 
   const res = TutStonesStore.saveHomePage(updatedHp);
@@ -839,6 +908,7 @@ function renderAboutPageForm() {
   if (document.getElementById('abp-bottom-title')) document.getElementById('abp-bottom-title').value = ab.bottomTitle || '';
 
   renderAbpCards();
+  initFieldVisibilityControls(document.getElementById('about-page-form'), ab.fieldVisibility);
 }
 
 function renderAbpCards() {
@@ -907,7 +977,8 @@ function saveAboutPageForm() {
     expText: document.getElementById('abp-exp-text')?.value || ab.expText,
     bottomTag: document.getElementById('abp-bottom-tag')?.value || ab.bottomTag,
     bottomTitle: document.getElementById('abp-bottom-title')?.value || ab.bottomTitle,
-    bottomCards: cards
+    bottomCards: cards,
+    fieldVisibility: collectFieldVisibility(document.getElementById('about-page-form'))
   };
 
   const res = TutStonesStore.saveAboutPage(updatedAb);
@@ -938,6 +1009,7 @@ function renderFactoryPageForm() {
   if (document.getElementById('fac-workflow-title')) document.getElementById('fac-workflow-title').value = fac.workflowTitle || '';
 
   renderFacCards();
+  initFieldVisibilityControls(document.getElementById('factory-page-form'), fac.fieldVisibility);
 }
 
 function renderFacCards() {
@@ -1005,7 +1077,8 @@ function saveFactoryPageForm() {
     expText: document.getElementById('fac-exp-text')?.value || fac.expText,
     workflowTag: document.getElementById('fac-workflow-tag')?.value || fac.workflowTag,
     workflowTitle: document.getElementById('fac-workflow-title')?.value || fac.workflowTitle,
-    cards: cards
+    cards: cards,
+    fieldVisibility: collectFieldVisibility(document.getElementById('factory-page-form'))
   };
 
   const res = TutStonesStore.saveFactoryPage(updatedFac);
@@ -1036,6 +1109,7 @@ function renderPackagingPageForm() {
   if (document.getElementById('pkg-specs-title')) document.getElementById('pkg-specs-title').value = pkg.specsTitle || '';
 
   renderPkgCards();
+  initFieldVisibilityControls(document.getElementById('packaging-page-form'), pkg.fieldVisibility);
 }
 
 function renderPkgCards() {
@@ -1103,7 +1177,8 @@ function savePackagingPageForm() {
     expText: document.getElementById('pkg-exp-text')?.value || pkg.expText,
     specsTag: document.getElementById('pkg-specs-tag')?.value || pkg.specsTag,
     specsTitle: document.getElementById('pkg-specs-title')?.value || pkg.specsTitle,
-    cards: cards
+    cards: cards,
+    fieldVisibility: collectFieldVisibility(document.getElementById('packaging-page-form'))
   };
 
   const res = TutStonesStore.savePackagingPage(updatedPkg);
@@ -1138,6 +1213,8 @@ function renderContactPageForm() {
   if (document.getElementById('cnt-phone-title')) document.getElementById('cnt-phone-title').value = cnt.phoneTitle || '';
   if (document.getElementById('cnt-phone-primary')) document.getElementById('cnt-phone-primary').value = cnt.phonePrimary || '';
   if (document.getElementById('cnt-whatsapp-num')) document.getElementById('cnt-whatsapp-num').value = cnt.whatsappNumber || '';
+
+  initFieldVisibilityControls(document.getElementById('contact-page-form'), cnt.fieldVisibility);
 }
 
 function saveContactPageForm() {
@@ -1161,7 +1238,8 @@ function saveContactPageForm() {
     emailSecondary: document.getElementById('cnt-email-secondary')?.value || cnt.emailSecondary,
     phoneTitle: document.getElementById('cnt-phone-title')?.value || cnt.phoneTitle,
     phonePrimary: document.getElementById('cnt-phone-primary')?.value || cnt.phonePrimary,
-    whatsappNumber: document.getElementById('cnt-whatsapp-num')?.value || cnt.whatsappNumber
+    whatsappNumber: document.getElementById('cnt-whatsapp-num')?.value || cnt.whatsappNumber,
+    fieldVisibility: collectFieldVisibility(document.getElementById('contact-page-form'))
   };
 
   const res = TutStonesStore.saveContactPage(updatedCnt);
@@ -1183,6 +1261,8 @@ function renderFooterForm() {
   if (document.getElementById('ftr-phone-primary')) document.getElementById('ftr-phone-primary').value = ftr.phonePrimary || '';
   if (document.getElementById('ftr-whatsapp-num')) document.getElementById('ftr-whatsapp-num').value = ftr.whatsappNumber || '';
   if (document.getElementById('ftr-hours')) document.getElementById('ftr-hours').value = ftr.hours || '';
+
+  initFieldVisibilityControls(document.getElementById('tab-footer'), ftr.fieldVisibility);
 }
 
 function saveFooterForm() {
@@ -1197,7 +1277,8 @@ function saveFooterForm() {
     emailSecondary: document.getElementById('ftr-email-secondary')?.value || ftr.emailSecondary,
     phonePrimary: document.getElementById('ftr-phone-primary')?.value || ftr.phonePrimary,
     whatsappNumber: document.getElementById('ftr-whatsapp-num')?.value || ftr.whatsappNumber,
-    hours: document.getElementById('ftr-hours')?.value || ftr.hours
+    hours: document.getElementById('ftr-hours')?.value || ftr.hours,
+    fieldVisibility: collectFieldVisibility(document.getElementById('tab-footer'))
   };
 
   const res = TutStonesStore.saveFooterData(updatedFtr);
@@ -1483,6 +1564,8 @@ function openStoneModal(stoneId = null) {
     document.getElementById('stone-flexural').value = stone.flexural || '';
     document.getElementById('stone-desc').value = stone.desc || '';
     document.getElementById('stone-applications').value = stone.applications || '';
+
+    initFieldVisibilityControls(modal ? modal.querySelector('.admin-modal-body') : null, stone.fieldVisibility);
   } else {
     title.innerText = "Add New Stone Item";
     document.getElementById('stone-id').value = '';
@@ -1500,12 +1583,17 @@ function openStoneModal(stoneId = null) {
     document.getElementById('stone-flexural').value = '15.0 MPa';
     document.getElementById('stone-desc').value = '';
     document.getElementById('stone-applications').value = '';
+
+    initFieldVisibilityControls(modal ? modal.querySelector('.admin-modal-body') : null, {});
   }
 
   modal.classList.add('active');
 }
 
 function saveStoneForm() {
+  const modalBody = document.querySelector('#stone-modal .admin-modal-body');
+  const fieldVisibility = collectFieldVisibility(modalBody);
+
   const slabImg = (document.getElementById('stone-image-slab')?.value || '').trim();
   const edgeImg = (document.getElementById('stone-image-edge')?.value || '').trim();
 
@@ -1528,7 +1616,8 @@ function saveStoneForm() {
     flexural: document.getElementById('stone-flexural').value,
     desc: document.getElementById('stone-desc').value,
     applications: document.getElementById('stone-applications').value,
-    featured: true
+    featured: true,
+    fieldVisibility: fieldVisibility
   };
 
   TutStonesStore.saveStone(stone);

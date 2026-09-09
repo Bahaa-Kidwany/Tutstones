@@ -57,8 +57,12 @@ window.addEventListener('tutstones:server-data-ready', () => {
     try { renderContactPageContent(); } catch (e) {}
   }
   try { renderFeaturedSections(); } catch (e) {}
-  try { initCatalogue(); } catch (e) {}
 });
+
+function isFieldVisible(obj, fieldId) {
+  if (!obj || !obj.fieldVisibility) return true;
+  return obj.fieldVisibility[fieldId] !== false;
+}
 
 
 
@@ -153,7 +157,14 @@ function renderFooterContent() {
 
   // Brand paragraph
   const brandP = footer.querySelector('.footer-brand p');
-  if (brandP && ftr.brandDesc) brandP.innerText = ftr.brandDesc;
+  if (brandP) {
+    if (!isFieldVisible(ftr, 'ftr-brand-desc')) {
+      brandP.style.display = 'none';
+    } else {
+      brandP.style.display = '';
+      if (ftr.brandDesc) brandP.innerText = ftr.brandDesc;
+    }
+  }
 
   // Headquarters column
   const hqCols = footer.querySelectorAll('.footer-col');
@@ -163,11 +174,21 @@ function renderFooterContent() {
       const ul = col.querySelector('.footer-links');
       if (ul) {
         let items = [];
-        if (ftr.address) items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> <a href="${ftr.addressLink || 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7'}" target="_blank" rel="noopener noreferrer" style="color: inherit;">${ftr.address}</a></li>`);
-        if (ftr.emailPrimary || ftr.emailSecondary) items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${ftr.emailPrimary || 'info@tutstones.com'}" style="color: inherit;">${ftr.emailPrimary || 'info@tutstones.com'}</a> ${ftr.emailSecondary ? '| <a href="mailto:' + ftr.emailSecondary + '" style="color: inherit;">' + ftr.emailSecondary + '</a>' : ''}</li>`);
-        if (ftr.phonePrimary) items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${ftr.phonePrimary}" style="color: inherit;">${ftr.phonePrimary}</a></li>`);
-        if (ftr.whatsappNumber) items.push(`<li><i class="ri-whatsapp-line" style="color: #25D366;"></i> <a href="https://wa.me/${ftr.whatsappNumber.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener noreferrer" style="color: inherit;">WhatsApp: ${ftr.whatsappNumber}</a></li>`);
-        if (ftr.hours) items.push(`<li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> ${ftr.hours}</li>`);
+        if (ftr.address && isFieldVisible(ftr, 'ftr-address')) {
+          items.push(`<li><i class="ri-map-pin-2-line" style="color: var(--color-gold-primary);"></i> <a href="${ftr.addressLink || 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7'}" target="_blank" rel="noopener noreferrer" style="color: inherit;">${ftr.address}</a></li>`);
+        }
+        if ((ftr.emailPrimary || ftr.emailSecondary) && isFieldVisible(ftr, 'ftr-email-primary')) {
+          items.push(`<li><i class="ri-mail-line" style="color: var(--color-gold-primary);"></i> <a href="mailto:${ftr.emailPrimary || 'info@tutstones.com'}" style="color: inherit;">${ftr.emailPrimary || 'info@tutstones.com'}</a> ${ftr.emailSecondary ? '| <a href="mailto:' + ftr.emailSecondary + '" style="color: inherit;">' + ftr.emailSecondary + '</a>' : ''}</li>`);
+        }
+        if (ftr.phonePrimary && isFieldVisible(ftr, 'ftr-phone-primary')) {
+          items.push(`<li><i class="ri-phone-line" style="color: var(--color-gold-primary);"></i> <a href="tel:${ftr.phonePrimary}" style="color: inherit;">${ftr.phonePrimary}</a></li>`);
+        }
+        if (ftr.whatsappNumber && isFieldVisible(ftr, 'ftr-whatsapp-num')) {
+          items.push(`<li><i class="ri-whatsapp-line" style="color: #25D366;"></i> <a href="https://wa.me/${ftr.whatsappNumber.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener noreferrer" style="color: inherit;">WhatsApp: ${ftr.whatsappNumber}</a></li>`);
+        }
+        if (ftr.hours && isFieldVisible(ftr, 'ftr-hours')) {
+          items.push(`<li><i class="ri-time-line" style="color: var(--color-gold-primary);"></i> ${ftr.hours}</li>`);
+        }
         ul.innerHTML = items.join('');
       }
     }
@@ -186,18 +207,37 @@ function renderHomePageContent() {
     const titleElem = aboutSection.querySelector('.section-title');
     const expNumElem = aboutSection.querySelector('.exp-number');
     const expTextElem = aboutSection.querySelector('.exp-text');
+    const expCard = aboutSection.querySelector('.exp-badge, .about-exp-card, .about-experience');
     const pContainer = aboutSection.querySelector('.about-paragraphs');
 
-    if (tagElem && hp.aboutTag) tagElem.innerText = hp.aboutTag;
-    if (titleElem && hp.aboutTitle) titleElem.innerHTML = hp.aboutTitle;
-    if (expNumElem && hp.aboutExpNumber) expNumElem.innerText = hp.aboutExpNumber;
-    if (expTextElem && hp.aboutExpText) expTextElem.innerHTML = hp.aboutExpText;
+    if (tagElem) {
+      tagElem.style.display = isFieldVisible(hp, 'hp-about-tag') ? '' : 'none';
+      if (hp.aboutTag) tagElem.innerText = hp.aboutTag;
+    }
+    if (titleElem) {
+      titleElem.style.display = isFieldVisible(hp, 'hp-about-title') ? '' : 'none';
+      if (hp.aboutTitle) titleElem.innerHTML = hp.aboutTitle;
+    }
+
+    const expNumVis = isFieldVisible(hp, 'hp-about-exp-num');
+    const expTextVis = isFieldVisible(hp, 'hp-about-exp-text');
+    if (expNumElem) {
+      expNumElem.style.display = expNumVis ? '' : 'none';
+      if (hp.aboutExpNumber) expNumElem.innerText = hp.aboutExpNumber;
+    }
+    if (expTextElem) {
+      expTextElem.style.display = expTextVis ? '' : 'none';
+      if (hp.aboutExpText) expTextElem.innerHTML = hp.aboutExpText;
+    }
+    if (expCard) {
+      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
+    }
 
     if (pContainer) {
       let pContent = '';
-      if (hp.aboutDesc1) pContent += `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${hp.aboutDesc1}</p>`;
-      if (hp.aboutDesc2) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${hp.aboutDesc2}</p>`;
-      if (hp.aboutDesc3) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${hp.aboutDesc3}</p>`;
+      if (hp.aboutDesc1 && isFieldVisible(hp, 'hp-about-desc1')) pContent += `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${hp.aboutDesc1}</p>`;
+      if (hp.aboutDesc2 && isFieldVisible(hp, 'hp-about-desc2')) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${hp.aboutDesc2}</p>`;
+      if (hp.aboutDesc3 && isFieldVisible(hp, 'hp-about-desc3')) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${hp.aboutDesc3}</p>`;
       pContainer.innerHTML = pContent;
     }
 
@@ -245,8 +285,14 @@ function renderHomePageContent() {
     const titleElem = boxesSection.querySelector('.section-title');
     const grid = boxesSection.querySelector('.process-grid');
 
-    if (tagElem && hp.boxesTag) tagElem.innerText = hp.boxesTag;
-    if (titleElem && hp.boxesTitle) titleElem.innerHTML = hp.boxesTitle;
+    if (tagElem) {
+      tagElem.style.display = isFieldVisible(hp, 'hp-boxes-tag') ? '' : 'none';
+      if (hp.boxesTag) tagElem.innerText = hp.boxesTag;
+    }
+    if (titleElem) {
+      titleElem.style.display = isFieldVisible(hp, 'hp-boxes-title') ? '' : 'none';
+      if (hp.boxesTitle) titleElem.innerHTML = hp.boxesTitle;
+    }
 
     if (grid && hp.boxes) {
       grid.innerHTML = hp.boxes.map(box => `
@@ -277,33 +323,70 @@ function renderAboutPageContent() {
   // Banner
   const banner = document.querySelector('.page-header-banner');
   if (banner) {
-    if (ab.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = ab.bannerTag;
-    if (ab.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = ab.bannerTitle;
-    if (ab.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = ab.bannerDesc;
+    const bTag = banner.querySelector('.section-tag');
+    const bTitle = banner.querySelector('.section-title');
+    const bDesc = banner.querySelector('.section-desc');
+
+    if (bTag) {
+      bTag.style.display = isFieldVisible(ab, 'abp-banner-tag') ? '' : 'none';
+      if (ab.bannerTag) bTag.innerText = ab.bannerTag;
+    }
+    if (bTitle) {
+      bTitle.style.display = isFieldVisible(ab, 'abp-banner-title') ? '' : 'none';
+      if (ab.bannerTitle) bTitle.innerHTML = ab.bannerTitle;
+    }
+    if (bDesc) {
+      bDesc.style.display = isFieldVisible(ab, 'abp-banner-desc') ? '' : 'none';
+      if (ab.bannerDesc) bDesc.innerText = ab.bannerDesc;
+    }
   }
 
   // Main story section
   const aboutSection = document.getElementById('about');
   if (aboutSection) {
+    const mainImgWrapper = aboutSection.querySelector('.about-image-wrapper');
     const mainImg = aboutSection.querySelector('.about-image-wrapper img');
     const expNum = aboutSection.querySelector('.exp-number');
     const expText = aboutSection.querySelector('.exp-text');
+    const expCard = aboutSection.querySelector('.exp-badge, .about-exp-card, .about-experience');
     const tag = aboutSection.querySelector('.about-text .section-tag');
     const title = aboutSection.querySelector('.about-text .section-title');
     const pContainer = aboutSection.querySelector('.about-paragraphs');
     const statsGrid = aboutSection.querySelector('.stats-grid');
 
-    if (mainImg && ab.mainImage) mainImg.src = ab.mainImage;
-    if (expNum && ab.expNumber) expNum.innerText = ab.expNumber;
-    if (expText && ab.expText) expText.innerHTML = ab.expText;
-    if (tag && ab.mainTag) tag.innerText = ab.mainTag;
-    if (title && ab.mainTitle) title.innerHTML = ab.mainTitle;
+    if (mainImg) {
+      const imgVis = isFieldVisible(ab, 'abp-main-img-url');
+      if (mainImgWrapper) mainImgWrapper.style.display = imgVis ? '' : 'none';
+      if (ab.mainImage) mainImg.src = ab.mainImage;
+    }
+    const expNumVis = isFieldVisible(ab, 'abp-exp-num');
+    const expTextVis = isFieldVisible(ab, 'abp-exp-text');
+    if (expNum) {
+      expNum.style.display = expNumVis ? '' : 'none';
+      if (ab.expNumber) expNum.innerText = ab.expNumber;
+    }
+    if (expText) {
+      expText.style.display = expTextVis ? '' : 'none';
+      if (ab.expText) expText.innerHTML = ab.expText;
+    }
+    if (expCard) {
+      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
+    }
+
+    if (tag) {
+      tag.style.display = isFieldVisible(ab, 'abp-main-tag') ? '' : 'none';
+      if (ab.mainTag) tag.innerText = ab.mainTag;
+    }
+    if (title) {
+      title.style.display = isFieldVisible(ab, 'abp-main-title') ? '' : 'none';
+      if (ab.mainTitle) title.innerHTML = ab.mainTitle;
+    }
 
     if (pContainer) {
       let pContent = '';
-      if (ab.desc1) pContent += `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${ab.desc1}</p>`;
-      if (ab.desc2) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${ab.desc2}</p>`;
-      if (ab.desc3) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${ab.desc3}</p>`;
+      if (ab.desc1 && isFieldVisible(ab, 'abp-desc1')) pContent += `<p style="color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">${ab.desc1}</p>`;
+      if (ab.desc2 && isFieldVisible(ab, 'abp-desc2')) pContent += `<p style="color: var(--color-text-muted); font-size: 0.98rem; margin-bottom: 1.25rem;">${ab.desc2}</p>`;
+      if (ab.desc3 && isFieldVisible(ab, 'abp-desc3')) pContent += `<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">${ab.desc3}</p>`;
       pContainer.innerHTML = pContent;
     }
 
@@ -324,8 +407,14 @@ function renderAboutPageContent() {
     const title = bottomSec.querySelector('.section-title');
     const grid = bottomSec.querySelector('.process-grid');
 
-    if (tag && ab.bottomTag) tag.innerText = ab.bottomTag;
-    if (title && ab.bottomTitle) title.innerHTML = ab.bottomTitle;
+    if (tag) {
+      tag.style.display = isFieldVisible(ab, 'abp-bottom-tag') ? '' : 'none';
+      if (ab.bottomTag) tag.innerText = ab.bottomTag;
+    }
+    if (title) {
+      title.style.display = isFieldVisible(ab, 'abp-bottom-title') ? '' : 'none';
+      if (ab.bottomTitle) title.innerHTML = ab.bottomTitle;
+    }
 
     if (grid && ab.bottomCards) {
       grid.innerHTML = ab.bottomCards.map(card => `
@@ -348,30 +437,70 @@ function renderFactoryPageContent() {
   // Banner
   const banner = document.querySelector('.page-header-banner');
   if (banner) {
-    if (fac.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = fac.bannerTag;
-    if (fac.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = fac.bannerTitle;
-    if (fac.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = fac.bannerDesc;
+    const bTag = banner.querySelector('.section-tag');
+    const bTitle = banner.querySelector('.section-title');
+    const bDesc = banner.querySelector('.section-desc');
+
+    if (bTag) {
+      bTag.style.display = isFieldVisible(fac, 'fac-banner-tag') ? '' : 'none';
+      if (fac.bannerTag) bTag.innerText = fac.bannerTag;
+    }
+    if (bTitle) {
+      bTitle.style.display = isFieldVisible(fac, 'fac-banner-title') ? '' : 'none';
+      if (fac.bannerTitle) bTitle.innerHTML = fac.bannerTitle;
+    }
+    if (bDesc) {
+      bDesc.style.display = isFieldVisible(fac, 'fac-banner-desc') ? '' : 'none';
+      if (fac.bannerDesc) bDesc.innerText = fac.bannerDesc;
+    }
   }
 
   // Main Section
   const mainSec = document.querySelector('body[data-page="factory"] section.section-padding:nth-of-type(1)');
   if (mainSec) {
+    const imgWrapper = mainSec.querySelector('.about-image-wrapper');
     const img = mainSec.querySelector('.about-image-wrapper img');
     const expNum = mainSec.querySelector('.exp-number');
     const expText = mainSec.querySelector('.exp-text');
+    const expCard = mainSec.querySelector('.exp-badge, .about-exp-card, .about-experience');
     const tag = mainSec.querySelector('.about-text .section-tag');
     const title = mainSec.querySelector('.about-text .section-title');
     const paragraphs = mainSec.querySelectorAll('.about-text p');
     const statsGrid = mainSec.querySelector('.stats-grid');
 
-    if (img && fac.mainImage) img.src = fac.mainImage;
-    if (expNum && fac.expNumber) expNum.innerText = fac.expNumber;
-    if (expText && fac.expText) expText.innerHTML = fac.expText;
-    if (tag && fac.mainTag) tag.innerText = fac.mainTag;
-    if (title && fac.mainTitle) title.innerHTML = fac.mainTitle;
+    if (img) {
+      const imgVis = isFieldVisible(fac, 'fac-main-img-url');
+      if (imgWrapper) imgWrapper.style.display = imgVis ? '' : 'none';
+      if (fac.mainImage) img.src = fac.mainImage;
+    }
+    const expNumVis = isFieldVisible(fac, 'fac-exp-num');
+    const expTextVis = isFieldVisible(fac, 'fac-exp-text');
+    if (expNum) {
+      expNum.style.display = expNumVis ? '' : 'none';
+      if (fac.expNumber) expNum.innerText = fac.expNumber;
+    }
+    if (expText) {
+      expText.style.display = expTextVis ? '' : 'none';
+      if (fac.expText) expText.innerHTML = fac.expText;
+    }
+    if (expCard) {
+      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
+    }
+
+    if (tag) {
+      tag.style.display = isFieldVisible(fac, 'fac-main-tag') ? '' : 'none';
+      if (fac.mainTag) tag.innerText = fac.mainTag;
+    }
+    if (title) {
+      title.style.display = isFieldVisible(fac, 'fac-main-title') ? '' : 'none';
+      if (fac.mainTitle) title.innerHTML = fac.mainTitle;
+    }
 
     if (paragraphs && paragraphs.length >= 2) {
+      paragraphs[0].style.display = isFieldVisible(fac, 'fac-desc1') ? '' : 'none';
       if (fac.desc1) paragraphs[0].innerText = fac.desc1;
+
+      paragraphs[1].style.display = isFieldVisible(fac, 'fac-desc2') ? '' : 'none';
       if (fac.desc2) paragraphs[1].innerText = fac.desc2;
     }
 
@@ -392,8 +521,14 @@ function renderFactoryPageContent() {
     const title = workflowSec.querySelector('.section-title');
     const grid = workflowSec.querySelector('.process-grid');
 
-    if (tag && fac.workflowTag) tag.innerText = fac.workflowTag;
-    if (title && fac.workflowTitle) title.innerHTML = fac.workflowTitle;
+    if (tag) {
+      tag.style.display = isFieldVisible(fac, 'fac-workflow-tag') ? '' : 'none';
+      if (fac.workflowTag) tag.innerText = fac.workflowTag;
+    }
+    if (title) {
+      title.style.display = isFieldVisible(fac, 'fac-workflow-title') ? '' : 'none';
+      if (fac.workflowTitle) title.innerHTML = fac.workflowTitle;
+    }
 
     if (grid && fac.cards) {
       grid.innerHTML = fac.cards.map((card, idx) => `
@@ -417,30 +552,70 @@ function renderPackagingPageContent() {
   // Banner
   const banner = document.querySelector('.page-header-banner');
   if (banner) {
-    if (pkg.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = pkg.bannerTag;
-    if (pkg.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = pkg.bannerTitle;
-    if (pkg.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = pkg.bannerDesc;
+    const bTag = banner.querySelector('.section-tag');
+    const bTitle = banner.querySelector('.section-title');
+    const bDesc = banner.querySelector('.section-desc');
+
+    if (bTag) {
+      bTag.style.display = isFieldVisible(pkg, 'pkg-banner-tag') ? '' : 'none';
+      if (pkg.bannerTag) bTag.innerText = pkg.bannerTag;
+    }
+    if (bTitle) {
+      bTitle.style.display = isFieldVisible(pkg, 'pkg-banner-title') ? '' : 'none';
+      if (pkg.bannerTitle) bTitle.innerHTML = pkg.bannerTitle;
+    }
+    if (bDesc) {
+      bDesc.style.display = isFieldVisible(pkg, 'pkg-banner-desc') ? '' : 'none';
+      if (pkg.bannerDesc) bDesc.innerText = pkg.bannerDesc;
+    }
   }
 
   // Main Section
   const mainSec = document.querySelector('body[data-page="packaging"] section.section-padding:nth-of-type(1)');
   if (mainSec) {
+    const imgWrapper = mainSec.querySelector('.about-image-wrapper');
     const img = mainSec.querySelector('.about-image-wrapper img');
     const expNum = mainSec.querySelector('.exp-number');
     const expText = mainSec.querySelector('.exp-text');
+    const expCard = mainSec.querySelector('.exp-badge, .about-exp-card, .about-experience');
     const tag = mainSec.querySelector('.about-text .section-tag');
     const title = mainSec.querySelector('.about-text .section-title');
     const paragraphs = mainSec.querySelectorAll('.about-text p');
     const statsGrid = mainSec.querySelector('.stats-grid');
 
-    if (img && pkg.mainImage) img.src = pkg.mainImage;
-    if (expNum && pkg.expNumber) expNum.innerText = pkg.expNumber;
-    if (expText && pkg.expText) expText.innerHTML = pkg.expText;
-    if (tag && pkg.mainTag) tag.innerText = pkg.mainTag;
-    if (title && pkg.mainTitle) title.innerHTML = pkg.mainTitle;
+    if (img) {
+      const imgVis = isFieldVisible(pkg, 'pkg-main-img-url');
+      if (imgWrapper) imgWrapper.style.display = imgVis ? '' : 'none';
+      if (pkg.mainImage) img.src = pkg.mainImage;
+    }
+    const expNumVis = isFieldVisible(pkg, 'pkg-exp-num');
+    const expTextVis = isFieldVisible(pkg, 'pkg-exp-text');
+    if (expNum) {
+      expNum.style.display = expNumVis ? '' : 'none';
+      if (pkg.expNumber) expNum.innerText = pkg.expNumber;
+    }
+    if (expText) {
+      expText.style.display = expTextVis ? '' : 'none';
+      if (pkg.expText) expText.innerHTML = pkg.expText;
+    }
+    if (expCard) {
+      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
+    }
+
+    if (tag) {
+      tag.style.display = isFieldVisible(pkg, 'pkg-main-tag') ? '' : 'none';
+      if (pkg.mainTag) tag.innerText = pkg.mainTag;
+    }
+    if (title) {
+      title.style.display = isFieldVisible(pkg, 'pkg-main-title') ? '' : 'none';
+      if (pkg.mainTitle) title.innerHTML = pkg.mainTitle;
+    }
 
     if (paragraphs && paragraphs.length >= 2) {
+      paragraphs[0].style.display = isFieldVisible(pkg, 'pkg-desc1') ? '' : 'none';
       if (pkg.desc1) paragraphs[0].innerText = pkg.desc1;
+
+      paragraphs[1].style.display = isFieldVisible(pkg, 'pkg-desc2') ? '' : 'none';
       if (pkg.desc2) paragraphs[1].innerText = pkg.desc2;
     }
 
@@ -461,8 +636,14 @@ function renderPackagingPageContent() {
     const title = specsSec.querySelector('.section-title');
     const grid = specsSec.querySelector('.process-grid');
 
-    if (tag && pkg.specsTag) tag.innerText = pkg.specsTag;
-    if (title && pkg.specsTitle) title.innerHTML = pkg.specsTitle;
+    if (tag) {
+      tag.style.display = isFieldVisible(pkg, 'pkg-specs-tag') ? '' : 'none';
+      if (pkg.specsTag) tag.innerText = pkg.specsTag;
+    }
+    if (title) {
+      title.style.display = isFieldVisible(pkg, 'pkg-specs-title') ? '' : 'none';
+      if (pkg.specsTitle) title.innerHTML = pkg.specsTitle;
+    }
 
     if (grid && pkg.cards) {
       grid.innerHTML = pkg.cards.map(card => `
@@ -485,9 +666,22 @@ function renderContactPageContent() {
   // Banner
   const banner = document.querySelector('.page-header-banner');
   if (banner) {
-    if (cnt.bannerTag && banner.querySelector('.section-tag')) banner.querySelector('.section-tag').innerText = cnt.bannerTag;
-    if (cnt.bannerTitle && banner.querySelector('.section-title')) banner.querySelector('.section-title').innerHTML = cnt.bannerTitle;
-    if (cnt.bannerDesc && banner.querySelector('.section-desc')) banner.querySelector('.section-desc').innerText = cnt.bannerDesc;
+    const bTag = banner.querySelector('.section-tag');
+    const bTitle = banner.querySelector('.section-title');
+    const bDesc = banner.querySelector('.section-desc');
+
+    if (bTag) {
+      bTag.style.display = isFieldVisible(cnt, 'cnt-banner-tag') ? '' : 'none';
+      if (cnt.bannerTag) bTag.innerText = cnt.bannerTag;
+    }
+    if (bTitle) {
+      bTitle.style.display = isFieldVisible(cnt, 'cnt-banner-title') ? '' : 'none';
+      if (cnt.bannerTitle) bTitle.innerHTML = cnt.bannerTitle;
+    }
+    if (bDesc) {
+      bDesc.style.display = isFieldVisible(cnt, 'cnt-banner-desc') ? '' : 'none';
+      if (cnt.bannerDesc) bDesc.innerText = cnt.bannerDesc;
+    }
   }
 
   // Main Section Headings
@@ -497,9 +691,18 @@ function renderContactPageContent() {
     const title = wrapper.querySelector('.section-title');
     const descP = wrapper.querySelector('p');
 
-    if (tag && cnt.mainTag) tag.innerText = cnt.mainTag;
-    if (title && cnt.mainTitle) title.innerHTML = cnt.mainTitle;
-    if (descP && cnt.mainDesc) descP.innerText = cnt.mainDesc;
+    if (tag) {
+      tag.style.display = isFieldVisible(cnt, 'cnt-main-tag') ? '' : 'none';
+      if (cnt.mainTag) tag.innerText = cnt.mainTag;
+    }
+    if (title) {
+      title.style.display = isFieldVisible(cnt, 'cnt-main-title') ? '' : 'none';
+      if (cnt.mainTitle) title.innerHTML = cnt.mainTitle;
+    }
+    if (descP) {
+      descP.style.display = isFieldVisible(cnt, 'cnt-main-desc') ? '' : 'none';
+      if (cnt.mainDesc) descP.innerText = cnt.mainDesc;
+    }
 
     // Contact info cards
     const cards = wrapper.querySelectorAll('.contact-info-wrapper > div > div');
@@ -508,25 +711,61 @@ function renderContactPageContent() {
       const addrH5 = cards[0].querySelector('h5');
       const addrP = cards[0].querySelector('p');
       const addrMap = cards[0].querySelector('a');
-      if (addrH5 && cnt.addressTitle) addrH5.innerText = cnt.addressTitle;
-      if (addrP && cnt.addressText) addrP.innerText = cnt.addressText;
-      if (addrMap && cnt.addressMapLink) addrMap.href = cnt.addressMapLink;
+      const addrTitleVis = isFieldVisible(cnt, 'cnt-address-title');
+      const addrTextVis = isFieldVisible(cnt, 'cnt-address-text');
+      const addrMapVis = isFieldVisible(cnt, 'cnt-address-map-link');
+
+      if (addrH5) {
+        addrH5.style.display = addrTitleVis ? '' : 'none';
+        if (cnt.addressTitle) addrH5.innerText = cnt.addressTitle;
+      }
+      if (addrP) {
+        addrP.style.display = addrTextVis ? '' : 'none';
+        if (cnt.addressText) addrP.innerText = cnt.addressText;
+      }
+      if (addrMap) {
+        addrMap.style.display = addrMapVis ? '' : 'none';
+        if (cnt.addressMapLink) addrMap.href = cnt.addressMapLink;
+      }
+      cards[0].style.display = (!addrTitleVis && !addrTextVis && !addrMapVis) ? 'none' : '';
 
       // Email card
       const emailH5 = cards[1].querySelector('h5');
       const emailP = cards[1].querySelector('p');
-      if (emailH5 && cnt.emailTitle) emailH5.innerText = cnt.emailTitle;
+      const emailTitleVis = isFieldVisible(cnt, 'cnt-email-title');
+      const emailTextVis = isFieldVisible(cnt, 'cnt-email-primary');
+
+      if (emailH5) {
+        emailH5.style.display = emailTitleVis ? '' : 'none';
+        if (cnt.emailTitle) emailH5.innerText = cnt.emailTitle;
+      }
       if (emailP) {
+        emailP.style.display = emailTextVis ? '' : 'none';
         emailP.innerHTML = `<a href="mailto:${cnt.emailPrimary || 'info@tutstones.com'}" style="color: inherit;">${cnt.emailPrimary || 'info@tutstones.com'}</a> ${cnt.emailSecondary ? '| <a href="mailto:' + cnt.emailSecondary + '" style="color: inherit;">' + cnt.emailSecondary + '</a>' : ''}`;
       }
+      cards[1].style.display = (!emailTitleVis && !emailTextVis) ? 'none' : '';
 
       // Phone card
       const phoneH5 = cards[2].querySelector('h5');
       const phoneP = cards[2].querySelector('p');
       const waLink = cards[2].querySelector('a[href*="wa.me"]');
-      if (phoneH5 && cnt.phoneTitle) phoneH5.innerText = cnt.phoneTitle;
-      if (phoneP && cnt.phonePrimary) phoneP.innerHTML = `<a href="tel:${cnt.phonePrimary}" style="color: inherit;">${cnt.phonePrimary}</a>`;
-      if (waLink && cnt.whatsappNumber) waLink.href = `https://wa.me/${cnt.whatsappNumber.replace(/[^0-9]/g, '')}`;
+      const phoneTitleVis = isFieldVisible(cnt, 'cnt-phone-title');
+      const phoneTextVis = isFieldVisible(cnt, 'cnt-phone-primary');
+      const waVis = isFieldVisible(cnt, 'cnt-whatsapp-num');
+
+      if (phoneH5) {
+        phoneH5.style.display = phoneTitleVis ? '' : 'none';
+        if (cnt.phoneTitle) phoneH5.innerText = cnt.phoneTitle;
+      }
+      if (phoneP) {
+        phoneP.style.display = phoneTextVis ? '' : 'none';
+        if (cnt.phonePrimary) phoneP.innerHTML = `<a href="tel:${cnt.phonePrimary}" style="color: inherit;">${cnt.phonePrimary}</a>`;
+      }
+      if (waLink) {
+        waLink.style.display = waVis ? '' : 'none';
+        if (cnt.whatsappNumber) waLink.href = `https://wa.me/${cnt.whatsappNumber.replace(/[^0-9]/g, '')}`;
+      }
+      cards[2].style.display = (!phoneTitleVis && !phoneTextVis && !waVis) ? 'none' : '';
     }
   }
 
@@ -535,8 +774,14 @@ function renderContactPageContent() {
   if (formCard) {
     const h3 = formCard.querySelector('h3');
     const p = formCard.querySelector('p');
-    if (h3 && cnt.formTitle) h3.innerText = cnt.formTitle;
-    if (p && cnt.formDesc) p.innerText = cnt.formDesc;
+    if (h3) {
+      h3.style.display = isFieldVisible(cnt, 'cnt-form-title') ? '' : 'none';
+      if (cnt.formTitle) h3.innerText = cnt.formTitle;
+    }
+    if (p) {
+      p.style.display = isFieldVisible(cnt, 'cnt-form-desc') ? '' : 'none';
+      if (cnt.formDesc) p.innerText = cnt.formDesc;
+    }
   }
 }
 
@@ -807,7 +1052,7 @@ function safeImgSrc(url) {
 }
 
 function createStoneCardHTML(stone) {
-  const hasSplit = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
+  const hasSplit = Boolean(isFieldVisible(stone, 'stone-image-edge') && stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
   
   const slabUrl = safeImgSrc(stone.imageSlab || stone.image);
   const edgeUrl = safeImgSrc(stone.imageEdge || stone.image);
@@ -842,15 +1087,19 @@ function createStoneCardHTML(stone) {
     `;
   }
 
+  const nameVisible = isFieldVisible(stone, 'stone-name');
+  const finishVisible = isFieldVisible(stone, 'stone-finish');
+
   return `
     <div class="stone-card" data-stone-id="${stone.id}" onclick="openStoneModal('${stone.id}')" style="cursor: pointer;" title="Click to view details & switch images for ${stone.name}">
       ${thumbHTML}
       <div class="stone-body" style="padding: 1rem 1.25rem;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
-          <h3 class="stone-name" style="margin-bottom: 0; font-size: 1.15rem;">${stone.name}</h3>
+          ${nameVisible ? `<h3 class="stone-name" style="margin-bottom: 0; font-size: 1.15rem;">${stone.name}</h3>` : ''}
+          ${finishVisible ? `
           <span style="font-size: 0.78rem; color: var(--color-gold-primary); text-transform: uppercase; font-weight: 600; background: rgba(141, 79, 78, 0.15); padding: 0.25rem 0.65rem; border-radius: 4px; border: 1px solid rgba(141, 79, 78, 0.35); white-space: nowrap;">
             <i class="ri-sparkling-line" style="font-size: 0.75rem;"></i> ${stone.finish || stone.category || 'Natural Finish'}
-          </span>
+          </span>` : ''}
         </div>
       </div>
     </div>
@@ -1275,7 +1524,7 @@ function openStoneModal(stoneId) {
 
   const fullImg = safeImgSrc(stone.imageSlab || stone.image);
   const edgeImg = safeImgSrc(stone.imageEdge);
-  const hasTwoImages = Boolean(stone.imageEdge && stone.imageEdge !== (stone.imageSlab || stone.image));
+  const hasTwoImages = Boolean(isFieldVisible(stone, 'stone-image-edge') && stone.imageEdge && stone.imageEdge !== (stone.imageSlab || stone.image));
 
   if (hasTwoImages) {
     const p1 = new Image(); p1.src = fullImg;
@@ -1337,13 +1586,17 @@ function openStoneModal(stoneId) {
     `;
   }
 
+  const nameVisible = isFieldVisible(stone, 'stone-name');
+  const finishVisible = isFieldVisible(stone, 'stone-finish');
+
   modalContent.innerHTML = `
     <div class="modal-clean-layout" style="padding: 1.75rem !important; display: flex !important; flex-direction: column !important; align-items: center !important; width: 100% !important; box-sizing: border-box !important; max-height: 90vh !important; overflow-y: auto !important;">
       <div class="modal-header-simple" style="text-align: center !important; margin-bottom: 1rem !important; width: 100% !important; flex-shrink: 0 !important;">
+        ${finishVisible ? `
         <span class="section-tag" style="font-size: 0.78rem; letter-spacing: 1.5px; color: #8D4F4E; font-weight: 700; text-transform: uppercase;">
           <i class="ri-sparkling-line"></i> ${(stone.finish || stone.category || 'NATURAL STONE').toUpperCase()}
-        </span>
-        <h3 style="font-family: var(--font-heading); font-size: 1.95rem; color: #241C18; margin: 0.35rem 0 0 0; font-weight: 700;">${stone.name}</h3>
+        </span>` : ''}
+        ${nameVisible ? `<h3 style="font-family: var(--font-heading); font-size: 1.95rem; color: #241C18; margin: 0.35rem 0 0 0; font-weight: 700;">${stone.name}</h3>` : ''}
       </div>
       ${imageBlock}
     </div>
