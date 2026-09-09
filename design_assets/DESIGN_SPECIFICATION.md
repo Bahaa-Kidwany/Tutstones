@@ -51,7 +51,7 @@ All visual assets used across the TUT Stones web application:
 
 | Filename | Type | Description |
 | :--- | :--- | :--- |
-| `tut_stones_logo.png` | PNG | Official brand logo mark |
+| `TUTSTONES.png` | PNG | Official brand logo mark |
 | `pharaonic_temple_bg.png` | PNG (1920x1080) | Karnak Pharaonic Temple background for Hero Slide 1 |
 | `egyptian_stone_beauty_bg.png` | PNG (1920x1080) | Egyptian Pyramids & stone relief background for Hero Slide 2 |
 | `pharaonic_hero_bg.png` | PNG | Ancient Egyptian tomb columns & relief texture |

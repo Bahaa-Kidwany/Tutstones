@@ -614,7 +614,7 @@ const DEFAULT_DATA = {
       id: 'img-brand-logo',
       keyName: 'Winged Obelisk Brand Logo',
       section: 'Header & Footer Brand',
-      url: 'assets/images/tut_stones_logo.png',
+      url: 'assets/images/TUTSTONES.png',
       description: 'Official header and footer emblem logo for TutStones.'
     }
   ],
