@@ -170,7 +170,7 @@ function renderFooterContent() {
   const hqCols = footer.querySelectorAll('.footer-col');
   hqCols.forEach(col => {
     const h5 = col.querySelector('h5');
-    if (h5 && (h5.textContent.includes('Headquarters') || h5.textContent.includes('Export') || h5.textContent.includes('Showroom') || h5.textContent.includes('Contact'))) {
+    if (h5 && (h5.textContent.includes('Headquarters') || h5.textContent.includes('Export') || h5.textContent.includes('Showroom') || h5.textContent.includes('Contact') || h5.textContent.includes('Address'))) {
       const ul = col.querySelector('.footer-links');
       if (ul) {
         let items = [];

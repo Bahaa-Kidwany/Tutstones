@@ -1858,8 +1858,8 @@ button {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
-  gap: 2rem;
+  grid-template-columns: 2fr 1.2fr 1.8fr;
+  gap: 3rem;
   margin-bottom: 1.75rem;
 }
 

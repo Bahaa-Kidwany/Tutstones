@@ -42,7 +42,7 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
             if (Array.isArray(parsed.imagesData)) {
               parsed.imagesData.forEach(img => {
                 if (img.id === 'img-brand-logo' || (img.url && img.url.includes('tut_stones_logo.png'))) {
-                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v52';
+                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v53';
                 }
               });
             }
@@ -643,7 +643,7 @@ const DEFAULT_DATA = {
       id: 'img-brand-logo',
       keyName: 'Winged Obelisk Brand Logo',
       section: 'Header & Footer Brand',
-      url: 'assets/images/TUTSTONES.png?v=20260914_v52',
+      url: 'assets/images/TUTSTONES.png?v=20260914_v53',
       description: 'Official header and footer emblem logo for TutStones.'
     }
   ],
