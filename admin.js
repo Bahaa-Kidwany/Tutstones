@@ -997,19 +997,21 @@ function renderFacSliderImages() {
 }
 
 function addFacSliderImage() {
+  saveFactoryPageForm(false, true); // save current unsaved changes
   const fac = TutStonesStore.getFactoryPage();
   if (!fac.aboutSliderImages) fac.aboutSliderImages = [];
   fac.aboutSliderImages.push({ id: 'f-about-' + Date.now(), url: 'assets/images/Factory/2.JPG' });
-  saveFactoryPageForm(false, false);
+  TutStonesStore.saveFactoryPage(fac);
   renderFacSliderImages();
   setUnsavedChanges(true);
 }
 
 function removeFacSliderImage(idx) {
+  saveFactoryPageForm(false, true);
   const fac = TutStonesStore.getFactoryPage();
   if (fac.aboutSliderImages && fac.aboutSliderImages[idx]) {
     fac.aboutSliderImages.splice(idx, 1);
-    saveFactoryPageForm(false, false);
+    TutStonesStore.saveFactoryPage(fac);
     renderFacSliderImages();
     setUnsavedChanges(true);
   }
