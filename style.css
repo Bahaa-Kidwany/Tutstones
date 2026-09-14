@@ -1897,6 +1897,44 @@ button {
   display: none !important;
 }
 
+/* Footer Social Media Icons */
+.footer-social-links {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+}
+
+.footer-social-links a {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--color-gold-primary, #D4AF37) !important;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.footer-social-links a:hover {
+  background: var(--color-gold-primary, #D4AF37) !important;
+  border-color: var(--color-gold-primary, #D4AF37) !important;
+  color: #0E121A !important;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+.footer-social-links a i {
+  color: inherit !important;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
 
 /* ==========================================================================
    Comprehensive Responsive Breakpoints & Mobile Phone Optimization
@@ -3473,13 +3511,17 @@ html[data-theme="pharaonic"] .page-header-banner,
 }
 
 [data-theme="pharaonic"] .footer-social-links a {
+  background: rgba(223, 183, 125, 0.12);
+  border-color: rgba(223, 183, 125, 0.4);
   color: #DFB77D !important;
-  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 [data-theme="pharaonic"] .footer-social-links a:hover {
-  color: #FFFFFF !important;
-  transform: translateY(-2px);
+  background: #DFB77D !important;
+  border-color: #DFB77D !important;
+  color: #12161F !important;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(223, 183, 125, 0.45);
 }
 
 [data-theme="pharaonic"] .footer-bottom {

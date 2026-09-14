@@ -127,14 +127,27 @@ function initNavbar() {
 }
 
 function renderSocialLinks() {
-  if (typeof TutStonesStore === 'undefined') return;
-  const socialLinks = TutStonesStore.getSocialLinks().filter(l => l.active);
-  const containers = document.querySelectorAll('.footer-social-links, .social-links-container');
+  let socialLinks = [];
+  if (typeof TutStonesStore !== 'undefined' && typeof TutStonesStore.getSocialLinks === 'function') {
+    socialLinks = TutStonesStore.getSocialLinks();
+  }
+  if (!Array.isArray(socialLinks) || socialLinks.length === 0) {
+    if (typeof DEFAULT_DATA !== 'undefined' && Array.isArray(DEFAULT_DATA.socialLinks)) {
+      socialLinks = DEFAULT_DATA.socialLinks;
+    }
+  }
+  if (!Array.isArray(socialLinks) || socialLinks.length === 0) return;
 
+  // Filter active links, treating undefined as active by default
+  const activeLinks = socialLinks.filter(l => l && (l.active === true || l.active === 'true' || l.active === 1 || l.active === '1' || l.active === undefined));
+  const linksToRender = activeLinks.length > 0 ? activeLinks : socialLinks;
+  if (!linksToRender || linksToRender.length === 0) return;
+
+  const containers = document.querySelectorAll('.footer-social-links, .social-links-container');
   containers.forEach(container => {
     if (container) {
-      container.innerHTML = socialLinks.map(link => `
-        <a href="${link.url}" target="_blank" title="${link.platform}">
+      container.innerHTML = linksToRender.map(link => `
+        <a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.platform}" aria-label="${link.platform}">
           <i class="${link.icon}"></i>
         </a>
       `).join('');
@@ -396,13 +409,8 @@ function renderAboutPageContent() {
       pContainer.innerHTML = pContent;
     }
 
-    if (statsGrid && ab.stats) {
-      statsGrid.innerHTML = ab.stats.map(s => `
-        <div class="stat-card">
-          <h4>${s.count}</h4>
-          <p>${s.label}</p>
-        </div>
-      `).join('');
+    if (statsGrid) {
+      statsGrid.remove();
     }
   }
 

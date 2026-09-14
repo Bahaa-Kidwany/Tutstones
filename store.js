@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.14.v51';
-const STORAGE_KEY = 'tut_stones_data_v51';
+const CURRENT_BUILD_VERSION = '2026.09.14.v55';
+const STORAGE_KEY = 'tut_stones_data_v55';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
@@ -15,13 +15,21 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
   try {
-    // Purge cached aboutStats from any existing localStorage data key immediately
+    // Purge cached aboutStats and aboutPage stats from any existing localStorage data key immediately
     Object.keys(localStorage).forEach(k => {
       if (k.startsWith('tut_stones_data_')) {
         try {
           const item = JSON.parse(localStorage.getItem(k));
+          let changed = false;
           if (item && item.homePage && item.homePage.aboutStats) {
             delete item.homePage.aboutStats;
+            changed = true;
+          }
+          if (item && item.aboutPage && item.aboutPage.stats) {
+            delete item.aboutPage.stats;
+            changed = true;
+          }
+          if (changed) {
             localStorage.setItem(k, JSON.stringify(item));
           }
         } catch(e) {}
@@ -42,12 +50,18 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
             if (Array.isArray(parsed.imagesData)) {
               parsed.imagesData.forEach(img => {
                 if (img.id === 'img-brand-logo' || (img.url && img.url.includes('tut_stones_logo.png'))) {
-                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v53';
+                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v55';
                 }
               });
             }
             if (parsed.homePage && parsed.homePage.aboutStats) {
               delete parsed.homePage.aboutStats;
+            }
+            if (parsed.aboutPage && parsed.aboutPage.stats) {
+              delete parsed.aboutPage.stats;
+            }
+            if (!Array.isArray(parsed.socialLinks) || parsed.socialLinks.length === 0) {
+              parsed.socialLinks = JSON.parse(JSON.stringify(DEFAULT_DATA.socialLinks));
             }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
           } catch(e) {
@@ -650,7 +664,7 @@ const DEFAULT_DATA = {
 
   // 6. Social Media Links
   socialLinks: [
-    { id: 'soc-1', platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://instagram.com/tutstones', active: true },
+    { id: 'soc-1', platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://www.instagram.com/tutstones.eg?stkn=cmc3Yn RxaTRmNjlu', active: true },
     { id: 'soc-2', platform: 'LinkedIn', icon: 'ri-linkedin-fill', url: 'https://linkedin.com/company/tutstones', active: true },
     { id: 'soc-3', platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://facebook.com/tutstones', active: true },
     { id: 'soc-4', platform: 'Pinterest', icon: 'ri-pinterest-line', url: 'https://pinterest.com/tutstones', active: true },
@@ -742,11 +756,6 @@ const DEFAULT_DATA = {
     desc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to custom cutting, quality control, packaging, and logistics, our experienced team ensures a seamless export experience tailored to your exact specifications.",
     expNumber: '24+',
     expText: 'Years Exporting<br>Egyptian Natural Stone',
-    stats: [
-      { id: 'ab-stat-1', count: '24+', label: 'Years Sourcing Rare Stone' },
-      { id: 'ab-stat-2', count: '50+', label: 'Global Export Markets' },
-      { id: 'ab-stat-3', count: '100%', label: 'Authentic Egyptian Granite & Marble' }
-    ],
     bottomTag: 'WHY WORK WITH US',
     bottomTitle: 'Our Commitments <span>To Global Clients</span>',
     bottomCards: [
@@ -898,6 +907,9 @@ class Store {
         if (this.data.homePage && this.data.homePage.aboutStats) {
           delete this.data.homePage.aboutStats;
         }
+        if (this.data.aboutPage && this.data.aboutPage.stats) {
+          delete this.data.aboutPage.stats;
+        }
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
         window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
       } else if (localTime > serverTime) {
@@ -929,6 +941,9 @@ class Store {
       if (parsed.homePage && parsed.homePage.aboutStats) {
         delete parsed.homePage.aboutStats;
       }
+      if (parsed.aboutPage && parsed.aboutPage.stats) {
+        delete parsed.aboutPage.stats;
+      }
       
       const hasSubCats = Array.isArray(parsed.categories) && parsed.categories.some(c => c.parent);
       const hasValidStones = Array.isArray(parsed.stones) && parsed.stones.length >= 10;
@@ -952,6 +967,22 @@ class Store {
             }
           } else {
             parsed.stones.push(JSON.parse(JSON.stringify(defStone)));
+          }
+        });
+      }
+
+      // Self-Healing Social Links Reconciler:
+      if (!Array.isArray(parsed.socialLinks) || parsed.socialLinks.length === 0) {
+        parsed.socialLinks = JSON.parse(JSON.stringify(DEFAULT_DATA.socialLinks));
+      } else {
+        DEFAULT_DATA.socialLinks.forEach(defLink => {
+          const match = parsed.socialLinks.find(l => l.id === defLink.id || (l.platform && l.platform.toLowerCase() === defLink.platform.toLowerCase()));
+          if (!match) {
+            parsed.socialLinks.push(JSON.parse(JSON.stringify(defLink)));
+          } else {
+            if (!match.icon) match.icon = defLink.icon;
+            if (!match.url) match.url = defLink.url;
+            if (match.active === undefined) match.active = true;
           }
         });
       }
@@ -1418,7 +1449,10 @@ class Store {
 
   // --- Social Links ---
   getSocialLinks() {
-    return this.data.socialLinks || [];
+    if (!this.data.socialLinks || !Array.isArray(this.data.socialLinks) || this.data.socialLinks.length === 0) {
+      return (typeof DEFAULT_DATA !== 'undefined' && DEFAULT_DATA.socialLinks) ? DEFAULT_DATA.socialLinks : [];
+    }
+    return this.data.socialLinks;
   }
 
   saveSocialLink(link) {
