@@ -169,40 +169,41 @@ function renderSocialLinks() {
     ];
   }
 
-  // Filter active links, treating undefined as active by default
-  const activeLinks = socialLinks.filter(l => l && (l.active === true || l.active === 'true' || l.active === 1 || l.active === '1' || l.active === undefined));
-  const linksToRender = activeLinks.length > 0 ? activeLinks : socialLinks;
-  if (!linksToRender || linksToRender.length === 0) return;
+  // Filter active links (treat undefined as true, but false as false)
+  const activeLinks = socialLinks.filter(l => l && l.active !== false && l.active !== 'false' && l.active !== 0 && l.active !== '0');
 
   // Ensure no social channels render in top bar
   document.querySelectorAll('.tut-nav-channels, .nav-social-links').forEach(el => el.remove());
 
   const containers = document.querySelectorAll('.tut-connect-channels, .footer-social-links, .social-links-container');
   containers.forEach(container => {
-    if (container) {
-      container.style.display = 'inline-flex';
-      container.style.alignItems = 'center';
-      container.style.flexWrap = 'wrap';
-      container.style.gap = '0.65rem';
-      container.style.visibility = 'visible';
-      container.style.opacity = '1';
-
-      const size = '42px';
-      const iconSize = 20;
-
-      container.innerHTML = linksToRender.map(link => {
-        const svgCode = getSocialSvg(link.platform, iconSize);
-        const isWhatsapp = (link.platform || '').toLowerCase().includes('whatsapp');
-        const badgeBg = isWhatsapp ? 'rgba(37, 211, 102, 0.15)' : 'rgba(212, 175, 55, 0.15)';
-        const badgeBorder = isWhatsapp ? 'rgba(37, 211, 102, 0.5)' : 'rgba(212, 175, 55, 0.5)';
-        const badgeColor = isWhatsapp ? '#25D366' : '#DFB77D';
-        return `
-          <a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.platform || 'Connect'}" aria-label="${link.platform || 'Connect'}" class="tut-channel-badge" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; width: ${size} !important; height: ${size} !important; min-width: ${size} !important; min-height: ${size} !important; border-radius: 50% !important; background: ${badgeBg} !important; border: 1.5px solid ${badgeBorder} !important; color: ${badgeColor} !important; text-decoration: none !important; margin: 0 2px !important; cursor: pointer !important; transition: all 0.25s ease !important;">
-            ${svgCode}
-          </a>
-        `;
-      }).join('');
+    if (!container) return;
+    if (activeLinks.length === 0) {
+      container.innerHTML = '';
+      return;
     }
+    container.style.display = 'inline-flex';
+    container.style.alignItems = 'center';
+    container.style.flexWrap = 'wrap';
+    container.style.gap = '0.65rem';
+    container.style.visibility = 'visible';
+    container.style.opacity = '1';
+
+    const size = '42px';
+    const iconSize = 20;
+
+    container.innerHTML = activeLinks.map(link => {
+      const svgCode = getSocialSvg(link.platform, iconSize);
+      const isWhatsapp = (link.platform || '').toLowerCase().includes('whatsapp');
+      const badgeBg = isWhatsapp ? 'rgba(37, 211, 102, 0.15)' : 'rgba(212, 175, 55, 0.15)';
+      const badgeBorder = isWhatsapp ? 'rgba(37, 211, 102, 0.5)' : 'rgba(212, 175, 55, 0.5)';
+      const badgeColor = isWhatsapp ? '#25D366' : '#DFB77D';
+      return `
+        <a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.platform || 'Connect'}" aria-label="${link.platform || 'Connect'}" class="tut-channel-badge" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; width: ${size} !important; height: ${size} !important; min-width: ${size} !important; min-height: ${size} !important; border-radius: 50% !important; background: ${badgeBg} !important; border: 1.5px solid ${badgeBorder} !important; color: ${badgeColor} !important; text-decoration: none !important; margin: 0 2px !important; cursor: pointer !important; transition: all 0.25s ease !important;">
+          ${svgCode}
+        </a>
+      `;
+    }).join('');
   });
 }
 

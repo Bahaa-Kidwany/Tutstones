@@ -1259,7 +1259,7 @@ function saveContactPageForm(showToastMsg = true, shouldSave = true) {
   return updatedCnt;
 }
 
-// --- 9f. Footer Manager ---
+// --- 9f. Footer & Social Media Manager ---
 function renderFooterForm() {
   const ftr = TutStonesStore.getFooterData();
   if (document.getElementById('ftr-brand-desc')) document.getElementById('ftr-brand-desc').value = ftr.brandDesc || '';
@@ -1272,6 +1272,7 @@ function renderFooterForm() {
   if (document.getElementById('ftr-hours')) document.getElementById('ftr-hours').value = ftr.hours || '';
 
   initFieldVisibilityControls(document.getElementById('tab-footer'), ftr.fieldVisibility);
+  renderSocialTable();
 }
 
 function saveFooterForm(showToastMsg = true, shouldSave = true) {
@@ -1290,6 +1291,23 @@ function saveFooterForm(showToastMsg = true, shouldSave = true) {
     fieldVisibility: collectFieldVisibility(document.getElementById('tab-footer'))
   };
 
+  // Collect social links from the footer form table
+  const rows = document.querySelectorAll('#social-table-body tr[data-id]');
+  if (rows && rows.length > 0) {
+    const currentLinks = TutStonesStore.getSocialLinks();
+    rows.forEach(row => {
+      const id = row.dataset.id;
+      const urlInput = row.querySelector('.social-link-url');
+      const activeInput = row.querySelector('.social-link-active');
+      const link = currentLinks.find(l => l.id === id);
+      if (link) {
+        if (urlInput) link.url = urlInput.value.trim();
+        if (activeInput) link.active = activeInput.checked;
+      }
+    });
+    TutStonesStore.data.socialLinks = currentLinks;
+  }
+
   if (shouldSave) {
     TutStonesStore.saveFooterData(updatedFtr);
   } else {
@@ -1299,85 +1317,64 @@ function saveFooterForm(showToastMsg = true, shouldSave = true) {
   if (showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
-    showToast('Footer settings saved successfully!');
+    showToast('Footer & Social Media settings saved successfully!');
+    renderSocialTable();
   }
   return updatedFtr;
 }
 
 /* ==========================================================================
-   10. TAB 7: SOCIAL MEDIA LINKS & CONTACT DETAILS EDITOR
+   10. SOCIAL MEDIA LINKS TABLE & TOGGLES (Integrated in Footer Tab)
    ========================================================================== */
 function renderSocialTable() {
   const links = TutStonesStore.getSocialLinks();
   const tableBody = document.getElementById('social-table-body');
   if (tableBody) {
-    tableBody.innerHTML = links.map(link => `
-      <tr>
-        <td><i class="${link.icon}" style="font-size: 1.3rem; color: var(--color-gold-primary);"></i></td>
-        <td><strong>${link.platform}</strong></td>
-        <td><a href="${link.url}" target="_blank" style="color: var(--color-gold-light); text-decoration: none;">${link.url}</a></td>
-        <td>
-          <span class="badge-tag" style="${link.active ? 'background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.4);' : 'background: rgba(239, 68, 68, 0.15); color: #EF4444; border-color: rgba(239, 68, 68, 0.4);'}">
-            ${link.active ? 'Active' : 'Disabled'}
-          </span>
-        </td>
-        <td style="text-align: right;">
-          <button class="btn btn-outline btn-sm" onclick="openSocialModal('${link.id}')"><i class="ri-edit-line"></i> Edit</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteSocialConfirm('${link.id}')"><i class="ri-delete-bin-line"></i></button>
-        </td>
-      </tr>
-    `).join('');
+    tableBody.innerHTML = links.map(link => {
+      const isActive = (link.active === true || link.active === 'true' || link.active === 1 || link.active === '1' || link.active === undefined);
+      return `
+        <tr data-id="${link.id}">
+          <td style="text-align: center; font-size: 1.35rem; color: var(--color-gold-primary);">
+            <i class="${link.icon || 'ri-links-line'}"></i>
+          </td>
+          <td>
+            <strong>${link.platform}</strong>
+          </td>
+          <td>
+            <input type="text" class="form-control social-link-url" data-id="${link.id}" value="${link.url || ''}" placeholder="https://..." oninput="setUnsavedChanges(true)" style="width: 100%; font-size: 0.88rem;">
+          </td>
+          <td style="text-align: center;">
+            <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; margin: 0;">
+              <input type="checkbox" class="social-link-active" data-id="${link.id}" ${isActive ? 'checked' : ''} onchange="handleSocialActiveToggle('${link.id}', this.checked)">
+              <span class="badge-tag" id="status-badge-${link.id}" style="${isActive ? 'background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: rgba(16, 185, 129, 0.4);' : 'background: rgba(239, 68, 68, 0.15); color: #EF4444; border-color: rgba(239, 68, 68, 0.4);'}">
+                ${isActive ? 'Active' : 'Hidden'}
+              </span>
+            </label>
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="openSocialModal('${link.id}')" title="Edit Platform / Icon"><i class="ri-edit-line"></i></button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="deleteSocialConfirm('${link.id}')" title="Delete Link"><i class="ri-delete-bin-line"></i></button>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
-
-  // Populate Showroom & Office Contact Details form
-  const about = TutStonesStore.getAbout();
-  if (document.getElementById('social-contact-address')) document.getElementById('social-contact-address').value = about.address || '';
-  if (document.getElementById('social-contact-address-visible')) document.getElementById('social-contact-address-visible').checked = about.addressVisible !== false;
-
-  if (document.getElementById('social-contact-email')) document.getElementById('social-contact-email').value = about.email || '';
-  if (document.getElementById('social-contact-email-visible')) document.getElementById('social-contact-email-visible').checked = about.emailVisible !== false;
-
-  if (document.getElementById('social-contact-email2')) document.getElementById('social-contact-email2').value = about.emailSecondary || '';
-  if (document.getElementById('social-contact-email2-visible')) document.getElementById('social-contact-email2-visible').checked = about.emailSecondaryVisible !== false;
-
-  if (document.getElementById('social-contact-phone')) document.getElementById('social-contact-phone').value = about.phone || '';
-  if (document.getElementById('social-contact-phone-visible')) document.getElementById('social-contact-phone-visible').checked = about.phoneVisible !== false;
-
-  if (document.getElementById('social-contact-phone2')) document.getElementById('social-contact-phone2').value = about.phoneSecondary || '';
-  if (document.getElementById('social-contact-phone2-visible')) document.getElementById('social-contact-phone2-visible').checked = about.phoneSecondaryVisible !== false;
-
-  if (document.getElementById('social-contact-hours')) document.getElementById('social-contact-hours').value = about.hours || '';
-  if (document.getElementById('social-contact-hours-visible')) document.getElementById('social-contact-hours-visible').checked = about.hoursVisible !== false;
 }
 
-function saveShowroomContact() {
-  const currentAbout = TutStonesStore.getAbout();
-  const updatedAbout = {
-    ...currentAbout,
-    address: document.getElementById('social-contact-address') ? document.getElementById('social-contact-address').value : currentAbout.address,
-    addressVisible: document.getElementById('social-contact-address-visible')?.checked ?? true,
-
-    email: document.getElementById('social-contact-email') ? document.getElementById('social-contact-email').value : currentAbout.email,
-    emailVisible: document.getElementById('social-contact-email-visible')?.checked ?? true,
-
-    emailSecondary: document.getElementById('social-contact-email2') ? document.getElementById('social-contact-email2').value : currentAbout.emailSecondary,
-    emailSecondaryVisible: document.getElementById('social-contact-email2-visible')?.checked ?? true,
-
-    phone: document.getElementById('social-contact-phone') ? document.getElementById('social-contact-phone').value : currentAbout.phone,
-    phoneVisible: document.getElementById('social-contact-phone-visible')?.checked ?? true,
-
-    phoneSecondary: document.getElementById('social-contact-phone2') ? document.getElementById('social-contact-phone2').value : currentAbout.phoneSecondary,
-    phoneSecondaryVisible: document.getElementById('social-contact-phone2-visible')?.checked ?? true,
-
-    hours: document.getElementById('social-contact-hours') ? document.getElementById('social-contact-hours').value : currentAbout.hours,
-    hoursVisible: document.getElementById('social-contact-hours-visible')?.checked ?? true
-  };
-
-  TutStonesStore.saveAbout(updatedAbout);
-  sessionStorage.removeItem('tut_stones_draft_backup');
-  setUnsavedChanges(false);
-  showToast('Showroom & Office contact information saved successfully!');
-  refreshAllAdminViews();
+function handleSocialActiveToggle(id, isChecked) {
+  const links = TutStonesStore.getSocialLinks();
+  const link = links.find(l => l.id === id);
+  if (link) {
+    link.active = isChecked;
+    const badge = document.getElementById(`status-badge-${id}`);
+    if (badge) {
+      badge.textContent = isChecked ? 'Active' : 'Hidden';
+      badge.style.background = isChecked ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)';
+      badge.style.color = isChecked ? '#10B981' : '#EF4444';
+      badge.style.borderColor = isChecked ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)';
+    }
+    setUnsavedChanges(true);
+  }
 }
 
 /* ==========================================================================

@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.14.v60';
-const STORAGE_KEY = 'tut_stones_data_v60';
+const CURRENT_BUILD_VERSION = '2026.09.14.v61';
+const STORAGE_KEY = 'tut_stones_data_v61';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
@@ -24,7 +24,7 @@ const DEFAULT_SOCIAL_LINKS = [
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
   try {
-    // Purge cached stats and ensure socialLinks are active across any existing localStorage data key immediately
+    // Purge cached stats across existing localStorage data keys immediately
     Object.keys(localStorage).forEach(k => {
       if (k.startsWith('tut_stones_data_')) {
         try {
@@ -48,10 +48,18 @@ const DEFAULT_SOCIAL_LINKS = [
                 item.socialLinks.push(JSON.parse(JSON.stringify(defLink)));
                 changed = true;
               } else {
-                match.active = true;
-                if (!match.url) match.url = defLink.url;
-                if (!match.icon) match.icon = defLink.icon;
-                changed = true;
+                if (match.active === undefined) {
+                  match.active = true;
+                  changed = true;
+                }
+                if (!match.url) {
+                  match.url = defLink.url;
+                  changed = true;
+                }
+                if (!match.icon) {
+                  match.icon = defLink.icon;
+                  changed = true;
+                }
               }
             });
           }
@@ -63,20 +71,19 @@ const DEFAULT_SOCIAL_LINKS = [
     });
 
     const lastBuild = localStorage.getItem('tut_app_build_version');
-    if (lastBuild !== CURRENT_BUILD_VERSION) {
-      // Migrate saved user data from previous build keys so custom edits are preserved
-      const dataKeys = Object.keys(localStorage).filter(k => k.startsWith('tut_stones_data_'));
-      if (dataKeys.length > 0 && !localStorage.getItem(STORAGE_KEY)) {
-        dataKeys.sort();
-        const latestDataRaw = localStorage.getItem(dataKeys[dataKeys.length - 1]);
-        if (latestDataRaw) {
+    if (!lastBuild || lastBuild !== CURRENT_BUILD_VERSION) {
+      // Version changed - preserve existing customized keys
+      const oldKeys = Object.keys(localStorage).filter(k => k.startsWith('tut_stones_data_') && k !== STORAGE_KEY);
+      if (oldKeys.length > 0) {
+        // Copy latest user data to new storage key if not already populated
+        const latestDataRaw = localStorage.getItem(oldKeys[oldKeys.length - 1]);
+        if (latestDataRaw && !localStorage.getItem(STORAGE_KEY)) {
           try {
             const parsed = JSON.parse(latestDataRaw);
-            // Upgrade legacy logo path if present
-            if (Array.isArray(parsed.imagesData)) {
-              parsed.imagesData.forEach(img => {
-                if (img.id === 'img-brand-logo' || (img.url && img.url.includes('tut_stones_logo.png'))) {
-                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v57';
+            if (parsed.homePage && parsed.homePage.sections) {
+              parsed.homePage.sections.forEach(sec => {
+                if (sec.id === 'about' && sec.stats) {
+                  delete sec.stats;
                 }
               });
             }
@@ -89,7 +96,9 @@ const DEFAULT_SOCIAL_LINKS = [
             if (!Array.isArray(parsed.socialLinks) || parsed.socialLinks.length === 0) {
               parsed.socialLinks = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_LINKS));
             } else {
-              parsed.socialLinks.forEach(l => { l.active = true; });
+              parsed.socialLinks.forEach(l => {
+                if (l.active === undefined) l.active = true;
+              });
             }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
           } catch(e) {
