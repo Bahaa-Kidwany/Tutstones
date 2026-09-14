@@ -338,7 +338,7 @@ function renderHomePageContent() {
         : defaultImages;
 
       let slidesHTML = sliderImages.map((img, idx) => `
-        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/Factory/1.jpg'}');"></div>
+        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/Factory/1.jpg'}'); background-position: ${img.imagePosition || '50% 10%'};"></div>
       `).join('');
 
       aboutSlider.innerHTML = `
@@ -421,9 +421,6 @@ function renderAboutPageContent() {
   if (aboutSection) {
     const mainImgWrapper = aboutSection.querySelector('.about-image-wrapper');
     const mainImg = aboutSection.querySelector('.about-image-wrapper img');
-    const expNum = aboutSection.querySelector('.exp-number');
-    const expText = aboutSection.querySelector('.exp-text');
-    const expCard = aboutSection.querySelector('.exp-badge, .about-exp-card, .about-experience');
     const tag = aboutSection.querySelector('.about-text .section-tag');
     const title = aboutSection.querySelector('.about-text .section-title');
     const pContainer = aboutSection.querySelector('.about-paragraphs');
@@ -434,20 +431,6 @@ function renderAboutPageContent() {
       if (mainImgWrapper) mainImgWrapper.style.display = imgVis ? '' : 'none';
       if (ab.mainImage) mainImg.src = ab.mainImage;
     }
-    const expNumVis = isFieldVisible(ab, 'abp-exp-num');
-    const expTextVis = isFieldVisible(ab, 'abp-exp-text');
-    if (expNum) {
-      expNum.style.display = expNumVis ? '' : 'none';
-      if (ab.expNumber) expNum.innerText = ab.expNumber;
-    }
-    if (expText) {
-      expText.style.display = expTextVis ? '' : 'none';
-      if (ab.expText) expText.innerHTML = ab.expText;
-    }
-    if (expCard) {
-      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
-    }
-
     if (tag) {
       tag.style.display = isFieldVisible(ab, 'abp-main-tag') ? '' : 'none';
       if (ab.mainTag) tag.innerText = ab.mainTag;
@@ -543,7 +526,7 @@ function renderFactoryPageContent() {
         : defaultImages;
 
       let slidesHTML = sliderImages.map((img, idx) => `
-        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/Factory/2.JPG'}');"></div>
+        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/Factory/2.JPG'}'); background-position: ${img.imagePosition || '50% 10%'};"></div>
       `).join('');
 
       aboutSlider.innerHTML = `
@@ -649,7 +632,7 @@ function renderPackagingPageContent() {
         : defaultImages;
 
       let slidesHTML = sliderImages.map((img, idx) => `
-        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/packaging_loading.png'}');"></div>
+        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/packaging_loading.png'}'); background-position: ${img.imagePosition || '50% 10%'};"></div>
       `).join('');
 
       aboutSlider.innerHTML = `

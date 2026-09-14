@@ -688,9 +688,11 @@ function renderHpAboutSliderImages() {
           <i class="ri-upload-cloud-line"></i> Upload
           <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-about-img-url-${idx}', 'hp-about-img-prev-${idx}'); setUnsavedChanges(true);" hidden>
         </label>
-        <button type="button" class="crop-btn-label" style="margin: 0; white-space: nowrap;" onclick="openImageCropModal('hp-about-img-url-${idx}', 'hp-about-img-prev-${idx}')">
+        <button type="button" class="crop-btn-label" style="margin: 0; white-space: nowrap;" onclick="openImageCropModal('hp-about-img-url-${idx}', 'hp-about-img-prev-${idx}', 'hp-about-img-pos-${idx}', 'hp-about-raw-url-${idx}')">
           <i class="ri-crop-2-line"></i> Frame
         </button>
+        <input type="hidden" id="hp-about-img-pos-${idx}" value="${img.imagePosition || '50% 10%'}">
+        <input type="hidden" id="hp-about-raw-url-${idx}" value="${img.rawImage || img.url || ''}">
       </div>
       <button type="button" class="btn btn-danger btn-sm" onclick="removeHpAboutSliderImage(${idx})"><i class="ri-delete-bin-line"></i></button>
     </div>
@@ -773,7 +775,16 @@ function saveHomePageForm(showToastMsg = true, shouldSave = true) {
   const aboutSliderImages = [];
   (hp.aboutSliderImages || []).forEach((img, idx) => {
     const urlElem = document.getElementById(`hp-about-img-url-${idx}`);
-    if (urlElem) aboutSliderImages.push({ id: img.id || `h-about-${idx}`, url: urlElem.value });
+    const posElem = document.getElementById(`hp-about-img-pos-${idx}`);
+    const rawElem = document.getElementById(`hp-about-raw-url-${idx}`);
+    if (urlElem) {
+      aboutSliderImages.push({ 
+        id: img.id || `h-about-${idx}`, 
+        url: urlElem.value,
+        imagePosition: posElem ? posElem.value : (img.imagePosition || '50% 10%'),
+        rawImage: rawElem ? rawElem.value : (img.rawImage || img.url || '')
+      });
+    }
   });
 
   const boxes = (hp.boxes || []).map((box, idx) => {
@@ -843,8 +854,7 @@ function renderAboutPageForm() {
   if (document.getElementById('abp-desc1')) document.getElementById('abp-desc1').value = ab.desc1 || '';
   if (document.getElementById('abp-desc2')) document.getElementById('abp-desc2').value = ab.desc2 || '';
   if (document.getElementById('abp-desc3')) document.getElementById('abp-desc3').value = ab.desc3 || '';
-  if (document.getElementById('abp-exp-num')) document.getElementById('abp-exp-num').value = ab.expNumber || '';
-  if (document.getElementById('abp-exp-text')) document.getElementById('abp-exp-text').value = ab.expText || '';
+
 
   if (document.getElementById('abp-bottom-tag')) document.getElementById('abp-bottom-tag').value = ab.bottomTag || '';
   if (document.getElementById('abp-bottom-title')) document.getElementById('abp-bottom-title').value = ab.bottomTitle || '';
@@ -929,8 +939,7 @@ function saveAboutPageForm(showToastMsg = true, shouldSave = true) {
     desc1: document.getElementById('abp-desc1')?.value ?? ab.desc1,
     desc2: document.getElementById('abp-desc2')?.value ?? ab.desc2,
     desc3: document.getElementById('abp-desc3')?.value ?? ab.desc3,
-    expNumber: document.getElementById('abp-exp-num')?.value ?? ab.expNumber,
-    expText: document.getElementById('abp-exp-text')?.value ?? ab.expText,
+
     bottomTag: document.getElementById('abp-bottom-tag')?.value ?? ab.bottomTag,
     bottomTitle: document.getElementById('abp-bottom-title')?.value ?? ab.bottomTitle,
     bottomCards: cards,
@@ -988,6 +997,11 @@ function renderFacSliderImages() {
           <i class="ri-upload-cloud-line"></i> Upload
           <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-slider-img-url-${idx}', 'fac-slider-img-prev-${idx}'); setUnsavedChanges(true);" hidden>
         </label>
+        <button type="button" class="crop-btn-label" style="margin: 0; white-space: nowrap;" onclick="openImageCropModal('fac-slider-img-url-${idx}', 'fac-slider-img-prev-${idx}', 'fac-slider-img-pos-${idx}', 'fac-slider-raw-url-${idx}')">
+          <i class="ri-crop-2-line"></i> Frame
+        </button>
+        <input type="hidden" id="fac-slider-img-pos-${idx}" value="${img.imagePosition || '50% 10%'}">
+        <input type="hidden" id="fac-slider-raw-url-${idx}" value="${img.rawImage || img.url || ''}">
         <button type="button" class="btn btn-outline btn-sm" onclick="removeFacSliderImage(${idx})" style="color: #F87171; border-color: rgba(248, 113, 113, 0.2); white-space: nowrap;">
           <i class="ri-delete-bin-line"></i> Remove
         </button>
@@ -1083,7 +1097,16 @@ function saveFactoryPageForm(showToastMsg = true, shouldSave = true) {
   const facSliderImages = [];
   (fac.aboutSliderImages || []).forEach((img, idx) => {
     const urlElem = document.getElementById(`fac-slider-img-url-${idx}`);
-    if (urlElem) facSliderImages.push({ id: img.id || `f-about-${idx}`, url: urlElem.value });
+    const posElem = document.getElementById(`fac-slider-img-pos-${idx}`);
+    const rawElem = document.getElementById(`fac-slider-raw-url-${idx}`);
+    if (urlElem) {
+      facSliderImages.push({ 
+        id: img.id || `f-about-${idx}`, 
+        url: urlElem.value,
+        imagePosition: posElem ? posElem.value : (img.imagePosition || '50% 10%'),
+        rawImage: rawElem ? rawElem.value : (img.rawImage || img.url || '')
+      });
+    }
   });
 
   const updatedFac = {
@@ -1155,6 +1178,11 @@ function renderPkgSliderImages() {
           <i class="ri-upload-cloud-line"></i> Upload
           <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-slider-img-url-${idx}', 'pkg-slider-img-prev-${idx}'); setUnsavedChanges(true);" hidden>
         </label>
+        <button type="button" class="crop-btn-label" style="margin: 0; white-space: nowrap;" onclick="openImageCropModal('pkg-slider-img-url-${idx}', 'pkg-slider-img-prev-${idx}', 'pkg-slider-img-pos-${idx}', 'pkg-slider-raw-url-${idx}')">
+          <i class="ri-crop-2-line"></i> Frame
+        </button>
+        <input type="hidden" id="pkg-slider-img-pos-${idx}" value="${img.imagePosition || '50% 10%'}">
+        <input type="hidden" id="pkg-slider-raw-url-${idx}" value="${img.rawImage || img.url || ''}">
         <button type="button" class="btn btn-outline btn-sm" onclick="removePkgSliderImage(${idx})" style="color: #F87171; border-color: rgba(248, 113, 113, 0.2); white-space: nowrap;">
           <i class="ri-delete-bin-line"></i> Remove
         </button>
@@ -1250,7 +1278,16 @@ function savePackagingPageForm(showToastMsg = true, shouldSave = true) {
   const pkgSliderImages = [];
   (pkg.aboutSliderImages || []).forEach((img, idx) => {
     const urlElem = document.getElementById(`pkg-slider-img-url-${idx}`);
-    if (urlElem) pkgSliderImages.push({ id: img.id || `p-about-${idx}`, url: urlElem.value });
+    const posElem = document.getElementById(`pkg-slider-img-pos-${idx}`);
+    const rawElem = document.getElementById(`pkg-slider-raw-url-${idx}`);
+    if (urlElem) {
+      pkgSliderImages.push({ 
+        id: img.id || `p-about-${idx}`, 
+        url: urlElem.value,
+        imagePosition: posElem ? posElem.value : (img.imagePosition || '50% 10%'),
+        rawImage: rawElem ? rawElem.value : (img.rawImage || img.url || '')
+      });
+    }
   });
 
   const updatedPkg = {
