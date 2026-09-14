@@ -1897,54 +1897,87 @@ button {
   display: none !important;
 }
 
-/* Footer Social Media Icons */
-.footer-social-links {
-  display: flex !important;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-  margin-top: 1.25rem;
-}
-
-.footer-social-links a {
+/* Connect Channels & Social Badges (Adblock Resilient) */
+.footer-social-links,
+.tut-connect-channels {
   display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(212, 175, 55, 0.1);
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  color: var(--color-gold-primary, #D4AF37) !important;
-  font-size: 1.2rem;
-  text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 0.65rem !important;
+  margin-top: 0.5rem !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
-.footer-social-links a:hover {
+.nav-social-links,
+.tut-nav-channels {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 0.45rem !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.tut-channel-badge,
+.footer-social-links a,
+.tut-connect-channels a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  border-radius: 50% !important;
+  background: rgba(212, 175, 55, 0.15) !important;
+  border: 1.5px solid rgba(212, 175, 55, 0.5) !important;
+  color: #DFB77D !important;
+  font-size: 1.2rem;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.tut-channel-badge:hover,
+.footer-social-links a:hover,
+.tut-connect-channels a:hover {
   background: var(--color-gold-primary, #D4AF37) !important;
   border-color: var(--color-gold-primary, #D4AF37) !important;
   color: #0E121A !important;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+  transform: translateY(-3px) !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4) !important;
 }
 
-.footer-social-links a i {
-  color: inherit !important;
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
+.tut-nav-channels .tut-channel-badge,
 .nav-social-links a {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  font-size: 1rem !important;
+  background: rgba(212, 175, 55, 0.12) !important;
+  border: 1.2px solid rgba(212, 175, 55, 0.45) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
+.tut-nav-channels .tut-channel-badge:hover,
 .nav-social-links a:hover {
   background: var(--color-gold-primary, #D4AF37) !important;
   border-color: var(--color-gold-primary, #D4AF37) !important;
   color: #0E121A !important;
-  transform: translateY(-2px);
-  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.35);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.35) !important;
+}
+
+.tut-channel-badge svg,
+.tut-connect-channels svg,
+.tut-nav-channels svg {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  pointer-events: none;
 }
 
 
