@@ -42,7 +42,7 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
             if (Array.isArray(parsed.imagesData)) {
               parsed.imagesData.forEach(img => {
                 if (img.id === 'img-brand-logo' || (img.url && img.url.includes('tut_stones_logo.png'))) {
-                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v51';
+                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v52';
                 }
               });
             }
@@ -643,7 +643,7 @@ const DEFAULT_DATA = {
       id: 'img-brand-logo',
       keyName: 'Winged Obelisk Brand Logo',
       section: 'Header & Footer Brand',
-      url: 'assets/images/TUTSTONES.png?v=20260914_v51',
+      url: 'assets/images/TUTSTONES.png?v=20260914_v52',
       description: 'Official header and footer emblem logo for TutStones.'
     }
   ],
@@ -993,8 +993,12 @@ class Store {
    * Fires 'tutstones:server-save-ok' or 'tutstones:server-save-fail' events.
    */
   _pushToServer() {
-    if (this._serverSaveInFlight) return; // debounce concurrent saves
+    if (this._serverSaveInFlight) {
+      this._serverSavePending = true;
+      return;
+    }
     this._serverSaveInFlight = true;
+    this._serverSavePending = false;
     fetch(SERVER_API_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -1006,6 +1010,9 @@ class Store {
     .then(res => res.json())
     .then(json => {
       this._serverSaveInFlight = false;
+      if (this._serverSavePending) {
+        this._pushToServer();
+      }
       if (json && json.success) {
         window.dispatchEvent(new CustomEvent('tutstones:server-save-ok'));
       } else {
@@ -1014,6 +1021,9 @@ class Store {
     })
     .catch(err => {
       this._serverSaveInFlight = false;
+      if (this._serverSavePending) {
+        this._pushToServer();
+      }
       console.info('[TutStones] Server save failed (API unreachable?). Data is in localStorage only.', err);
       window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: { error: err.message } }));
     });

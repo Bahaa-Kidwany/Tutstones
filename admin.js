@@ -150,22 +150,22 @@ function restoreDraftStateFromClient() {
 
 function collectAllPageFormsToStoreData() {
   if (document.getElementById('hp-about-tag')) {
-    saveHomePageForm(false);
+    saveHomePageForm(false, false);
   }
   if (document.getElementById('abp-banner-tag')) {
-    saveAboutPageForm(false);
+    saveAboutPageForm(false, false);
   }
   if (document.getElementById('fac-banner-tag')) {
-    saveFactoryPageForm(false);
+    saveFactoryPageForm(false, false);
   }
   if (document.getElementById('pkg-banner-tag')) {
-    savePackagingPageForm(false);
+    savePackagingPageForm(false, false);
   }
   if (document.getElementById('cnt-banner-tag')) {
-    saveContactPageForm(false);
+    saveContactPageForm(false, false);
   }
   if (document.getElementById('ftr-brand-desc')) {
-    saveFooterForm(false);
+    saveFooterForm(false, false);
   }
 }
 
@@ -174,7 +174,14 @@ function saveAllGlobalChanges() {
   TutStonesStore.save();
   sessionStorage.removeItem('tut_stones_draft_backup');
   setUnsavedChanges(false);
-  refreshAllAdminViews();
+  renderOverviewMetrics();
+  renderCategoriesTable();
+  renderStoneCards();
+  renderSliderCards();
+  renderParagraphImages();
+  renderSocialTable();
+  renderUsersTable();
+  populateCategoryDropdowns();
   showToast('All modifications across all pages saved successfully!');
 }
 
@@ -760,7 +767,7 @@ function renderHpBoxes() {
   `).join('');
 }
 
-function saveHomePageForm(showToastMsg = true) {
+function saveHomePageForm(showToastMsg = true, shouldSave = true) {
   const hp = TutStonesStore.getHomePage();
   
   const aboutSliderImages = [];
@@ -808,8 +815,13 @@ function saveHomePageForm(showToastMsg = true) {
     fieldVisibility: collectFieldVisibility(formEl)
   };
 
-  const res = TutStonesStore.saveHomePage(updatedHp);
-  if (res !== false && showToastMsg) {
+  if (shouldSave) {
+    TutStonesStore.saveHomePage(updatedHp);
+  } else {
+    TutStonesStore.data.homePage = { ...TutStonesStore.getHomePage(), ...updatedHp };
+  }
+
+  if (showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Homepage settings saved successfully!');
@@ -882,7 +894,7 @@ function renderAbpCards() {
   `).join('');
 }
 
-function saveAboutPageForm(showToastMsg = true) {
+function saveAboutPageForm(showToastMsg = true, shouldSave = true) {
   const ab = TutStonesStore.getAboutPage();
 
   const cards = (ab.bottomCards || []).map((card, idx) => {
@@ -925,8 +937,13 @@ function saveAboutPageForm(showToastMsg = true) {
     fieldVisibility: collectFieldVisibility(formEl)
   };
 
-  const res = TutStonesStore.saveAboutPage(updatedAb);
-  if (res !== false && showToastMsg) {
+  if (shouldSave) {
+    TutStonesStore.saveAboutPage(updatedAb);
+  } else {
+    TutStonesStore.data.aboutPage = { ...TutStonesStore.getAboutPage(), ...updatedAb };
+  }
+
+  if (showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('About Us Page settings saved successfully!');
@@ -998,7 +1015,7 @@ function renderFacCards() {
   `).join('');
 }
 
-function saveFactoryPageForm(showToastMsg = true) {
+function saveFactoryPageForm(showToastMsg = true, shouldSave = true) {
   const fac = TutStonesStore.getFactoryPage();
 
   const cards = (fac.cards || []).map((card, idx) => {
@@ -1040,8 +1057,13 @@ function saveFactoryPageForm(showToastMsg = true) {
     fieldVisibility: collectFieldVisibility(formEl)
   };
 
-  const res = TutStonesStore.saveFactoryPage(updatedFac);
-  if (res !== false && showToastMsg) {
+  if (shouldSave) {
+    TutStonesStore.saveFactoryPage(updatedFac);
+  } else {
+    TutStonesStore.data.factoryPage = { ...TutStonesStore.getFactoryPage(), ...updatedFac };
+  }
+
+  if (showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Factory Page settings saved successfully!');
@@ -1113,7 +1135,7 @@ function renderPkgCards() {
   `).join('');
 }
 
-function savePackagingPageForm(showToastMsg = true) {
+function savePackagingPageForm(showToastMsg = true, shouldSave = true) {
   const pkg = TutStonesStore.getPackagingPage();
 
   const cards = (pkg.cards || []).map((card, idx) => {
@@ -1155,8 +1177,13 @@ function savePackagingPageForm(showToastMsg = true) {
     fieldVisibility: collectFieldVisibility(formEl)
   };
 
-  const res = TutStonesStore.savePackagingPage(updatedPkg);
-  if (res !== false && showToastMsg) {
+  if (shouldSave) {
+    TutStonesStore.savePackagingPage(updatedPkg);
+  } else {
+    TutStonesStore.data.packagingPage = { ...TutStonesStore.getPackagingPage(), ...updatedPkg };
+  }
+
+  if (showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Packaging Page settings saved successfully!');
@@ -1192,7 +1219,7 @@ function renderContactPageForm() {
   initFieldVisibilityControls(document.getElementById('contact-page-form'), cnt.fieldVisibility);
 }
 
-function saveContactPageForm(showToastMsg = true) {
+function saveContactPageForm(showToastMsg = true, shouldSave = true) {
   const cnt = TutStonesStore.getContactPage();
   const formEl = document.getElementById('contact-page-form');
 
@@ -1218,8 +1245,13 @@ function saveContactPageForm(showToastMsg = true) {
     fieldVisibility: collectFieldVisibility(formEl)
   };
 
-  const res = TutStonesStore.saveContactPage(updatedCnt);
-  if (res !== false && showToastMsg) {
+  if (shouldSave) {
+    TutStonesStore.saveContactPage(updatedCnt);
+  } else {
+    TutStonesStore.data.contactPage = { ...TutStonesStore.getContactPage(), ...updatedCnt };
+  }
+
+  if (showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Contact Page settings saved successfully!');
@@ -1242,7 +1274,7 @@ function renderFooterForm() {
   initFieldVisibilityControls(document.getElementById('tab-footer'), ftr.fieldVisibility);
 }
 
-function saveFooterForm(showToastMsg = true) {
+function saveFooterForm(showToastMsg = true, shouldSave = true) {
   const ftr = TutStonesStore.getFooterData();
 
   const updatedFtr = {
@@ -1258,8 +1290,13 @@ function saveFooterForm(showToastMsg = true) {
     fieldVisibility: collectFieldVisibility(document.getElementById('tab-footer'))
   };
 
-  const res = TutStonesStore.saveFooterData(updatedFtr);
-  if (res !== false && showToastMsg) {
+  if (shouldSave) {
+    TutStonesStore.saveFooterData(updatedFtr);
+  } else {
+    TutStonesStore.data.footerData = { ...TutStonesStore.getFooterData(), ...updatedFtr };
+  }
+
+  if (showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Footer settings saved successfully!');
