@@ -1556,8 +1556,8 @@ function handleImageFileUpload(event, targetInputId, previewImgId) {
     const img = new Image();
     img.onload = function() {
       const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 1200;
-      const MAX_HEIGHT = 1200;
+      const MAX_WIDTH = 800;
+      const MAX_HEIGHT = 800;
       let width = img.width;
       let height = img.height;
 
@@ -1578,8 +1578,8 @@ function handleImageFileUpload(event, targetInputId, previewImgId) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      // Compress to lightweight JPEG Data URL (quality: 0.8)
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      // Compress to lightweight JPEG Data URL (quality: 0.5) to prevent localStorage quota issues
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
 
       const inputElem = document.getElementById(targetInputId);
       if (inputElem) {
