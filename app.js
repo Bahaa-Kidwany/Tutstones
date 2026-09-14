@@ -524,33 +524,33 @@ function renderFactoryPageContent() {
   // Main Section
   const mainSec = document.querySelector('body[data-page="factory"] section.section-padding');
   if (mainSec) {
-    const imgWrapper = mainSec.querySelector('.about-image-wrapper');
-    const img = mainSec.querySelector('.about-image-wrapper img');
-    const expNum = mainSec.querySelector('.exp-number');
-    const expText = mainSec.querySelector('.exp-text');
-    const expCard = mainSec.querySelector('.exp-badge, .about-exp-card, .about-experience');
     const tag = mainSec.querySelector('.about-text .section-tag');
     const title = mainSec.querySelector('.about-text .section-title');
     const paragraphs = mainSec.querySelectorAll('.about-text p');
-    const statsGrid = mainSec.querySelector('.stats-grid');
 
-    if (img) {
-      const imgVis = isFieldVisible(fac, 'fac-main-img-url');
-      if (imgWrapper) imgWrapper.style.display = imgVis ? '' : 'none';
-      if (fac.mainImage) img.src = fac.mainImage;
-    }
-    const expNumVis = isFieldVisible(fac, 'fac-exp-num');
-    const expTextVis = isFieldVisible(fac, 'fac-exp-text');
-    if (expNum) {
-      expNum.style.display = expNumVis ? '' : 'none';
-      if (fac.expNumber) expNum.innerText = fac.expNumber;
-    }
-    if (expText) {
-      expText.style.display = expTextVis ? '' : 'none';
-      if (fac.expText) expText.innerHTML = fac.expText;
-    }
-    if (expCard) {
-      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
+    // Factory Slider Images Hydration
+    const aboutSlider = mainSec.querySelector('.about-slider');
+    if (aboutSlider) {
+      const defaultImages = [
+        { id: 'f-about-1', url: 'assets/images/Factory/2.JPG' }
+      ];
+      const sliderImages = (fac.aboutSliderImages && fac.aboutSliderImages.length > 0)
+        ? fac.aboutSliderImages
+        : defaultImages;
+
+      let slidesHTML = sliderImages.map((img, idx) => `
+        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/Factory/2.JPG'}');"></div>
+      `).join('');
+
+      aboutSlider.innerHTML = `
+        ${slidesHTML}
+        <div class="about-slider-controls">
+          <div class="slider-arrows about-arrows">
+            <button class="slider-arrow prev" aria-label="Previous Slide"><i class="ri-arrow-left-s-line"></i></button>
+            <button class="slider-arrow next" aria-label="Next Slide"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+      `;
     }
 
     if (tag) {
@@ -568,15 +568,6 @@ function renderFactoryPageContent() {
 
       paragraphs[1].style.display = isFieldVisible(fac, 'fac-desc2') ? '' : 'none';
       if (fac.desc2) paragraphs[1].innerText = fac.desc2;
-    }
-
-    if (statsGrid && fac.stats) {
-      statsGrid.innerHTML = fac.stats.map(s => `
-        <div class="stat-card">
-          <h4>${s.count}</h4>
-          <p>${s.label}</p>
-        </div>
-      `).join('');
     }
   }
 

@@ -960,8 +960,6 @@ function renderFactoryPageForm() {
 
   if (document.getElementById('fac-main-tag')) document.getElementById('fac-main-tag').value = fac.mainTag || '';
   if (document.getElementById('fac-main-title')) document.getElementById('fac-main-title').value = fac.mainTitle || '';
-  if (document.getElementById('fac-main-img-url')) document.getElementById('fac-main-img-url').value = fac.mainImage || '';
-  if (document.getElementById('fac-main-img-preview')) document.getElementById('fac-main-img-preview').src = fac.mainImage || '';
   if (document.getElementById('fac-desc1')) document.getElementById('fac-desc1').value = fac.desc1 || '';
   if (document.getElementById('fac-desc2')) document.getElementById('fac-desc2').value = fac.desc2 || '';
   if (document.getElementById('fac-exp-num')) document.getElementById('fac-exp-num').value = fac.expNumber || '';
@@ -971,7 +969,50 @@ function renderFactoryPageForm() {
   if (document.getElementById('fac-workflow-title')) document.getElementById('fac-workflow-title').value = fac.workflowTitle || '';
 
   renderFacCards();
+  renderFacSliderImages();
   initFieldVisibilityControls(document.getElementById('factory-page-form'), fac.fieldVisibility);
+}
+
+function renderFacSliderImages() {
+  const fac = TutStonesStore.getFactoryPage();
+  const container = document.getElementById('fac-slider-images-container');
+  if (!container) return;
+
+  const images = fac.aboutSliderImages || [];
+  container.innerHTML = images.map((img, idx) => `
+    <div style="display: flex; gap: 1rem; align-items: center; background: var(--color-bg-surface); padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
+      <img id="fac-slider-img-prev-${idx}" src="${img.url}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;" onerror="this.src='assets/images/Factory/2.JPG'">
+      <div style="flex: 1; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+        <input type="text" id="fac-slider-img-url-${idx}" class="form-control" value="${img.url}" placeholder="Image URL..." oninput="document.getElementById('fac-slider-img-prev-${idx}').src=this.value; setUnsavedChanges(true);" style="flex: 1; min-width: 140px;">
+        <label class="upload-btn-label" style="margin: 0; white-space: nowrap;">
+          <i class="ri-upload-cloud-line"></i> Upload
+          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-slider-img-url-${idx}', 'fac-slider-img-prev-${idx}'); setUnsavedChanges(true);" hidden>
+        </label>
+        <button type="button" class="btn btn-outline btn-sm" onclick="removeFacSliderImage(${idx})" style="color: #F87171; border-color: rgba(248, 113, 113, 0.2); white-space: nowrap;">
+          <i class="ri-delete-bin-line"></i> Remove
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addFacSliderImage() {
+  const fac = TutStonesStore.getFactoryPage();
+  if (!fac.aboutSliderImages) fac.aboutSliderImages = [];
+  fac.aboutSliderImages.push({ id: 'f-about-' + Date.now(), url: 'assets/images/Factory/2.JPG' });
+  saveFactoryPageForm(false, false);
+  renderFacSliderImages();
+  setUnsavedChanges(true);
+}
+
+function removeFacSliderImage(idx) {
+  const fac = TutStonesStore.getFactoryPage();
+  if (fac.aboutSliderImages && fac.aboutSliderImages[idx]) {
+    fac.aboutSliderImages.splice(idx, 1);
+    saveFactoryPageForm(false, false);
+    renderFacSliderImages();
+    setUnsavedChanges(true);
+  }
 }
 
 function renderFacCards() {
@@ -1037,6 +1078,12 @@ function saveFactoryPageForm(showToastMsg = true, shouldSave = true) {
 
   const formEl = document.getElementById('factory-page-form');
 
+  const facSliderImages = [];
+  (fac.aboutSliderImages || []).forEach((img, idx) => {
+    const urlElem = document.getElementById(`fac-slider-img-url-${idx}`);
+    if (urlElem) facSliderImages.push({ id: img.id || `f-about-${idx}`, url: urlElem.value });
+  });
+
   const updatedFac = {
     ...fac,
     bannerTag: document.getElementById('fac-banner-tag')?.value ?? fac.bannerTag,
@@ -1044,9 +1091,7 @@ function saveFactoryPageForm(showToastMsg = true, shouldSave = true) {
     bannerDesc: document.getElementById('fac-banner-desc')?.value ?? fac.bannerDesc,
     mainTag: document.getElementById('fac-main-tag')?.value ?? fac.mainTag,
     mainTitle: document.getElementById('fac-main-title')?.value ?? fac.mainTitle,
-    mainImage: document.getElementById('fac-main-img-url')?.value ?? fac.mainImage,
-    mainImageRaw: document.getElementById('fac-main-raw-url')?.value || fac.mainImageRaw || fac.mainImage,
-    mainImagePosition: document.getElementById('fac-main-img-pos')?.value || fac.mainImagePosition || '50% 10%',
+    aboutSliderImages: facSliderImages.length > 0 ? facSliderImages : fac.aboutSliderImages,
     desc1: document.getElementById('fac-desc1')?.value ?? fac.desc1,
     desc2: document.getElementById('fac-desc2')?.value ?? fac.desc2,
     expNumber: document.getElementById('fac-exp-num')?.value ?? fac.expNumber,

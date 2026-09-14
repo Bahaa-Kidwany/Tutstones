@@ -659,27 +659,17 @@
                 </div>
               </div>
 
-              <div>
-                <div class="form-group">
-                  <label>Factory Section Image</label>
-                  <div class="image-upload-wrapper">
-                    <img id="fac-main-img-preview" src="" alt="Factory Image Preview" class="image-preview-thumb">
-                    <div class="upload-actions">
-                      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <label class="upload-btn-label">
-                          <i class="ri-upload-cloud-2-line"></i> Upload Image File
-                          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'fac-main-img-url', 'fac-main-img-preview')" hidden>
-                        </label>
-                        <button type="button" class="crop-btn-label" onclick="openImageCropModal('fac-main-img-url', 'fac-main-img-preview', 'fac-main-img-pos', 'fac-main-raw-url')">
-                          <i class="ri-crop-2-line"></i> Crop / Frame View
-                        </button>
-                      </div>
-                      <input type="text" id="fac-main-img-url" class="form-control" placeholder="Or enter image URL" oninput="document.getElementById('fac-main-img-preview').src=this.value">
-                      <input type="hidden" id="fac-main-img-pos" value="50% 10%">
-                      <input type="hidden" id="fac-main-raw-url" value="">
-                    </div>
-                  </div>
+              <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--color-border-gold);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                  <h4 style="color: var(--color-gold-light); margin: 0;"><i class="ri-slideshow-line"></i> Factory Slider Images</h4>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="addFacSliderImage()">
+                    <i class="ri-add-line"></i> Add Slider Image
+                  </button>
                 </div>
+                <div id="fac-slider-images-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                  <!-- Dynamically rendered via admin.js -->
+                </div>
+              </div>
 
 
               </div>

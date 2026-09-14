@@ -822,6 +822,9 @@ const DEFAULT_DATA = {
     mainTag: 'FACTORY & INFRASTRUCTURE',
     mainTitle: 'Transforming Raw Blocks Into <span>Architectural Masterpieces</span>',
     mainImage: 'assets/images/Factory/2.JPG',
+    aboutSliderImages: [
+      { id: 'f-about-1', url: 'assets/images/Factory/2.JPG' }
+    ],
     desc1: 'Our factory in Egypt operates under strict international quality control systems. We source premier quarry blocks of Egyptian Marble (such as Galala, Sunny, Silvia, Sinai Pearl) and Egyptian Granite (such as Rosa Hudi, Gandolla, Aswan Black).',
     desc2: 'From raw block squaring to diamond gangsaw slicing, resin treatment, surface finishing, and waterjet cut-to-size orders, our factory is engineered for large-scale international commercial projects and luxury residential developments.',
     expNumber: '100%',
