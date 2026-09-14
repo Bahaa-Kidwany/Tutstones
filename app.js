@@ -25,8 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try { renderAboutPageContent(); } catch (e) { console.error('Error renderAboutPageContent:', e); }
   } else if (page === 'factory') {
     try { renderFactoryPageContent(); } catch (e) { console.error('Error renderFactoryPageContent:', e); }
+    try { initAboutSlider(); } catch (e) { console.error('Error initAboutSlider on factory:', e); }
   } else if (page === 'packaging') {
     try { renderPackagingPageContent(); } catch (e) { console.error('Error renderPackagingPageContent:', e); }
+    try { initAboutSlider(); } catch (e) { console.error('Error initAboutSlider on packaging:', e); }
   } else if (page === 'contact') {
     try { renderContactPageContent(); } catch (e) { console.error('Error renderContactPageContent:', e); }
   }
@@ -51,8 +53,10 @@ window.addEventListener('tutstones:server-data-ready', () => {
     try { renderAboutPageContent(); } catch (e) {}
   } else if (page === 'factory') {
     try { renderFactoryPageContent(); } catch (e) {}
+    try { initAboutSlider(); } catch (e) {}
   } else if (page === 'packaging') {
     try { renderPackagingPageContent(); } catch (e) {}
+    try { initAboutSlider(); } catch (e) {}
   } else if (page === 'contact') {
     try { renderContactPageContent(); } catch (e) {}
   }
@@ -630,33 +634,33 @@ function renderPackagingPageContent() {
   // Main Section
   const mainSec = document.querySelector('body[data-page="packaging"] section.section-padding');
   if (mainSec) {
-    const imgWrapper = mainSec.querySelector('.about-image-wrapper');
-    const img = mainSec.querySelector('.about-image-wrapper img');
-    const expNum = mainSec.querySelector('.exp-number');
-    const expText = mainSec.querySelector('.exp-text');
-    const expCard = mainSec.querySelector('.exp-badge, .about-exp-card, .about-experience');
     const tag = mainSec.querySelector('.about-text .section-tag');
     const title = mainSec.querySelector('.about-text .section-title');
     const paragraphs = mainSec.querySelectorAll('.about-text p');
-    const statsGrid = mainSec.querySelector('.stats-grid');
 
-    if (img) {
-      const imgVis = isFieldVisible(pkg, 'pkg-main-img-url');
-      if (imgWrapper) imgWrapper.style.display = imgVis ? '' : 'none';
-      if (pkg.mainImage) img.src = pkg.mainImage;
-    }
-    const expNumVis = isFieldVisible(pkg, 'pkg-exp-num');
-    const expTextVis = isFieldVisible(pkg, 'pkg-exp-text');
-    if (expNum) {
-      expNum.style.display = expNumVis ? '' : 'none';
-      if (pkg.expNumber) expNum.innerText = pkg.expNumber;
-    }
-    if (expText) {
-      expText.style.display = expTextVis ? '' : 'none';
-      if (pkg.expText) expText.innerHTML = pkg.expText;
-    }
-    if (expCard) {
-      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
+    // Packaging Slider Images Hydration
+    const aboutSlider = mainSec.querySelector('.about-slider');
+    if (aboutSlider) {
+      const defaultImages = [
+        { id: 'p-about-1', url: 'assets/images/packaging_loading.png' }
+      ];
+      const sliderImages = (pkg.aboutSliderImages && pkg.aboutSliderImages.length > 0)
+        ? pkg.aboutSliderImages
+        : defaultImages;
+
+      let slidesHTML = sliderImages.map((img, idx) => `
+        <div class="about-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${img.url || 'assets/images/packaging_loading.png'}');"></div>
+      `).join('');
+
+      aboutSlider.innerHTML = `
+        ${slidesHTML}
+        <div class="about-slider-controls">
+          <div class="slider-arrows about-arrows">
+            <button class="slider-arrow prev" aria-label="Previous Slide"><i class="ri-arrow-left-s-line"></i></button>
+            <button class="slider-arrow next" aria-label="Next Slide"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+      `;
     }
 
     if (tag) {
@@ -674,15 +678,6 @@ function renderPackagingPageContent() {
 
       paragraphs[1].style.display = isFieldVisible(pkg, 'pkg-desc2') ? '' : 'none';
       if (pkg.desc2) paragraphs[1].innerText = pkg.desc2;
-    }
-
-    if (statsGrid && pkg.stats) {
-      statsGrid.innerHTML = pkg.stats.map(s => `
-        <div class="stat-card">
-          <h4>${s.count}</h4>
-          <p>${s.label}</p>
-        </div>
-      `).join('');
     }
   }
 
