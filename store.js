@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.09.v50';
-const STORAGE_KEY = 'tut_stones_data_v50';
+const CURRENT_BUILD_VERSION = '2026.09.14.v51';
+const STORAGE_KEY = 'tut_stones_data_v51';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
@@ -15,6 +15,19 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
   try {
+    // Purge cached aboutStats from any existing localStorage data key immediately
+    Object.keys(localStorage).forEach(k => {
+      if (k.startsWith('tut_stones_data_')) {
+        try {
+          const item = JSON.parse(localStorage.getItem(k));
+          if (item && item.homePage && item.homePage.aboutStats) {
+            delete item.homePage.aboutStats;
+            localStorage.setItem(k, JSON.stringify(item));
+          }
+        } catch(e) {}
+      }
+    });
+
     const lastBuild = localStorage.getItem('tut_app_build_version');
     if (lastBuild !== CURRENT_BUILD_VERSION) {
       // Migrate saved user data from previous build keys so custom edits are preserved
@@ -29,9 +42,12 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
             if (Array.isArray(parsed.imagesData)) {
               parsed.imagesData.forEach(img => {
                 if (img.id === 'img-brand-logo' || (img.url && img.url.includes('tut_stones_logo.png'))) {
-                  img.url = 'assets/images/TUTSTONES.png?v=20260909_v50';
+                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v51';
                 }
               });
+            }
+            if (parsed.homePage && parsed.homePage.aboutStats) {
+              delete parsed.homePage.aboutStats;
             }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
           } catch(e) {
@@ -627,7 +643,7 @@ const DEFAULT_DATA = {
       id: 'img-brand-logo',
       keyName: 'Winged Obelisk Brand Logo',
       section: 'Header & Footer Brand',
-      url: 'assets/images/TUTSTONES.png?v=20260909_v50',
+      url: 'assets/images/TUTSTONES.png?v=20260914_v51',
       description: 'Official header and footer emblem logo for TutStones.'
     }
   ],
@@ -679,11 +695,7 @@ const DEFAULT_DATA = {
       { id: 'h-about-1', url: 'assets/images/Factory/1.jpg' },
       { id: 'h-about-2', url: 'assets/images/Factory/2.JPG' }
     ],
-    aboutStats: [
-      { id: 'h-stat-1', count: '24+', label: 'Years of Excellence' },
-      { id: 'h-stat-2', count: '50+', label: 'Export Destinations' },
-      { id: 'h-stat-3', count: '100%', label: 'Egyptian Origin' }
-    ],
+    aboutStats: [],
     boxesTag: 'OUR EXPORT CAPABILITIES',
     boxesTitle: 'State-of-the-Art <span>Factory & Packaging</span>',
     boxes: [
@@ -883,6 +895,9 @@ class Store {
       // If server data is newer or equal, merge server data into local
       if (serverTime >= localTime) {
         this.data = { ...this.data, ...serverData };
+        if (this.data.homePage && this.data.homePage.aboutStats) {
+          delete this.data.homePage.aboutStats;
+        }
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
         window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
       } else {
@@ -911,6 +926,9 @@ class Store {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return JSON.parse(JSON.stringify(DEFAULT_DATA));
       const parsed = JSON.parse(raw);
+      if (parsed.homePage && parsed.homePage.aboutStats) {
+        delete parsed.homePage.aboutStats;
+      }
       
       const hasSubCats = Array.isArray(parsed.categories) && parsed.categories.some(c => c.parent);
       const hasValidStones = Array.isArray(parsed.stones) && parsed.stones.length >= 10;

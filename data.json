@@ -1,5 +1,5 @@
 {
-  "lastModified": 1788969600000,
+  "lastModified": 1789000000000,
   "categories": [
     {
       "id": "marble",
@@ -576,7 +576,7 @@
       "id": "img-brand-logo",
       "keyName": "Winged Obelisk Brand Logo",
       "section": "Header & Footer Brand",
-      "url": "assets/images/TUTSTONES.png?v=20260909_v50",
+      "url": "assets/images/TUTSTONES.png?v=20260914_v51",
       "description": "Official header and footer emblem logo for TutStones."
     }
   ],
@@ -656,23 +656,7 @@
         "url": "assets/images/Factory/2.JPG"
       }
     ],
-    "aboutStats": [
-      {
-        "id": "h-stat-1",
-        "count": "24+",
-        "label": "Years of Excellence"
-      },
-      {
-        "id": "h-stat-2",
-        "count": "50+",
-        "label": "Export Destinations"
-      },
-      {
-        "id": "h-stat-3",
-        "count": "100%",
-        "label": "Egyptian Origin"
-      }
-    ],
+    "aboutStats": [],
     "boxesTag": "OUR EXPORT CAPABILITIES",
     "boxesTitle": "State-of-the-Art <span>Factory & Packaging</span>",
     "boxes": [

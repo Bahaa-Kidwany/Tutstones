@@ -253,13 +253,8 @@ function renderHomePageContent() {
     }
 
     const statsGrid = aboutSection.querySelector('.stats-grid');
-    if (statsGrid && hp.aboutStats) {
-      statsGrid.innerHTML = hp.aboutStats.map(s => `
-        <div class="stat-card">
-          <h4>${s.count}</h4>
-          <p>${s.label}</p>
-        </div>
-      `).join('');
+    if (statsGrid) {
+      statsGrid.remove();
     }
 
     // Homepage About Slider Images Hydration
