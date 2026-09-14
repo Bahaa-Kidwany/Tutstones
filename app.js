@@ -134,9 +134,19 @@ function renderSocialLinks() {
   if (!Array.isArray(socialLinks) || socialLinks.length === 0) {
     if (typeof DEFAULT_DATA !== 'undefined' && Array.isArray(DEFAULT_DATA.socialLinks)) {
       socialLinks = DEFAULT_DATA.socialLinks;
+    } else if (typeof DEFAULT_SOCIAL_LINKS !== 'undefined' && Array.isArray(DEFAULT_SOCIAL_LINKS)) {
+      socialLinks = DEFAULT_SOCIAL_LINKS;
     }
   }
-  if (!Array.isArray(socialLinks) || socialLinks.length === 0) return;
+  if (!Array.isArray(socialLinks) || socialLinks.length === 0) {
+    socialLinks = [
+      { id: 'soc-1', platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://www.instagram.com/tutstones.eg?stkn=cmc3Yn RxaTRmNjlu', active: true },
+      { id: 'soc-2', platform: 'LinkedIn', icon: 'ri-linkedin-fill', url: 'https://linkedin.com/company/tutstones', active: true },
+      { id: 'soc-3', platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://facebook.com/tutstones', active: true },
+      { id: 'soc-4', platform: 'Pinterest', icon: 'ri-pinterest-line', url: 'https://pinterest.com/tutstones', active: true },
+      { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/201104539397', active: true }
+    ];
+  }
 
   // Filter active links, treating undefined as active by default
   const activeLinks = socialLinks.filter(l => l && (l.active === true || l.active === 'true' || l.active === 1 || l.active === '1' || l.active === undefined));
@@ -146,9 +156,17 @@ function renderSocialLinks() {
   const containers = document.querySelectorAll('.footer-social-links, .social-links-container');
   containers.forEach(container => {
     if (container) {
+      container.style.display = 'inline-flex';
+      container.style.alignItems = 'center';
+      container.style.flexWrap = 'wrap';
+      container.style.gap = '0.75rem';
+      container.style.marginTop = '1.25rem';
+      container.style.visibility = 'visible';
+      container.style.opacity = '1';
+
       container.innerHTML = linksToRender.map(link => `
-        <a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.platform}" aria-label="${link.platform}">
-          <i class="${link.icon}"></i>
+        <a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.platform || 'Social Link'}" aria-label="${link.platform || 'Social Link'}" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 40px !important; height: 40px !important; min-width: 40px !important; min-height: 40px !important; border-radius: 50% !important; background: rgba(212, 175, 55, 0.15) !important; border: 1.5px solid rgba(212, 175, 55, 0.5) !important; color: #D4AF37 !important; font-size: 1.25rem !important; text-decoration: none !important; margin: 0 4px 4px 0 !important; cursor: pointer !important;">
+          <i class="${link.icon || 'ri-global-line'}" style="color: #D4AF37 !important; font-size: 1.25rem !important; line-height: 1 !important; display: inline-block !important;"></i>
         </a>
       `).join('');
     }

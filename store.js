@@ -4,18 +4,27 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.14.v55';
-const STORAGE_KEY = 'tut_stones_data_v55';
+const CURRENT_BUILD_VERSION = '2026.09.14.v57';
+const STORAGE_KEY = 'tut_stones_data_v57';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
 const SERVER_API_ENDPOINT = '/api.php';
 const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.php
 
+// Default Social Links guaranteed available prior to initialization
+const DEFAULT_SOCIAL_LINKS = [
+  { id: 'soc-1', platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://www.instagram.com/tutstones.eg?stkn=cmc3Yn RxaTRmNjlu', active: true },
+  { id: 'soc-2', platform: 'LinkedIn', icon: 'ri-linkedin-fill', url: 'https://linkedin.com/company/tutstones', active: true },
+  { id: 'soc-3', platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://facebook.com/tutstones', active: true },
+  { id: 'soc-4', platform: 'Pinterest', icon: 'ri-pinterest-line', url: 'https://pinterest.com/tutstones', active: true },
+  { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/201104539397', active: true }
+];
+
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)
 (function autoEnforceLatestVersion() {
   try {
-    // Purge cached aboutStats and aboutPage stats from any existing localStorage data key immediately
+    // Purge cached stats and ensure socialLinks are active across any existing localStorage data key immediately
     Object.keys(localStorage).forEach(k => {
       if (k.startsWith('tut_stones_data_')) {
         try {
@@ -28,6 +37,23 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
           if (item && item.aboutPage && item.aboutPage.stats) {
             delete item.aboutPage.stats;
             changed = true;
+          }
+          if (item && (!Array.isArray(item.socialLinks) || item.socialLinks.length === 0)) {
+            item.socialLinks = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_LINKS));
+            changed = true;
+          } else if (item && Array.isArray(item.socialLinks)) {
+            DEFAULT_SOCIAL_LINKS.forEach(defLink => {
+              const match = item.socialLinks.find(l => l.id === defLink.id || (l.platform && l.platform.toLowerCase() === defLink.platform.toLowerCase()));
+              if (!match) {
+                item.socialLinks.push(JSON.parse(JSON.stringify(defLink)));
+                changed = true;
+              } else {
+                match.active = true;
+                if (!match.url) match.url = defLink.url;
+                if (!match.icon) match.icon = defLink.icon;
+                changed = true;
+              }
+            });
           }
           if (changed) {
             localStorage.setItem(k, JSON.stringify(item));
@@ -50,7 +76,7 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
             if (Array.isArray(parsed.imagesData)) {
               parsed.imagesData.forEach(img => {
                 if (img.id === 'img-brand-logo' || (img.url && img.url.includes('tut_stones_logo.png'))) {
-                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v55';
+                  img.url = 'assets/images/TUTSTONES.png?v=20260914_v57';
                 }
               });
             }
@@ -61,7 +87,9 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
               delete parsed.aboutPage.stats;
             }
             if (!Array.isArray(parsed.socialLinks) || parsed.socialLinks.length === 0) {
-              parsed.socialLinks = JSON.parse(JSON.stringify(DEFAULT_DATA.socialLinks));
+              parsed.socialLinks = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_LINKS));
+            } else {
+              parsed.socialLinks.forEach(l => { l.active = true; });
             }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
           } catch(e) {
@@ -663,13 +691,7 @@ const DEFAULT_DATA = {
   ],
 
   // 6. Social Media Links
-  socialLinks: [
-    { id: 'soc-1', platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://www.instagram.com/tutstones.eg?stkn=cmc3Yn RxaTRmNjlu', active: true },
-    { id: 'soc-2', platform: 'LinkedIn', icon: 'ri-linkedin-fill', url: 'https://linkedin.com/company/tutstones', active: true },
-    { id: 'soc-3', platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://facebook.com/tutstones', active: true },
-    { id: 'soc-4', platform: 'Pinterest', icon: 'ri-pinterest-line', url: 'https://pinterest.com/tutstones', active: true },
-    { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/18005558887', active: true }
-  ],
+  socialLinks: JSON.parse(JSON.stringify(DEFAULT_SOCIAL_LINKS)),
 
   // 7. Active Role State (admin = Super Admin / Developer, editor = Content Editor)
   currentRole: 'editor',
