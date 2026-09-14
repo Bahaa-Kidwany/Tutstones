@@ -892,15 +892,15 @@ class Store {
       const localTime = Number(this.data?.lastModified) || 0;
       const serverTime = Number(serverData?.lastModified) || 0;
 
-      // If server data is newer or equal, merge server data into local
-      if (serverTime >= localTime) {
+      // Only overwrite local data if server data is strictly newer
+      if (serverTime > localTime) {
         this.data = { ...this.data, ...serverData };
         if (this.data.homePage && this.data.homePage.aboutStats) {
           delete this.data.homePage.aboutStats;
         }
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
         window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
-      } else {
+      } else if (localTime > serverTime) {
         // Local data is newer than server data: sync server up with local data
         this._pushToServer();
       }
@@ -961,6 +961,10 @@ class Store {
       console.error('Failed to load store from localStorage', e);
       return JSON.parse(JSON.stringify(DEFAULT_DATA));
     }
+  }
+
+  load() {
+    return this.loadData();
   }
 
   save() {

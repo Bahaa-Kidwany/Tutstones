@@ -21,7 +21,9 @@ window.addEventListener('tutstones:server-save-fail', () => {
 
 // When server data loads on admin startup, refresh all form views with server data
 window.addEventListener('tutstones:server-data-ready', () => {
-  refreshAllAdminViews();
+  if (!hasUnsavedChanges && !document.activeElement?.closest('form')) {
+    refreshAllAdminViews();
+  }
 });
 
 
@@ -148,116 +150,22 @@ function restoreDraftStateFromClient() {
 
 function collectAllPageFormsToStoreData() {
   if (document.getElementById('hp-about-tag')) {
-    const formEl = document.getElementById('home-page-form');
-    TutStonesStore.saveHomePage({
-      aboutTag: document.getElementById('hp-about-tag').value,
-      aboutTitle: document.getElementById('hp-about-title').value,
-      aboutDesc1: document.getElementById('hp-about-desc1').value,
-      aboutDesc2: document.getElementById('hp-about-desc2').value,
-      aboutDesc3: document.getElementById('hp-about-desc3').value,
-      aboutExpNumber: document.getElementById('hp-about-exp-num').value,
-      aboutExpText: document.getElementById('hp-about-exp-text').value,
-      boxesTag: document.getElementById('hp-boxes-tag').value,
-      boxesTitle: document.getElementById('hp-boxes-title').value,
-      fieldVisibility: collectFieldVisibility(formEl)
-    });
+    saveHomePageForm(false);
   }
-
   if (document.getElementById('abp-banner-tag')) {
-    const formEl = document.getElementById('about-page-form');
-    TutStonesStore.saveAboutPage({
-      bannerTag: document.getElementById('abp-banner-tag').value,
-      bannerTitle: document.getElementById('abp-banner-title').value,
-      bannerDesc: document.getElementById('abp-banner-desc').value,
-      mainTag: document.getElementById('abp-main-tag').value,
-      mainTitle: document.getElementById('abp-main-title').value,
-      desc1: document.getElementById('abp-desc1').value,
-      desc2: document.getElementById('abp-desc2').value,
-      desc3: document.getElementById('abp-desc3').value,
-      mainImgUrl: document.getElementById('abp-main-img-url').value,
-      expNumber: document.getElementById('abp-exp-num').value,
-      expText: document.getElementById('abp-exp-text').value,
-      bottomTag: document.getElementById('abp-bottom-tag').value,
-      bottomTitle: document.getElementById('abp-bottom-title').value,
-      fieldVisibility: collectFieldVisibility(formEl)
-    });
+    saveAboutPageForm(false);
   }
-
   if (document.getElementById('fac-banner-tag')) {
-    const formEl = document.getElementById('factory-page-form');
-    TutStonesStore.saveFactoryPage({
-      bannerTag: document.getElementById('fac-banner-tag').value,
-      bannerTitle: document.getElementById('fac-banner-title').value,
-      bannerDesc: document.getElementById('fac-banner-desc').value,
-      mainTag: document.getElementById('fac-main-tag').value,
-      mainTitle: document.getElementById('fac-main-title').value,
-      desc1: document.getElementById('fac-desc1').value,
-      desc2: document.getElementById('fac-desc2').value,
-      mainImgUrl: document.getElementById('fac-main-img-url').value,
-      expNumber: document.getElementById('fac-exp-num').value,
-      expText: document.getElementById('fac-exp-text').value,
-      workflowTag: document.getElementById('fac-workflow-tag').value,
-      workflowTitle: document.getElementById('fac-workflow-title').value,
-      fieldVisibility: collectFieldVisibility(formEl)
-    });
+    saveFactoryPageForm(false);
   }
-
   if (document.getElementById('pkg-banner-tag')) {
-    const formEl = document.getElementById('packaging-page-form');
-    TutStonesStore.savePackagingPage({
-      bannerTag: document.getElementById('pkg-banner-tag').value,
-      bannerTitle: document.getElementById('pkg-banner-title').value,
-      bannerDesc: document.getElementById('pkg-banner-desc').value,
-      mainTag: document.getElementById('pkg-main-tag').value,
-      mainTitle: document.getElementById('pkg-main-title').value,
-      desc1: document.getElementById('pkg-desc1').value,
-      desc2: document.getElementById('pkg-desc2').value,
-      mainImgUrl: document.getElementById('pkg-main-img-url').value,
-      expNumber: document.getElementById('pkg-exp-num').value,
-      expText: document.getElementById('pkg-exp-text').value,
-      specsTag: document.getElementById('pkg-specs-tag').value,
-      specsTitle: document.getElementById('pkg-specs-title').value,
-      fieldVisibility: collectFieldVisibility(formEl)
-    });
+    savePackagingPageForm(false);
   }
-
   if (document.getElementById('cnt-banner-tag')) {
-    const formEl = document.getElementById('contact-page-form');
-    TutStonesStore.saveContactPage({
-      bannerTag: document.getElementById('cnt-banner-tag').value,
-      bannerTitle: document.getElementById('cnt-banner-title').value,
-      bannerDesc: document.getElementById('cnt-banner-desc').value,
-      mainTag: document.getElementById('cnt-main-tag').value,
-      mainTitle: document.getElementById('cnt-main-title').value,
-      mainDesc: document.getElementById('cnt-main-desc').value,
-      formTitle: document.getElementById('cnt-form-title').value,
-      formDesc: document.getElementById('cnt-form-desc').value,
-      addressTitle: document.getElementById('cnt-address-title').value,
-      addressText: document.getElementById('cnt-address-text').value,
-      addressMapLink: document.getElementById('cnt-address-map-link').value,
-      emailTitle: document.getElementById('cnt-email-title').value,
-      emailPrimary: document.getElementById('cnt-email-primary').value,
-      emailSecondary: document.getElementById('cnt-email-secondary').value,
-      phoneTitle: document.getElementById('cnt-phone-title').value,
-      phonePrimary: document.getElementById('cnt-phone-primary').value,
-      whatsappNumber: document.getElementById('cnt-whatsapp-num').value,
-      fieldVisibility: collectFieldVisibility(formEl)
-    });
+    saveContactPageForm(false);
   }
-
   if (document.getElementById('ftr-brand-desc')) {
-    const formEl = document.getElementById('tab-footer');
-    TutStonesStore.saveFooterData({
-      brandDesc: document.getElementById('ftr-brand-desc')?.value || '',
-      address: document.getElementById('ftr-address')?.value || '',
-      addressLink: document.getElementById('ftr-address-link')?.value || '',
-      emailPrimary: document.getElementById('ftr-email-primary')?.value || '',
-      emailSecondary: document.getElementById('ftr-email-secondary')?.value || '',
-      phonePrimary: document.getElementById('ftr-phone-primary')?.value || '',
-      whatsappNumber: document.getElementById('ftr-whatsapp-num')?.value || '',
-      hours: document.getElementById('ftr-hours')?.value || '',
-      fieldVisibility: collectFieldVisibility(formEl)
-    });
+    saveFooterForm(false);
   }
 }
 
@@ -755,7 +663,7 @@ function renderHomePageForm() {
 
   renderHpAboutSliderImages();
   renderHpBoxes();
-  initFieldVisibilityControls(document.getElementById('home-page-form'), hp.fieldVisibility);
+  initFieldVisibilityControls(document.getElementById('homepage-form') || document.getElementById('home-page-form'), hp.fieldVisibility);
 }
 
 function renderHpAboutSliderImages() {
@@ -768,10 +676,10 @@ function renderHpAboutSliderImages() {
     <div style="display: flex; gap: 1rem; align-items: center; background: var(--color-bg-surface); padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
       <img id="hp-about-img-prev-${idx}" src="${img.url}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;" onerror="this.src='assets/images/about_craft.png'">
       <div style="flex: 1; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-        <input type="text" id="hp-about-img-url-${idx}" class="form-control" value="${img.url}" placeholder="Image URL..." oninput="document.getElementById('hp-about-img-prev-${idx}').src=this.value" style="flex: 1; min-width: 140px;">
+        <input type="text" id="hp-about-img-url-${idx}" class="form-control" value="${img.url}" placeholder="Image URL..." oninput="document.getElementById('hp-about-img-prev-${idx}').src=this.value; setUnsavedChanges(true);" style="flex: 1; min-width: 140px;">
         <label class="upload-btn-label" style="margin: 0; white-space: nowrap;">
           <i class="ri-upload-cloud-line"></i> Upload
-          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-about-img-url-${idx}', 'hp-about-img-prev-${idx}')" hidden>
+          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-about-img-url-${idx}', 'hp-about-img-prev-${idx}'); setUnsavedChanges(true);" hidden>
         </label>
         <button type="button" class="crop-btn-label" style="margin: 0; white-space: nowrap;" onclick="openImageCropModal('hp-about-img-url-${idx}', 'hp-about-img-prev-${idx}')">
           <i class="ri-crop-2-line"></i> Frame
@@ -787,6 +695,7 @@ function addHpAboutSliderImage() {
   if (!hp.aboutSliderImages) hp.aboutSliderImages = [];
   hp.aboutSliderImages.push({ id: 'h-about-' + Date.now(), url: 'assets/images/Factory/1.jpg' });
   TutStonesStore.saveHomePage(hp);
+  setUnsavedChanges(true);
   renderHpAboutSliderImages();
 }
 
@@ -795,6 +704,7 @@ function removeHpAboutSliderImage(idx) {
   if (hp.aboutSliderImages && hp.aboutSliderImages[idx]) {
     hp.aboutSliderImages.splice(idx, 1);
     TutStonesStore.saveHomePage(hp);
+    setUnsavedChanges(true);
     renderHpAboutSliderImages();
   }
 }
@@ -810,11 +720,11 @@ function renderHpBoxes() {
       <h4 style="color: var(--color-gold-primary); font-size: 1rem; margin-bottom: 0.75rem;">Box #${idx + 1}</h4>
       <div class="form-group">
         <label>Box Title</label>
-        <input type="text" id="hp-box-title-${idx}" class="form-control" value="${box.title}">
+        <input type="text" id="hp-box-title-${idx}" class="form-control" value="${box.title || ''}" oninput="setUnsavedChanges(true)">
       </div>
       <div class="form-group">
         <label>Box Description</label>
-        <textarea id="hp-box-desc-${idx}" class="form-control" rows="3">${box.desc}</textarea>
+        <textarea id="hp-box-desc-${idx}" class="form-control" rows="3" oninput="setUnsavedChanges(true)">${box.desc || ''}</textarea>
       </div>
       <div class="form-group">
         <label>Card Image (Optional)</label>
@@ -824,13 +734,13 @@ function renderHpBoxes() {
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <label class="upload-btn-label">
                 <i class="ri-upload-cloud-line"></i> Upload File
-                <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}')" hidden>
+                <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}'); setUnsavedChanges(true);" hidden>
               </label>
               <button type="button" class="crop-btn-label" onclick="openImageCropModal('hp-box-img-url-${idx}', 'hp-box-img-preview-${idx}', 'hp-box-img-pos-${idx}', 'hp-box-raw-url-${idx}')">
                 <i class="ri-crop-2-line"></i> Crop / Frame View
               </button>
             </div>
-            <input type="text" id="hp-box-img-url-${idx}" class="form-control" value="${box.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('hp-box-img-preview-${idx}', this.value)">
+            <input type="text" id="hp-box-img-url-${idx}" class="form-control" value="${box.image || ''}" placeholder="Image URL (Optional)..." oninput="updateImagePreview('hp-box-img-preview-${idx}', this.value); setUnsavedChanges(true)">
             <input type="hidden" id="hp-box-img-pos-${idx}" value="${box.imagePosition || '50% 10%'}">
             <input type="hidden" id="hp-box-raw-url-${idx}" value="${box.rawImage || box.image || ''}">
           </div>
@@ -839,18 +749,18 @@ function renderHpBoxes() {
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
         <div class="form-group">
           <label>Button Text</label>
-          <input type="text" id="hp-box-btntext-${idx}" class="form-control" value="${box.btnText || 'Explore'}">
+          <input type="text" id="hp-box-btntext-${idx}" class="form-control" value="${box.btnText || 'Explore'}" oninput="setUnsavedChanges(true)">
         </div>
         <div class="form-group">
           <label>Button Link</label>
-          <input type="text" id="hp-box-btnlink-${idx}" class="form-control" value="${box.btnLink || 'factory.html'}">
+          <input type="text" id="hp-box-btnlink-${idx}" class="form-control" value="${box.btnLink || 'factory.html'}" oninput="setUnsavedChanges(true)">
         </div>
       </div>
     </div>
   `).join('');
 }
 
-function saveHomePageForm() {
+function saveHomePageForm(showToastMsg = true) {
   const hp = TutStonesStore.getHomePage();
   
   const aboutSliderImages = [];
@@ -859,39 +769,52 @@ function saveHomePageForm() {
     if (urlElem) aboutSliderImages.push({ id: img.id || `h-about-${idx}`, url: urlElem.value });
   });
 
-  const boxes = (hp.boxes || []).map((box, idx) => ({
-    ...box,
-    title: document.getElementById(`hp-box-title-${idx}`)?.value || box.title,
-    desc: document.getElementById(`hp-box-desc-${idx}`)?.value || box.desc,
-    image: document.getElementById(`hp-box-img-url-${idx}`)?.value || box.image,
-    rawImage: document.getElementById(`hp-box-raw-url-${idx}`)?.value || box.rawImage || box.image,
-    imagePosition: document.getElementById(`hp-box-img-pos-${idx}`)?.value || box.imagePosition || '50% 10%',
-    btnText: document.getElementById(`hp-box-btntext-${idx}`)?.value || box.btnText,
-    btnLink: document.getElementById(`hp-box-btnlink-${idx}`)?.value || box.btnLink
-  }));
+  const boxes = (hp.boxes || []).map((box, idx) => {
+    const titleEl = document.getElementById(`hp-box-title-${idx}`);
+    const descEl = document.getElementById(`hp-box-desc-${idx}`);
+    const imgEl = document.getElementById(`hp-box-img-url-${idx}`);
+    const rawImgEl = document.getElementById(`hp-box-raw-url-${idx}`);
+    const posEl = document.getElementById(`hp-box-img-pos-${idx}`);
+    const btnTextEl = document.getElementById(`hp-box-btntext-${idx}`);
+    const btnLinkEl = document.getElementById(`hp-box-btnlink-${idx}`);
+
+    return {
+      ...box,
+      title: titleEl ? titleEl.value : box.title,
+      desc: descEl ? descEl.value : box.desc,
+      image: imgEl ? imgEl.value : box.image,
+      rawImage: rawImgEl ? rawImgEl.value : (box.rawImage || box.image),
+      imagePosition: posEl ? posEl.value : (box.imagePosition || '50% 10%'),
+      btnText: btnTextEl ? btnTextEl.value : (box.btnText || 'Explore'),
+      btnLink: btnLinkEl ? btnLinkEl.value : (box.btnLink || 'factory.html')
+    };
+  });
+
+  const formEl = document.getElementById('homepage-form') || document.getElementById('home-page-form');
 
   const updatedHp = {
     ...hp,
-    aboutTag: document.getElementById('hp-about-tag')?.value || hp.aboutTag,
-    aboutTitle: document.getElementById('hp-about-title')?.value || hp.aboutTitle,
-    aboutDesc1: document.getElementById('hp-about-desc1')?.value || hp.aboutDesc1,
-    aboutDesc2: document.getElementById('hp-about-desc2')?.value || hp.aboutDesc2,
-    aboutDesc3: document.getElementById('hp-about-desc3')?.value || hp.aboutDesc3,
-    aboutExpNumber: document.getElementById('hp-about-exp-num')?.value || hp.aboutExpNumber,
-    aboutExpText: document.getElementById('hp-about-exp-text')?.value || hp.aboutExpText,
+    aboutTag: document.getElementById('hp-about-tag')?.value ?? hp.aboutTag,
+    aboutTitle: document.getElementById('hp-about-title')?.value ?? hp.aboutTitle,
+    aboutDesc1: document.getElementById('hp-about-desc1')?.value ?? hp.aboutDesc1,
+    aboutDesc2: document.getElementById('hp-about-desc2')?.value ?? hp.aboutDesc2,
+    aboutDesc3: document.getElementById('hp-about-desc3')?.value ?? hp.aboutDesc3,
+    aboutExpNumber: document.getElementById('hp-about-exp-num')?.value ?? hp.aboutExpNumber,
+    aboutExpText: document.getElementById('hp-about-exp-text')?.value ?? hp.aboutExpText,
     aboutSliderImages: aboutSliderImages.length > 0 ? aboutSliderImages : hp.aboutSliderImages,
-    boxesTag: document.getElementById('hp-boxes-tag')?.value || hp.boxesTag,
-    boxesTitle: document.getElementById('hp-boxes-title')?.value || hp.boxesTitle,
+    boxesTag: document.getElementById('hp-boxes-tag')?.value ?? hp.boxesTag,
+    boxesTitle: document.getElementById('hp-boxes-title')?.value ?? hp.boxesTitle,
     boxes: boxes,
-    fieldVisibility: collectFieldVisibility(document.getElementById('home-page-form'))
+    fieldVisibility: collectFieldVisibility(formEl)
   };
 
   const res = TutStonesStore.saveHomePage(updatedHp);
-  if (res !== false) {
+  if (res !== false && showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Homepage settings saved successfully!');
   }
+  return updatedHp;
 }
 
 // --- 9b. About Us Page Manager ---
@@ -959,41 +882,56 @@ function renderAbpCards() {
   `).join('');
 }
 
-function saveAboutPageForm() {
+function saveAboutPageForm(showToastMsg = true) {
   const ab = TutStonesStore.getAboutPage();
 
-  const cards = (ab.bottomCards || []).map((card, idx) => ({
-    ...card,
-    title: document.getElementById(`abp-card-title-${idx}`)?.value || card.title,
-    desc: document.getElementById(`abp-card-desc-${idx}`)?.value || card.desc,
-    image: document.getElementById(`abp-card-img-url-${idx}`)?.value || card.image
-  }));
+  const cards = (ab.bottomCards || []).map((card, idx) => {
+    const titleEl = document.getElementById(`abp-card-title-${idx}`);
+    const descEl = document.getElementById(`abp-card-desc-${idx}`);
+    const imgEl = document.getElementById(`abp-card-img-url-${idx}`);
+    const rawImgEl = document.getElementById(`abp-card-raw-url-${idx}`);
+    const posEl = document.getElementById(`abp-card-img-pos-${idx}`);
+
+    return {
+      ...card,
+      title: titleEl ? titleEl.value : card.title,
+      desc: descEl ? descEl.value : card.desc,
+      image: imgEl ? imgEl.value : card.image,
+      rawImage: rawImgEl ? rawImgEl.value : (card.rawImage || card.image),
+      imagePosition: posEl ? posEl.value : (card.imagePosition || '50% 10%')
+    };
+  });
+
+  const formEl = document.getElementById('about-page-form');
 
   const updatedAb = {
     ...ab,
-    bannerTag: document.getElementById('abp-banner-tag')?.value || ab.bannerTag,
-    bannerTitle: document.getElementById('abp-banner-title')?.value || ab.bannerTitle,
-    bannerDesc: document.getElementById('abp-banner-desc')?.value || ab.bannerDesc,
-    mainTag: document.getElementById('abp-main-tag')?.value || ab.mainTag,
-    mainTitle: document.getElementById('abp-main-title')?.value || ab.mainTitle,
-    mainImage: document.getElementById('abp-main-img-url')?.value || ab.mainImage,
-    desc1: document.getElementById('abp-desc1')?.value || ab.desc1,
-    desc2: document.getElementById('abp-desc2')?.value || ab.desc2,
-    desc3: document.getElementById('abp-desc3')?.value || ab.desc3,
-    expNumber: document.getElementById('abp-exp-num')?.value || ab.expNumber,
-    expText: document.getElementById('abp-exp-text')?.value || ab.expText,
-    bottomTag: document.getElementById('abp-bottom-tag')?.value || ab.bottomTag,
-    bottomTitle: document.getElementById('abp-bottom-title')?.value || ab.bottomTitle,
+    bannerTag: document.getElementById('abp-banner-tag')?.value ?? ab.bannerTag,
+    bannerTitle: document.getElementById('abp-banner-title')?.value ?? ab.bannerTitle,
+    bannerDesc: document.getElementById('abp-banner-desc')?.value ?? ab.bannerDesc,
+    mainTag: document.getElementById('abp-main-tag')?.value ?? ab.mainTag,
+    mainTitle: document.getElementById('abp-main-title')?.value ?? ab.mainTitle,
+    mainImage: document.getElementById('abp-main-img-url')?.value ?? ab.mainImage,
+    mainImageRaw: document.getElementById('abp-main-raw-url')?.value || ab.mainImageRaw || ab.mainImage,
+    mainImagePosition: document.getElementById('abp-main-img-pos')?.value || ab.mainImagePosition || '50% 10%',
+    desc1: document.getElementById('abp-desc1')?.value ?? ab.desc1,
+    desc2: document.getElementById('abp-desc2')?.value ?? ab.desc2,
+    desc3: document.getElementById('abp-desc3')?.value ?? ab.desc3,
+    expNumber: document.getElementById('abp-exp-num')?.value ?? ab.expNumber,
+    expText: document.getElementById('abp-exp-text')?.value ?? ab.expText,
+    bottomTag: document.getElementById('abp-bottom-tag')?.value ?? ab.bottomTag,
+    bottomTitle: document.getElementById('abp-bottom-title')?.value ?? ab.bottomTitle,
     bottomCards: cards,
-    fieldVisibility: collectFieldVisibility(document.getElementById('about-page-form'))
+    fieldVisibility: collectFieldVisibility(formEl)
   };
 
   const res = TutStonesStore.saveAboutPage(updatedAb);
-  if (res !== false) {
+  if (res !== false && showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('About Us Page settings saved successfully!');
   }
+  return updatedAb;
 }
 
 // --- 9c. Factory Page Manager ---
@@ -1060,40 +998,55 @@ function renderFacCards() {
   `).join('');
 }
 
-function saveFactoryPageForm() {
+function saveFactoryPageForm(showToastMsg = true) {
   const fac = TutStonesStore.getFactoryPage();
 
-  const cards = (fac.cards || []).map((card, idx) => ({
-    ...card,
-    title: document.getElementById(`fac-card-title-${idx}`)?.value || card.title,
-    desc: document.getElementById(`fac-card-desc-${idx}`)?.value || card.desc,
-    image: document.getElementById(`fac-card-img-url-${idx}`)?.value || card.image
-  }));
+  const cards = (fac.cards || []).map((card, idx) => {
+    const titleEl = document.getElementById(`fac-card-title-${idx}`);
+    const descEl = document.getElementById(`fac-card-desc-${idx}`);
+    const imgEl = document.getElementById(`fac-card-img-url-${idx}`);
+    const rawImgEl = document.getElementById(`fac-card-raw-url-${idx}`);
+    const posEl = document.getElementById(`fac-card-img-pos-${idx}`);
+
+    return {
+      ...card,
+      title: titleEl ? titleEl.value : card.title,
+      desc: descEl ? descEl.value : card.desc,
+      image: imgEl ? imgEl.value : card.image,
+      rawImage: rawImgEl ? rawImgEl.value : (card.rawImage || card.image),
+      imagePosition: posEl ? posEl.value : (card.imagePosition || '50% 10%')
+    };
+  });
+
+  const formEl = document.getElementById('factory-page-form');
 
   const updatedFac = {
     ...fac,
-    bannerTag: document.getElementById('fac-banner-tag')?.value || fac.bannerTag,
-    bannerTitle: document.getElementById('fac-banner-title')?.value || fac.bannerTitle,
-    bannerDesc: document.getElementById('fac-banner-desc')?.value || fac.bannerDesc,
-    mainTag: document.getElementById('fac-main-tag')?.value || fac.mainTag,
-    mainTitle: document.getElementById('fac-main-title')?.value || fac.mainTitle,
-    mainImage: document.getElementById('fac-main-img-url')?.value || fac.mainImage,
-    desc1: document.getElementById('fac-desc1')?.value || fac.desc1,
-    desc2: document.getElementById('fac-desc2')?.value || fac.desc2,
-    expNumber: document.getElementById('fac-exp-num')?.value || fac.expNumber,
-    expText: document.getElementById('fac-exp-text')?.value || fac.expText,
-    workflowTag: document.getElementById('fac-workflow-tag')?.value || fac.workflowTag,
-    workflowTitle: document.getElementById('fac-workflow-title')?.value || fac.workflowTitle,
+    bannerTag: document.getElementById('fac-banner-tag')?.value ?? fac.bannerTag,
+    bannerTitle: document.getElementById('fac-banner-title')?.value ?? fac.bannerTitle,
+    bannerDesc: document.getElementById('fac-banner-desc')?.value ?? fac.bannerDesc,
+    mainTag: document.getElementById('fac-main-tag')?.value ?? fac.mainTag,
+    mainTitle: document.getElementById('fac-main-title')?.value ?? fac.mainTitle,
+    mainImage: document.getElementById('fac-main-img-url')?.value ?? fac.mainImage,
+    mainImageRaw: document.getElementById('fac-main-raw-url')?.value || fac.mainImageRaw || fac.mainImage,
+    mainImagePosition: document.getElementById('fac-main-img-pos')?.value || fac.mainImagePosition || '50% 10%',
+    desc1: document.getElementById('fac-desc1')?.value ?? fac.desc1,
+    desc2: document.getElementById('fac-desc2')?.value ?? fac.desc2,
+    expNumber: document.getElementById('fac-exp-num')?.value ?? fac.expNumber,
+    expText: document.getElementById('fac-exp-text')?.value ?? fac.expText,
+    workflowTag: document.getElementById('fac-workflow-tag')?.value ?? fac.workflowTag,
+    workflowTitle: document.getElementById('fac-workflow-title')?.value ?? fac.workflowTitle,
     cards: cards,
-    fieldVisibility: collectFieldVisibility(document.getElementById('factory-page-form'))
+    fieldVisibility: collectFieldVisibility(formEl)
   };
 
   const res = TutStonesStore.saveFactoryPage(updatedFac);
-  if (res !== false) {
+  if (res !== false && showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Factory Page settings saved successfully!');
   }
+  return updatedFac;
 }
 
 // --- 9d. Packaging Page Manager ---
@@ -1160,40 +1113,55 @@ function renderPkgCards() {
   `).join('');
 }
 
-function savePackagingPageForm() {
+function savePackagingPageForm(showToastMsg = true) {
   const pkg = TutStonesStore.getPackagingPage();
 
-  const cards = (pkg.cards || []).map((card, idx) => ({
-    ...card,
-    title: document.getElementById(`pkg-card-title-${idx}`)?.value || card.title,
-    desc: document.getElementById(`pkg-card-desc-${idx}`)?.value || card.desc,
-    image: document.getElementById(`pkg-card-img-url-${idx}`)?.value || card.image
-  }));
+  const cards = (pkg.cards || []).map((card, idx) => {
+    const titleEl = document.getElementById(`pkg-card-title-${idx}`);
+    const descEl = document.getElementById(`pkg-card-desc-${idx}`);
+    const imgEl = document.getElementById(`pkg-card-img-url-${idx}`);
+    const rawImgEl = document.getElementById(`pkg-card-raw-url-${idx}`);
+    const posEl = document.getElementById(`pkg-card-img-pos-${idx}`);
+
+    return {
+      ...card,
+      title: titleEl ? titleEl.value : card.title,
+      desc: descEl ? descEl.value : card.desc,
+      image: imgEl ? imgEl.value : card.image,
+      rawImage: rawImgEl ? rawImgEl.value : (card.rawImage || card.image),
+      imagePosition: posEl ? posEl.value : (card.imagePosition || '50% 10%')
+    };
+  });
+
+  const formEl = document.getElementById('packaging-page-form');
 
   const updatedPkg = {
     ...pkg,
-    bannerTag: document.getElementById('pkg-banner-tag')?.value || pkg.bannerTag,
-    bannerTitle: document.getElementById('pkg-banner-title')?.value || pkg.bannerTitle,
-    bannerDesc: document.getElementById('pkg-banner-desc')?.value || pkg.bannerDesc,
-    mainTag: document.getElementById('pkg-main-tag')?.value || pkg.mainTag,
-    mainTitle: document.getElementById('pkg-main-title')?.value || pkg.mainTitle,
-    mainImage: document.getElementById('pkg-main-img-url')?.value || pkg.mainImage,
-    desc1: document.getElementById('pkg-desc1')?.value || pkg.desc1,
-    desc2: document.getElementById('pkg-desc2')?.value || pkg.desc2,
-    expNumber: document.getElementById('pkg-exp-num')?.value || pkg.expNumber,
-    expText: document.getElementById('pkg-exp-text')?.value || pkg.expText,
-    specsTag: document.getElementById('pkg-specs-tag')?.value || pkg.specsTag,
-    specsTitle: document.getElementById('pkg-specs-title')?.value || pkg.specsTitle,
+    bannerTag: document.getElementById('pkg-banner-tag')?.value ?? pkg.bannerTag,
+    bannerTitle: document.getElementById('pkg-banner-title')?.value ?? pkg.bannerTitle,
+    bannerDesc: document.getElementById('pkg-banner-desc')?.value ?? pkg.bannerDesc,
+    mainTag: document.getElementById('pkg-main-tag')?.value ?? pkg.mainTag,
+    mainTitle: document.getElementById('pkg-main-title')?.value ?? pkg.mainTitle,
+    mainImage: document.getElementById('pkg-main-img-url')?.value ?? pkg.mainImage,
+    mainImageRaw: document.getElementById('pkg-main-raw-url')?.value || pkg.mainImageRaw || pkg.mainImage,
+    mainImagePosition: document.getElementById('pkg-main-img-pos')?.value || pkg.mainImagePosition || '50% 10%',
+    desc1: document.getElementById('pkg-desc1')?.value ?? pkg.desc1,
+    desc2: document.getElementById('pkg-desc2')?.value ?? pkg.desc2,
+    expNumber: document.getElementById('pkg-exp-num')?.value ?? pkg.expNumber,
+    expText: document.getElementById('pkg-exp-text')?.value ?? pkg.expText,
+    specsTag: document.getElementById('pkg-specs-tag')?.value ?? pkg.specsTag,
+    specsTitle: document.getElementById('pkg-specs-title')?.value ?? pkg.specsTitle,
     cards: cards,
-    fieldVisibility: collectFieldVisibility(document.getElementById('packaging-page-form'))
+    fieldVisibility: collectFieldVisibility(formEl)
   };
 
   const res = TutStonesStore.savePackagingPage(updatedPkg);
-  if (res !== false) {
+  if (res !== false && showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Packaging Page settings saved successfully!');
   }
+  return updatedPkg;
 }
 
 // --- 9e. Contact Page Manager ---
@@ -1224,37 +1192,39 @@ function renderContactPageForm() {
   initFieldVisibilityControls(document.getElementById('contact-page-form'), cnt.fieldVisibility);
 }
 
-function saveContactPageForm() {
+function saveContactPageForm(showToastMsg = true) {
   const cnt = TutStonesStore.getContactPage();
+  const formEl = document.getElementById('contact-page-form');
 
   const updatedCnt = {
     ...cnt,
-    bannerTag: document.getElementById('cnt-banner-tag')?.value || cnt.bannerTag,
-    bannerTitle: document.getElementById('cnt-banner-title')?.value || cnt.bannerTitle,
-    bannerDesc: document.getElementById('cnt-banner-desc')?.value || cnt.bannerDesc,
-    mainTag: document.getElementById('cnt-main-tag')?.value || cnt.mainTag,
-    mainTitle: document.getElementById('cnt-main-title')?.value || cnt.mainTitle,
-    mainDesc: document.getElementById('cnt-main-desc')?.value || cnt.mainDesc,
-    formTitle: document.getElementById('cnt-form-title')?.value || cnt.formTitle,
-    formDesc: document.getElementById('cnt-form-desc')?.value || cnt.formDesc,
-    addressTitle: document.getElementById('cnt-address-title')?.value || cnt.addressTitle,
-    addressText: document.getElementById('cnt-address-text')?.value || cnt.addressText,
-    addressMapLink: document.getElementById('cnt-address-map-link')?.value || cnt.addressMapLink,
-    emailTitle: document.getElementById('cnt-email-title')?.value || cnt.emailTitle,
-    emailPrimary: document.getElementById('cnt-email-primary')?.value || cnt.emailPrimary,
-    emailSecondary: document.getElementById('cnt-email-secondary')?.value || cnt.emailSecondary,
-    phoneTitle: document.getElementById('cnt-phone-title')?.value || cnt.phoneTitle,
-    phonePrimary: document.getElementById('cnt-phone-primary')?.value || cnt.phonePrimary,
-    whatsappNumber: document.getElementById('cnt-whatsapp-num')?.value || cnt.whatsappNumber,
-    fieldVisibility: collectFieldVisibility(document.getElementById('contact-page-form'))
+    bannerTag: document.getElementById('cnt-banner-tag')?.value ?? cnt.bannerTag,
+    bannerTitle: document.getElementById('cnt-banner-title')?.value ?? cnt.bannerTitle,
+    bannerDesc: document.getElementById('cnt-banner-desc')?.value ?? cnt.bannerDesc,
+    mainTag: document.getElementById('cnt-main-tag')?.value ?? cnt.mainTag,
+    mainTitle: document.getElementById('cnt-main-title')?.value ?? cnt.mainTitle,
+    mainDesc: document.getElementById('cnt-main-desc')?.value ?? cnt.mainDesc,
+    formTitle: document.getElementById('cnt-form-title')?.value ?? cnt.formTitle,
+    formDesc: document.getElementById('cnt-form-desc')?.value ?? cnt.formDesc,
+    addressTitle: document.getElementById('cnt-address-title')?.value ?? cnt.addressTitle,
+    addressText: document.getElementById('cnt-address-text')?.value ?? cnt.addressText,
+    addressMapLink: document.getElementById('cnt-address-map-link')?.value ?? cnt.addressMapLink,
+    emailTitle: document.getElementById('cnt-email-title')?.value ?? cnt.emailTitle,
+    emailPrimary: document.getElementById('cnt-email-primary')?.value ?? cnt.emailPrimary,
+    emailSecondary: document.getElementById('cnt-email-secondary')?.value ?? cnt.emailSecondary,
+    phoneTitle: document.getElementById('cnt-phone-title')?.value ?? cnt.phoneTitle,
+    phonePrimary: document.getElementById('cnt-phone-primary')?.value ?? cnt.phonePrimary,
+    whatsappNumber: document.getElementById('cnt-whatsapp-num')?.value ?? cnt.whatsappNumber,
+    fieldVisibility: collectFieldVisibility(formEl)
   };
 
   const res = TutStonesStore.saveContactPage(updatedCnt);
-  if (res !== false) {
+  if (res !== false && showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Contact Page settings saved successfully!');
   }
+  return updatedCnt;
 }
 
 // --- 9f. Footer Manager ---
@@ -1272,28 +1242,29 @@ function renderFooterForm() {
   initFieldVisibilityControls(document.getElementById('tab-footer'), ftr.fieldVisibility);
 }
 
-function saveFooterForm() {
+function saveFooterForm(showToastMsg = true) {
   const ftr = TutStonesStore.getFooterData();
 
   const updatedFtr = {
     ...ftr,
-    brandDesc: document.getElementById('ftr-brand-desc')?.value || ftr.brandDesc,
-    address: document.getElementById('ftr-address')?.value || ftr.address,
-    addressLink: document.getElementById('ftr-address-link')?.value || ftr.addressLink,
-    emailPrimary: document.getElementById('ftr-email-primary')?.value || ftr.emailPrimary,
-    emailSecondary: document.getElementById('ftr-email-secondary')?.value || ftr.emailSecondary,
-    phonePrimary: document.getElementById('ftr-phone-primary')?.value || ftr.phonePrimary,
-    whatsappNumber: document.getElementById('ftr-whatsapp-num')?.value || ftr.whatsappNumber,
-    hours: document.getElementById('ftr-hours')?.value || ftr.hours,
+    brandDesc: document.getElementById('ftr-brand-desc')?.value ?? ftr.brandDesc,
+    address: document.getElementById('ftr-address')?.value ?? ftr.address,
+    addressLink: document.getElementById('ftr-address-link')?.value ?? ftr.addressLink,
+    emailPrimary: document.getElementById('ftr-email-primary')?.value ?? ftr.emailPrimary,
+    emailSecondary: document.getElementById('ftr-email-secondary')?.value ?? ftr.emailSecondary,
+    phonePrimary: document.getElementById('ftr-phone-primary')?.value ?? ftr.phonePrimary,
+    whatsappNumber: document.getElementById('ftr-whatsapp-num')?.value ?? ftr.whatsappNumber,
+    hours: document.getElementById('ftr-hours')?.value ?? ftr.hours,
     fieldVisibility: collectFieldVisibility(document.getElementById('tab-footer'))
   };
 
   const res = TutStonesStore.saveFooterData(updatedFtr);
-  if (res !== false) {
+  if (res !== false && showToastMsg) {
     sessionStorage.removeItem('tut_stones_draft_backup');
     setUnsavedChanges(false);
     showToast('Footer settings saved successfully!');
   }
+  return updatedFtr;
 }
 
 /* ==========================================================================
