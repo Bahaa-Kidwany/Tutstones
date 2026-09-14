@@ -522,7 +522,7 @@ function renderFactoryPageContent() {
   }
 
   // Main Section
-  const mainSec = document.querySelector('body[data-page="factory"] section.section-padding:nth-of-type(1)');
+  const mainSec = document.querySelector('body[data-page="factory"] section.section-padding');
   if (mainSec) {
     const imgWrapper = mainSec.querySelector('.about-image-wrapper');
     const img = mainSec.querySelector('.about-image-wrapper img');
@@ -637,7 +637,7 @@ function renderPackagingPageContent() {
   }
 
   // Main Section
-  const mainSec = document.querySelector('body[data-page="packaging"] section.section-padding:nth-of-type(1)');
+  const mainSec = document.querySelector('body[data-page="packaging"] section.section-padding');
   if (mainSec) {
     const imgWrapper = mainSec.querySelector('.about-image-wrapper');
     const img = mainSec.querySelector('.about-image-wrapper img');
