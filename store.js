@@ -854,6 +854,9 @@ const DEFAULT_DATA = {
     mainTag: 'SAFE TRANSPORTATION',
     mainTitle: 'Zero-Damage <span>International Delivery</span>',
     mainImage: 'assets/images/packaging_loading.png',
+    aboutSliderImages: [
+      { id: 'p-about-1', url: 'assets/images/packaging_loading.png' }
+    ],
     desc1: 'At TUT Stones, we take packaging as seriously as stone craftsmanship. Shipping natural stone across ocean waters requires robust outer protection and careful weight distribution inside 20-foot heavy-duty containers.',
     desc2: 'Every bundle of slabs and crate of tiles is reinforced with interior polyethylene foam, corner protectors, and steel lashing straps to ensure your order arrives in flawless condition at your port or warehouse.',
     expNumber: 'ISPM-15',

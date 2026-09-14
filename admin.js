@@ -1127,8 +1127,6 @@ function renderPackagingPageForm() {
 
   if (document.getElementById('pkg-main-tag')) document.getElementById('pkg-main-tag').value = pkg.mainTag || '';
   if (document.getElementById('pkg-main-title')) document.getElementById('pkg-main-title').value = pkg.mainTitle || '';
-  if (document.getElementById('pkg-main-img-url')) document.getElementById('pkg-main-img-url').value = pkg.mainImage || '';
-  if (document.getElementById('pkg-main-img-preview')) document.getElementById('pkg-main-img-preview').src = pkg.mainImage || '';
   if (document.getElementById('pkg-desc1')) document.getElementById('pkg-desc1').value = pkg.desc1 || '';
   if (document.getElementById('pkg-desc2')) document.getElementById('pkg-desc2').value = pkg.desc2 || '';
   if (document.getElementById('pkg-exp-num')) document.getElementById('pkg-exp-num').value = pkg.expNumber || '';
@@ -1138,7 +1136,52 @@ function renderPackagingPageForm() {
   if (document.getElementById('pkg-specs-title')) document.getElementById('pkg-specs-title').value = pkg.specsTitle || '';
 
   renderPkgCards();
+  renderPkgSliderImages();
   initFieldVisibilityControls(document.getElementById('packaging-page-form'), pkg.fieldVisibility);
+}
+
+function renderPkgSliderImages() {
+  const pkg = TutStonesStore.getPackagingPage();
+  const container = document.getElementById('pkg-slider-images-container');
+  if (!container) return;
+
+  const images = pkg.aboutSliderImages || [];
+  container.innerHTML = images.map((img, idx) => `
+    <div style="display: flex; gap: 1rem; align-items: center; background: var(--color-bg-surface); padding: 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
+      <img id="pkg-slider-img-prev-${idx}" src="${img.url}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;" onerror="this.src='assets/images/packaging_loading.png'">
+      <div style="flex: 1; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+        <input type="text" id="pkg-slider-img-url-${idx}" class="form-control" value="${img.url}" placeholder="Image URL..." oninput="document.getElementById('pkg-slider-img-prev-${idx}').src=this.value; setUnsavedChanges(true);" style="flex: 1; min-width: 140px;">
+        <label class="upload-btn-label" style="margin: 0; white-space: nowrap;">
+          <i class="ri-upload-cloud-line"></i> Upload
+          <input type="file" accept="image/*" onchange="handleImageFileUpload(event, 'pkg-slider-img-url-${idx}', 'pkg-slider-img-prev-${idx}'); setUnsavedChanges(true);" hidden>
+        </label>
+        <button type="button" class="btn btn-outline btn-sm" onclick="removePkgSliderImage(${idx})" style="color: #F87171; border-color: rgba(248, 113, 113, 0.2); white-space: nowrap;">
+          <i class="ri-delete-bin-line"></i> Remove
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addPkgSliderImage() {
+  savePackagingPageForm(false, true); // save current unsaved changes
+  const pkg = TutStonesStore.getPackagingPage();
+  if (!pkg.aboutSliderImages) pkg.aboutSliderImages = [];
+  pkg.aboutSliderImages.push({ id: 'p-about-' + Date.now(), url: 'assets/images/packaging_loading.png' });
+  TutStonesStore.savePackagingPage(pkg);
+  renderPkgSliderImages();
+  setUnsavedChanges(true);
+}
+
+function removePkgSliderImage(idx) {
+  savePackagingPageForm(false, true);
+  const pkg = TutStonesStore.getPackagingPage();
+  if (pkg.aboutSliderImages && pkg.aboutSliderImages[idx]) {
+    pkg.aboutSliderImages.splice(idx, 1);
+    TutStonesStore.savePackagingPage(pkg);
+    renderPkgSliderImages();
+    setUnsavedChanges(true);
+  }
 }
 
 function renderPkgCards() {
@@ -1204,6 +1247,12 @@ function savePackagingPageForm(showToastMsg = true, shouldSave = true) {
 
   const formEl = document.getElementById('packaging-page-form');
 
+  const pkgSliderImages = [];
+  (pkg.aboutSliderImages || []).forEach((img, idx) => {
+    const urlElem = document.getElementById(`pkg-slider-img-url-${idx}`);
+    if (urlElem) pkgSliderImages.push({ id: img.id || `p-about-${idx}`, url: urlElem.value });
+  });
+
   const updatedPkg = {
     ...pkg,
     bannerTag: document.getElementById('pkg-banner-tag')?.value ?? pkg.bannerTag,
@@ -1211,9 +1260,7 @@ function savePackagingPageForm(showToastMsg = true, shouldSave = true) {
     bannerDesc: document.getElementById('pkg-banner-desc')?.value ?? pkg.bannerDesc,
     mainTag: document.getElementById('pkg-main-tag')?.value ?? pkg.mainTag,
     mainTitle: document.getElementById('pkg-main-title')?.value ?? pkg.mainTitle,
-    mainImage: document.getElementById('pkg-main-img-url')?.value ?? pkg.mainImage,
-    mainImageRaw: document.getElementById('pkg-main-raw-url')?.value || pkg.mainImageRaw || pkg.mainImage,
-    mainImagePosition: document.getElementById('pkg-main-img-pos')?.value || pkg.mainImagePosition || '50% 10%',
+    aboutSliderImages: pkgSliderImages.length > 0 ? pkgSliderImages : pkg.aboutSliderImages,
     desc1: document.getElementById('pkg-desc1')?.value ?? pkg.desc1,
     desc2: document.getElementById('pkg-desc2')?.value ?? pkg.desc2,
     expNumber: document.getElementById('pkg-exp-num')?.value ?? pkg.expNumber,
