@@ -174,19 +174,21 @@ function renderSocialLinks() {
   const linksToRender = activeLinks.length > 0 ? activeLinks : socialLinks;
   if (!linksToRender || linksToRender.length === 0) return;
 
-  const containers = document.querySelectorAll('.tut-connect-channels, .tut-nav-channels, .footer-social-links, .social-links-container, .nav-social-links');
+  // Ensure no social channels render in top bar
+  document.querySelectorAll('.tut-nav-channels, .nav-social-links').forEach(el => el.remove());
+
+  const containers = document.querySelectorAll('.tut-connect-channels, .footer-social-links, .social-links-container');
   containers.forEach(container => {
     if (container) {
-      const isNav = container.classList.contains('nav-social-links') || container.classList.contains('tut-nav-channels');
       container.style.display = 'inline-flex';
       container.style.alignItems = 'center';
       container.style.flexWrap = 'wrap';
-      container.style.gap = isNav ? '0.45rem' : '0.65rem';
+      container.style.gap = '0.65rem';
       container.style.visibility = 'visible';
       container.style.opacity = '1';
 
-      const size = isNav ? '34px' : '42px';
-      const iconSize = isNav ? 16 : 20;
+      const size = '42px';
+      const iconSize = 20;
 
       container.innerHTML = linksToRender.map(link => {
         const svgCode = getSocialSvg(link.platform, iconSize);
