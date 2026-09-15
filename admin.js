@@ -2475,6 +2475,7 @@ function applyCropAndSave() {
   const tPct = Math.round((relTop / imgHeight) * 100);
   const wPct = Math.round((relWidth / imgWidth) * 100);
   const hPct = Math.round((relHeight / imgHeight) * 100);
+  const cropStateStr = `${lPct}% ${tPct}% ${wPct}% ${hPct}%`;
 
   // Draw crop box selection onto Canvas
   const canvas = document.createElement('canvas');
