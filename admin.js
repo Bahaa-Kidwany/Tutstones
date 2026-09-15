@@ -2477,28 +2477,13 @@ function applyCropAndSave() {
 
   const cropStateStr = `${lPct}% ${tPct}% ${wPct}% ${hPct}%`;
 
-  // Draw crop box selection onto Canvas filling card window completely (Cover fill - zero gaps)
-  const canvas = document.createElement('canvas');
-  const CARD_ASPECT = 1.727;
-  const targetW = 600;
-  const targetH = Math.round(600 / CARD_ASPECT);
-
-  canvas.width = targetW;
-  canvas.height = targetH;
-  const ctx = canvas.getContext('2d');
-
-  // Fill canvas completely with selected image region (cover fill - no gaps or black spaces)
-  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
-
-  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
-
   const targetInput = document.getElementById(activeCropTarget.inputId);
   const targetPreview = document.getElementById(activeCropTarget.previewId);
   const posInput = activeCropTarget.posInputId ? document.getElementById(activeCropTarget.posInputId) : null;
   const rawInput = activeCropTarget.rawInputId ? document.getElementById(activeCropTarget.rawInputId) : null;
 
   if (targetInput) {
-    targetInput.value = croppedDataUrl;
+    targetInput.value = activeCropTarget.rawUrl;
     targetInput.dataset.rawUrl = activeCropTarget.rawUrl;
   }
   if (posInput) {
@@ -2509,8 +2494,9 @@ function applyCropAndSave() {
   }
 
   if (targetPreview) {
-    targetPreview.src = croppedDataUrl;
+    targetPreview.src = activeCropTarget.rawUrl;
     targetPreview.style.objectFit = 'cover';
+    targetPreview.style.objectPosition = `${lPct}% ${tPct}%`;
     targetPreview.style.display = 'block';
   }
 
