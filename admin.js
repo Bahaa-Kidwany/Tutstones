@@ -709,12 +709,17 @@ function addHpAboutSliderImage() {
 }
 
 function removeHpAboutSliderImage(idx) {
+  saveHomePageForm(false, true);
   const hp = TutStonesStore.getHomePage();
   if (hp.aboutSliderImages && hp.aboutSliderImages[idx]) {
+    const imgToRemove = hp.aboutSliderImages[idx];
+    if (imgToRemove.rawImage) deleteServerImage(imgToRemove.rawImage);
+    if (imgToRemove.url) deleteServerImage(imgToRemove.url);
+
     hp.aboutSliderImages.splice(idx, 1);
     TutStonesStore.saveHomePage(hp);
-    setUnsavedChanges(true);
     renderHpAboutSliderImages();
+    setUnsavedChanges(true);
   }
 }
 
@@ -1024,6 +1029,10 @@ function removeFacSliderImage(idx) {
   saveFactoryPageForm(false, true);
   const fac = TutStonesStore.getFactoryPage();
   if (fac.aboutSliderImages && fac.aboutSliderImages[idx]) {
+    const imgToRemove = fac.aboutSliderImages[idx];
+    if (imgToRemove.rawImage) deleteServerImage(imgToRemove.rawImage);
+    if (imgToRemove.url) deleteServerImage(imgToRemove.url);
+
     fac.aboutSliderImages.splice(idx, 1);
     TutStonesStore.saveFactoryPage(fac);
     renderFacSliderImages();
@@ -1205,6 +1214,10 @@ function removePkgSliderImage(idx) {
   savePackagingPageForm(false, true);
   const pkg = TutStonesStore.getPackagingPage();
   if (pkg.aboutSliderImages && pkg.aboutSliderImages[idx]) {
+    const imgToRemove = pkg.aboutSliderImages[idx];
+    if (imgToRemove.rawImage) deleteServerImage(imgToRemove.rawImage);
+    if (imgToRemove.url) deleteServerImage(imgToRemove.url);
+
     pkg.aboutSliderImages.splice(idx, 1);
     TutStonesStore.savePackagingPage(pkg);
     renderPkgSliderImages();
@@ -1581,80 +1594,68 @@ function updateImagePreview(previewImgId, value) {
   }
 }
 
+function deleteServerImage(url) {
+  if (!url || !url.startsWith('assets/images/uploads/')) return;
+  fetch('upload.php', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Api-Key': 'tutstones_api_key_2026'
+    },
+    body: JSON.stringify({ url: url })
+  }).catch(e => console.error('Failed to delete old image on server', e));
+}
+
 function handleImageFileUpload(event, targetInputId, previewImgId) {
   const file = event.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const rawDataUrl = e.target.result;
-    
-    // Auto-compress image using HTML5 Canvas to prevent browser localStorage quota overflow
-    const img = new Image();
-    img.onload = function() {
-      const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 600;
-      const MAX_HEIGHT = 600;
-      let width = img.width;
-      let height = img.height;
+  const inputElem = document.getElementById(targetInputId);
+  const oldUrl = inputElem ? inputElem.value : null;
 
-      if (width > height) {
-        if (width > MAX_WIDTH) {
-          height = Math.round((height * MAX_WIDTH) / width);
-          width = MAX_WIDTH;
-        }
-      } else {
-        if (height > MAX_HEIGHT) {
-          width = Math.round((width * MAX_HEIGHT) / height);
-          height = MAX_HEIGHT;
-        }
-      }
+  showToast('Uploading image to server...', 'info');
 
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
+  const formData = new FormData();
+  formData.append('image', file);
 
-      // Compress to lightweight JPEG Data URL (quality: 0.5) to prevent localStorage quota issues
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
+  fetch('upload.php', {
+    method: 'POST',
+    headers: {
+      'X-Api-Key': 'tutstones_api_key_2026'
+    },
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success && data.url) {
+      if (oldUrl) deleteServerImage(oldUrl);
 
-      const inputElem = document.getElementById(targetInputId);
+      const uploadedUrl = data.url;
       if (inputElem) {
-        inputElem.value = compressedDataUrl;
-        inputElem.dataset.rawUrl = compressedDataUrl;
+        inputElem.value = uploadedUrl;
+        inputElem.dataset.rawUrl = uploadedUrl;
       }
-
       const rawInputId = targetInputId.replace('img-url', 'raw-url');
       const rawInputElem = document.getElementById(rawInputId);
-      if (rawInputElem) rawInputElem.value = compressedDataUrl;
-      
+      if (rawInputElem) rawInputElem.value = uploadedUrl;
+
       if (previewImgId) {
         const imgElem = document.getElementById(previewImgId);
         if (imgElem) {
-          imgElem.src = compressedDataUrl;
+          imgElem.src = uploadedUrl;
           imgElem.style.display = 'block';
         }
       }
-      showToast('Image uploaded and optimized successfully!');
-    };
-
-    img.onerror = function() {
-      // Fallback if image object fails
-      const inputElem = document.getElementById(targetInputId);
-      if (inputElem) inputElem.value = rawDataUrl;
-      if (previewImgId) {
-        const imgElem = document.getElementById(previewImgId);
-        if (imgElem) {
-          imgElem.src = rawDataUrl;
-          imgElem.style.display = 'block';
-        }
-      }
-      showToast('Image uploaded successfully!');
-    };
-
-    img.src = rawDataUrl;
-  };
-  reader.readAsDataURL(file);
+      setUnsavedChanges(true);
+      showToast('Image uploaded successfully to server!');
+    } else {
+      showToast('Upload failed: ' + (data.message || 'Unknown error'), 'error');
+    }
+  })
+  .catch(err => {
+    console.error('Upload Error:', err);
+    showToast('Failed to upload image to server.', 'error');
+  });
 }
 
 /* ==========================================================================
@@ -2475,7 +2476,21 @@ function applyCropAndSave() {
   const wPct = Math.round((relWidth / imgWidth) * 100);
   const hPct = Math.round((relHeight / imgHeight) * 100);
 
-  const cropStateStr = `${lPct}% ${tPct}% ${wPct}% ${hPct}%`;
+  // Draw crop box selection onto Canvas
+  const canvas = document.createElement('canvas');
+  // Dynamic scaling based on selected crop area, capping at 600px to keep file size tiny
+  const targetW = Math.min(sw, 600);
+  const targetH = Math.round(targetW * (sh / sw));
+
+  canvas.width = targetW;
+  canvas.height = targetH;
+  const ctx = canvas.getContext('2d');
+
+  // Fill canvas completely with selected image region
+  ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
+
+  // Compress heavily to avoid localStorage quota
+  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
 
   const targetInput = document.getElementById(activeCropTarget.inputId);
   const targetPreview = document.getElementById(activeCropTarget.previewId);
@@ -2483,7 +2498,7 @@ function applyCropAndSave() {
   const rawInput = activeCropTarget.rawInputId ? document.getElementById(activeCropTarget.rawInputId) : null;
 
   if (targetInput) {
-    targetInput.value = activeCropTarget.rawUrl;
+    targetInput.value = croppedDataUrl;
     targetInput.dataset.rawUrl = activeCropTarget.rawUrl;
   }
   if (posInput) {
@@ -2494,9 +2509,9 @@ function applyCropAndSave() {
   }
 
   if (targetPreview) {
-    targetPreview.src = activeCropTarget.rawUrl;
+    targetPreview.src = croppedDataUrl;
     targetPreview.style.objectFit = 'cover';
-    targetPreview.style.objectPosition = `${lPct}% ${tPct}%`;
+    targetPreview.style.objectPosition = '50% 50%';
     targetPreview.style.display = 'block';
   }
 
