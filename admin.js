@@ -2479,9 +2479,10 @@ function applyCropAndSave() {
 
   // Draw crop box selection onto Canvas
   const canvas = document.createElement('canvas');
-  // Dynamic scaling based on selected crop area, capping at 600px to keep file size tiny
-  const targetW = Math.min(sw, 600);
-  const targetH = Math.round(targetW * (sh / sw));
+  
+  // Use original resolution of the crop region (no downscaling!)
+  const targetW = sw;
+  const targetH = sh;
 
   canvas.width = targetW;
   canvas.height = targetH;
@@ -2490,35 +2491,69 @@ function applyCropAndSave() {
   // Fill canvas completely with selected image region
   ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
 
-  // Compress heavily to avoid localStorage quota
-  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+  showToast('Cropping and uploading high-res image...', 'info');
 
-  const targetInput = document.getElementById(activeCropTarget.inputId);
-  const targetPreview = document.getElementById(activeCropTarget.previewId);
-  const posInput = activeCropTarget.posInputId ? document.getElementById(activeCropTarget.posInputId) : null;
-  const rawInput = activeCropTarget.rawInputId ? document.getElementById(activeCropTarget.rawInputId) : null;
+  canvas.toBlob((blob) => {
+    if (!blob) {
+      showToast('Failed to process cropped image.', 'error');
+      return;
+    }
 
-  if (targetInput) {
-    targetInput.value = croppedDataUrl;
-    targetInput.dataset.rawUrl = activeCropTarget.rawUrl;
-  }
-  if (posInput) {
-    posInput.value = cropStateStr;
-  }
-  if (rawInput) {
-    rawInput.value = activeCropTarget.rawUrl;
-  }
+    const formData = new FormData();
+    formData.append('image', blob, 'cropped_image.jpg');
 
-  if (targetPreview) {
-    targetPreview.src = croppedDataUrl;
-    targetPreview.style.objectFit = 'cover';
-    targetPreview.style.objectPosition = '50% 50%';
-    targetPreview.style.display = 'block';
-  }
+    fetch('upload.php', {
+      method: 'POST',
+      headers: {
+        'X-Api-Key': 'tutstones_api_key_2026'
+      },
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.url) {
+        const uploadedUrl = data.url;
+        
+        const targetInput = document.getElementById(activeCropTarget.inputId);
+        const targetPreview = document.getElementById(activeCropTarget.previewId);
+        const posInput = activeCropTarget.posInputId ? document.getElementById(activeCropTarget.posInputId) : null;
+        const rawInput = activeCropTarget.rawInputId ? document.getElementById(activeCropTarget.rawInputId) : null;
 
-  closeAdminModal('image-crop-modal');
-  setUnsavedChanges(true);
-  showToast('Image view framed and saved successfully! Remember to click Save Page.');
+        if (targetInput) {
+          // If we had a previously uploaded cropped image, delete it from server
+          if (targetInput.value && targetInput.value !== activeCropTarget.rawUrl && targetInput.value.startsWith('assets/images/uploads/')) {
+            deleteServerImage(targetInput.value);
+          }
+          targetInput.value = uploadedUrl;
+          targetInput.dataset.rawUrl = activeCropTarget.rawUrl;
+        }
+        if (posInput) {
+          posInput.value = cropStateStr;
+        }
+        if (rawInput) {
+          rawInput.value = activeCropTarget.rawUrl;
+        }
+
+        if (targetPreview) {
+          targetPreview.src = uploadedUrl;
+          targetPreview.style.objectFit = 'cover';
+          targetPreview.style.objectPosition = '50% 50%';
+          targetPreview.style.display = 'block';
+        }
+
+        closeAdminModal('image-crop-modal');
+        setUnsavedChanges(true);
+        showToast('High-res crop saved successfully! Remember to click Save Page.');
+      } else {
+        showToast('Upload failed: ' + (data.message || 'Unknown error'), 'error');
+      }
+    })
+    .catch(err => {
+      console.error('Crop Upload Error:', err);
+      showToast('Failed to upload cropped image to server.', 'error');
+    });
+
+  }, 'image/jpeg', 0.9);
 }
 
 function alignCropWindow(align) {
