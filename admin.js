@@ -1593,8 +1593,8 @@ function handleImageFileUpload(event, targetInputId, previewImgId) {
     const img = new Image();
     img.onload = function() {
       const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 800;
-      const MAX_HEIGHT = 800;
+      const MAX_WIDTH = 600;
+      const MAX_HEIGHT = 600;
       let width = img.width;
       let height = img.height;
 
@@ -2480,8 +2480,8 @@ function applyCropAndSave() {
   // Draw crop box selection onto Canvas filling card window completely (Cover fill - zero gaps)
   const canvas = document.createElement('canvas');
   const CARD_ASPECT = 1.727;
-  const targetW = 880;
-  const targetH = Math.round(880 / CARD_ASPECT);
+  const targetW = 600;
+  const targetH = Math.round(600 / CARD_ASPECT);
 
   canvas.width = targetW;
   canvas.height = targetH;
@@ -2490,7 +2490,7 @@ function applyCropAndSave() {
   // Fill canvas completely with selected image region (cover fill - no gaps or black spaces)
   ctx.drawImage(cropStageNaturalImg, sx, sy, sw, sh, 0, 0, targetW, targetH);
 
-  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+  const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.5);
 
   const targetInput = document.getElementById(activeCropTarget.inputId);
   const targetPreview = document.getElementById(activeCropTarget.previewId);
@@ -2515,6 +2515,7 @@ function applyCropAndSave() {
   }
 
   closeAdminModal('image-crop-modal');
+  setUnsavedChanges(true);
   showToast('Image view framed and saved successfully! Remember to click Save Page.');
 }
 
