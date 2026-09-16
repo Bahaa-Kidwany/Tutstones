@@ -418,7 +418,12 @@ function renderAboutPageContent() {
     if (mainImg) {
       const imgVis = isFieldVisible(ab, 'abp-main-img-url');
       if (mainImgWrapper) mainImgWrapper.style.display = imgVis ? '' : 'none';
-      if (ab.mainImage) mainImg.src = ab.mainImage;
+      if (ab.mainImage) {
+        const bustUrl = ab.mainImage.includes('about_craft.png') && !ab.mainImage.includes('?v=') 
+          ? ab.mainImage + '?v=20260916_v1' 
+          : ab.mainImage;
+        mainImg.src = bustUrl;
+      }
     }
     if (tag) {
       tag.style.display = isFieldVisible(ab, 'abp-main-tag') ? '' : 'none';

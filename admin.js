@@ -852,6 +852,8 @@ function renderAboutPageForm() {
   if (document.getElementById('abp-main-title')) document.getElementById('abp-main-title').value = ab.mainTitle || '';
   if (document.getElementById('abp-main-img-url')) document.getElementById('abp-main-img-url').value = ab.mainImage || '';
   if (document.getElementById('abp-main-img-preview')) document.getElementById('abp-main-img-preview').src = ab.mainImage || '';
+  if (document.getElementById('abp-main-img-pos')) document.getElementById('abp-main-img-pos').value = ab.mainImagePosition || '50% 10%';
+  if (document.getElementById('abp-main-raw-url')) document.getElementById('abp-main-raw-url').value = ab.mainImageRaw || ab.mainImage || '';
   if (document.getElementById('abp-desc1')) document.getElementById('abp-desc1').value = ab.desc1 || '';
   if (document.getElementById('abp-desc2')) document.getElementById('abp-desc2').value = ab.desc2 || '';
   if (document.getElementById('abp-desc3')) document.getElementById('abp-desc3').value = ab.desc3 || '';
