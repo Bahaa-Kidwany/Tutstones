@@ -17,6 +17,7 @@
  * URLs returned to the browser use serve-image.php as a proxy:
  *   serve-image.php?f=filename.jpg
  *   (serve-image.php reads from tutstones_uploads/ and streams the file)
+ * 
  */
 
 header('Access-Control-Allow-Origin: *');
