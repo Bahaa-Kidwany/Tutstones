@@ -2,11 +2,11 @@
    TUT STONES - Luxury Marble & Granite Catalogue Design System
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;600;700;800&family=Geologica:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 
 :root {
-  --font-heading: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Geologica', system-ui, -apple-system, sans-serif;
 
   /* Color Palette */
   --color-bg-dark: #0B0C0E;
