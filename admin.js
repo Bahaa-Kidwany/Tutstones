@@ -2,6 +2,15 @@
  * TUT STONES - Admin Dashboard Interactivity & Controller Logic
  */
 
+// Listen for global server save events to notify the admin
+window.addEventListener('tutstones:server-save-ok', () => {
+  showToast('Server sync successful! Changes are now live.', 'success');
+});
+window.addEventListener('tutstones:server-save-fail', (e) => {
+  const err = e.detail;
+  alert('CRITICAL ERROR: Failed to save changes to the live server!\n\nMessage: ' + (err.message || 'Unknown network error') + '\n\nYour changes were only saved locally on this PC.');
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   initAuthSession();
   initTabNavigation();
