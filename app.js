@@ -426,12 +426,10 @@ function renderAboutPageContent() {
       }
     }
     if (tag) {
-      tag.style.display = isFieldVisible(ab, 'abp-main-tag') ? '' : 'none';
-      if (ab.mainTag) tag.innerText = ab.mainTag;
+      tag.style.display = 'none';
     }
     if (title) {
-      title.style.display = isFieldVisible(ab, 'abp-main-title') ? '' : 'none';
-      if (ab.mainTitle) title.innerHTML = ab.mainTitle;
+      title.style.display = 'none';
     }
 
     if (pContainer) {
