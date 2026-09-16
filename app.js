@@ -299,19 +299,8 @@ function renderHomePageContent() {
       if (hp.aboutTitle) titleElem.innerHTML = hp.aboutTitle;
     }
 
-    const expNumVis = isFieldVisible(hp, 'hp-about-exp-num');
-    const expTextVis = isFieldVisible(hp, 'hp-about-exp-text');
-    if (expNumElem) {
-      expNumElem.style.display = expNumVis ? '' : 'none';
-      if (hp.aboutExpNumber) expNumElem.innerText = hp.aboutExpNumber;
-    }
-    if (expTextElem) {
-      expTextElem.style.display = expTextVis ? '' : 'none';
-      if (hp.aboutExpText) expTextElem.innerHTML = hp.aboutExpText;
-    }
-    if (expCard) {
-      expCard.style.display = (!expNumVis && !expTextVis) ? 'none' : '';
-    }
+    const expBadge = aboutSection.querySelector('.experience-badge, .exp-badge, .about-exp-card, .about-experience');
+    if (expBadge) expBadge.remove();
 
     if (pContainer) {
       let pContent = '';

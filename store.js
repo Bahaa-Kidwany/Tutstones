@@ -734,8 +734,6 @@ const DEFAULT_DATA = {
     aboutDesc1: "Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.",
     aboutDesc2: "At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
     aboutDesc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.",
-    aboutExpNumber: '24+',
-    aboutExpText: 'Years Exporting<br>Egyptian Natural Stone',
     aboutSliderImages: [
       { id: 'h-about-1', url: 'assets/images/Factory/1.jpg' },
       { id: 'h-about-2', url: 'assets/images/Factory/2.JPG' }
