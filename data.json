@@ -518,7 +518,7 @@
     "phoneSecondaryVisible": true,
     "email": "info@tutstones.com",
     "emailVisible": true,
-    "emailSecondary": "sales@tutstones.com",
+    "emailSecondary": "info@tutstones.com",
     "emailSecondaryVisible": true,
     "address": "D461 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.",
     "addressLink": "https://maps.app.goo.gl/aJqNQiZidc59BU3h7",
@@ -895,7 +895,7 @@
     "addressMapLink": "https://maps.app.goo.gl/aJqNQiZidc59BU3h7",
     "emailTitle": "Email Inquiries",
     "emailPrimary": "info@tutstones.com",
-    "emailSecondary": "sales@tutstones.com",
+    "emailSecondary": "info@tutstones.com",
     "phoneTitle": "Phone",
     "phonePrimary": "+201104539397",
     "whatsappNumber": "+201104539397"
@@ -905,7 +905,7 @@
     "address": "D461, Shak El Thoaban, Cairo, Egypt",
     "addressLink": "https://maps.app.goo.gl/aJqNQiZidc59BU3h7",
     "emailPrimary": "info@tutstones.com",
-    "emailSecondary": "sales@tutstones.com",
+    "emailSecondary": "info@tutstones.com",
     "phonePrimary": "+201104539397",
     "whatsappNumber": "+201104539397",
     "hours": "Mon - Sat: 8:00 AM - 6:00 PM"
