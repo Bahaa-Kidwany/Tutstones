@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.16.v64';
-const STORAGE_KEY = 'tut_stones_data_v64';
+const CURRENT_BUILD_VERSION = '2026.09.16.v65';
+const STORAGE_KEY = 'tut_stones_data_v65';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
@@ -15,9 +15,6 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
 // Default Social Links guaranteed available prior to initialization
 const DEFAULT_SOCIAL_LINKS = [
   { id: 'soc-1', platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://www.instagram.com/tutstones.eg?stkn=cmc3Yn RxaTRmNjlu', active: true },
-  { id: 'soc-2', platform: 'LinkedIn', icon: 'ri-linkedin-fill', url: 'https://linkedin.com/company/tutstones', active: true },
-  { id: 'soc-3', platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://facebook.com/tutstones', active: true },
-  { id: 'soc-4', platform: 'Pinterest', icon: 'ri-pinterest-line', url: 'https://pinterest.com/tutstones', active: true },
   { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/201104539397', active: true }
 ];
 
