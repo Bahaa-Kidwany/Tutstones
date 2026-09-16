@@ -9,7 +9,7 @@ const STORAGE_KEY = 'tut_stones_data_v65';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
-const SERVER_API_ENDPOINT = '/api.php';
+const SERVER_API_ENDPOINT = 'https://www.tutstones.com/api.php';
 const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.php
 
 // Default Social Links guaranteed available prior to initialization
@@ -1491,4 +1491,5 @@ class Store {
 }
 
 window.TutStonesStore = new Store();
+
 

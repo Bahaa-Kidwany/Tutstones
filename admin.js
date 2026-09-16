@@ -1633,7 +1633,7 @@ function updateImagePreview(previewImgId, value) {
 
 function deleteServerImage(url) {
   if (!url || !url.startsWith('assets/images/uploads/')) return;
-  fetch('upload.php', {
+  fetch('https://www.tutstones.com/upload.php', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -1655,7 +1655,7 @@ function handleImageFileUpload(event, targetInputId, previewImgId) {
   const formData = new FormData();
   formData.append('image', file);
 
-  fetch('upload.php', {
+  fetch('https://www.tutstones.com/upload.php', {
     method: 'POST',
     headers: {
       'X-Api-Key': 'tutstones_api_key_2026'
@@ -2513,7 +2513,7 @@ function applyCropAndSave() {
     const formData = new FormData();
     formData.append('image', blob, 'cropped_image.jpg');
 
-    fetch('upload.php', {
+    fetch('https://www.tutstones.com/upload.php', {
       method: 'POST',
       headers: {
         'X-Api-Key': 'tutstones_api_key_2026'
@@ -2779,3 +2779,4 @@ function setupCropBoxDragListeners() {
     document.removeEventListener('touchend', onResizeUp);
   }
 }
+
