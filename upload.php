@@ -2,8 +2,21 @@
 /**
  * TUT STONES - Server-Side Image Upload & Delete API
  *
- * POST /upload.php   → Uploads an image file to assets/images/uploads/
- * DELETE /upload.php → Deletes an image file from assets/images/uploads/
+ * POST   /upload.php -> Uploads an image to a persistent folder OUTSIDE the git deploy directory.
+ * DELETE /upload.php -> Deletes an image from the persistent uploads folder.
+ *
+ * WHY OUTSIDE GIT DIRECTORY:
+ *   Hostinger's auto-deploy syncs the git repo to public_html and removes any file
+ *   not tracked in git. By storing uploads one level above public_html (in a
+ *   sibling folder), they survive every git push forever.
+ *
+ * FOLDER STRUCTURE ON HOSTINGER:
+ *   /home/u??????/public_html/          <- git-deployed (this file lives here)
+ *   /home/u??????/tutstones_uploads/    <- persistent uploads (never touched by git)
+ *
+ * URLs returned to the browser use serve-image.php as a proxy:
+ *   serve-image.php?f=filename.jpg
+ *   (serve-image.php reads from tutstones_uploads/ and streams the file)
  */
 
 header('Access-Control-Allow-Origin: *');
@@ -11,9 +24,23 @@ header('Access-Control-Allow-Methods: POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Api-Key');
 header('Content-Type: application/json; charset=utf-8');
 
-$API_KEY = 'tutstones_api_key_2026'; // Must match admin.js and api.php
-$UPLOAD_DIR = __DIR__ . '/assets/images/uploads/';
-$RELATIVE_PATH = 'assets/images/uploads/';
+$API_KEY = 'tutstones_api_key_2026';
+
+// Try sibling-folder strategy first (outside public_html), fall back to local uploads/
+// This ensures the site works both on Hostinger and on local development
+$PERSISTENT_DIR = dirname(__DIR__) . '/tutstones_uploads/';
+$LOCAL_DIR      = __DIR__ . '/assets/images/uploads/';
+
+// Use persistent dir if we can write to it (or create it), otherwise fall back to local
+if (!is_dir($PERSISTENT_DIR)) {
+    @mkdir($PERSISTENT_DIR, 0755, true);
+}
+$USE_PERSISTENT = is_dir($PERSISTENT_DIR) && is_writable($PERSISTENT_DIR);
+$UPLOAD_DIR     = $USE_PERSISTENT ? $PERSISTENT_DIR : $LOCAL_DIR;
+
+// URL prefix that clients use to access the file.
+// serve-image.php proxies persistent files; local files use the direct path.
+$URL_PREFIX = $USE_PERSISTENT ? 'serve-image.php?f=' : 'assets/images/uploads/';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
@@ -41,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $fileTmpPath = $_FILES['image']['tmp_name'];
-    $fileName = $_FILES['image']['name'];
+    $fileTmpPath   = $_FILES['image']['tmp_name'];
+    $fileName      = $_FILES['image']['name'];
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
     $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
@@ -52,18 +79,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Generate unique filename to avoid collisions
     $newFileName = uniqid('img_', true) . '.' . $fileExtension;
-    $destPath = $UPLOAD_DIR . $newFileName;
+    $destPath    = $UPLOAD_DIR . $newFileName;
 
     if (move_uploaded_file($fileTmpPath, $destPath)) {
         echo json_encode([
             'success' => true,
-            'url' => $RELATIVE_PATH . $newFileName
+            'url'     => $URL_PREFIX . $newFileName
         ]);
     } else {
         http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Failed to move uploaded file.']);
+        echo json_encode(['success' => false, 'message' => 'Failed to move uploaded file. Check server permissions for: ' . $UPLOAD_DIR]);
     }
     exit;
 }
@@ -78,27 +104,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     }
 
     $urlToDelete = $data['url'];
-    
-    // Safety check: Only allow deleting files inside our uploads folder
-    if (strpos($urlToDelete, $RELATIVE_PATH) !== 0) {
+    $fileName    = null;
+
+    if (strpos($urlToDelete, 'serve-image.php?f=') !== false) {
+        parse_str(parse_url($urlToDelete, PHP_URL_QUERY), $qs);
+        $fileName = isset($qs['f']) ? basename($qs['f']) : null;
+    } elseif (strpos($urlToDelete, 'assets/images/uploads/') !== false) {
+        $fileName = basename($urlToDelete);
+    }
+
+    if (!$fileName || strpos($fileName, '..') !== false) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Cannot delete files outside of uploads directory.']);
+        echo json_encode(['success' => false, 'message' => 'Invalid file reference.']);
         exit;
     }
 
-    $fileName = basename($urlToDelete);
-    $filePath = $UPLOAD_DIR . $fileName;
-
-    if (file_exists($filePath)) {
-        if (unlink($filePath)) {
-            echo json_encode(['success' => true, 'message' => 'File deleted successfully.']);
-        } else {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Failed to delete file. Check permissions.']);
+    // Try both locations
+    $deleted = false;
+    foreach ([$PERSISTENT_DIR . $fileName, $LOCAL_DIR . $fileName] as $filePath) {
+        if (file_exists($filePath)) {
+            $deleted = @unlink($filePath);
+            break;
         }
-    } else {
-        echo json_encode(['success' => true, 'message' => 'File already deleted or not found.']);
     }
+
+    echo json_encode(['success' => true, 'message' => $deleted ? 'File deleted.' : 'File not found (already deleted).']);
     exit;
 }
 
