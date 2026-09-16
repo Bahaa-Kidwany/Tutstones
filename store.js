@@ -14,8 +14,13 @@ const SERVER_API_KEY = 'tutstones_api_key_2026'; // Must match $API_KEY in api.p
 
 // Default Social Links guaranteed available prior to initialization
 const DEFAULT_SOCIAL_LINKS = [
-  { id: 'soc-1', platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://www.instagram.com/tutstones.eg?stkn=cmc3Yn RxaTRmNjlu', active: true },
-  { id: 'soc-5', platform: 'WhatsApp', icon: 'ri-whatsapp-line', url: 'https://wa.me/201104539397', active: true }
+  { id: 'soc-1', platform: 'Instagram',  icon: 'ri-instagram-line',   url: 'https://www.instagram.com/tutstones.eg?stkn=cmc3Yn RxaTRmNjlu', active: true  },
+  { id: 'soc-5', platform: 'WhatsApp',   icon: 'ri-whatsapp-line',    url: 'https://wa.me/201104539397',                                    active: true  },
+  { id: 'soc-2', platform: 'Facebook',   icon: 'ri-facebook-fill',    url: 'https://facebook.com/tutstones',                                 active: false },
+  { id: 'soc-3', platform: 'LinkedIn',   icon: 'ri-linkedin-fill',    url: 'https://linkedin.com/company/tutstones',                         active: false },
+  { id: 'soc-6', platform: 'YouTube',    icon: 'ri-youtube-fill',     url: 'https://youtube.com/@tutstones',                                 active: false },
+  { id: 'soc-7', platform: 'X (Twitter)',icon: 'ri-twitter-x-fill',   url: 'https://x.com/tutstones',                                        active: false },
+  { id: 'soc-4', platform: 'Pinterest',  icon: 'ri-pinterest-fill',   url: 'https://pinterest.com/tutstones',                                active: false }
 ];
 
 // Automatic Version Verification & Cache Invalidation Engine (Runs before DOM render)

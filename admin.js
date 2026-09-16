@@ -1894,9 +1894,54 @@ function saveParagraphImageForm() {
 }
 
 // --- Social Modal ---
+const SOCIAL_PLATFORMS = [
+  { platform: 'Instagram',   icon: 'ri-instagram-line',  url: 'https://www.instagram.com/',   color: '#E1306C' },
+  { platform: 'WhatsApp',    icon: 'ri-whatsapp-line',   url: 'https://wa.me/',               color: '#25D366' },
+  { platform: 'Facebook',    icon: 'ri-facebook-fill',   url: 'https://facebook.com/',        color: '#1877F2' },
+  { platform: 'LinkedIn',    icon: 'ri-linkedin-fill',   url: 'https://linkedin.com/company/',color: '#0A66C2' },
+  { platform: 'YouTube',     icon: 'ri-youtube-fill',    url: 'https://youtube.com/',         color: '#FF0000' },
+  { platform: 'X (Twitter)', icon: 'ri-twitter-x-fill', url: 'https://x.com/',               color: '#000000' },
+  { platform: 'Pinterest',   icon: 'ri-pinterest-fill',  url: 'https://pinterest.com/',       color: '#E60023' },
+  { platform: 'TikTok',      icon: 'ri-tiktok-fill',     url: 'https://tiktok.com/@',         color: '#010101' },
+];
+
+function renderSocialPlatformPicker(selectedIcon) {
+  const picker = document.getElementById('social-platform-picker');
+  if (!picker) return;
+  picker.innerHTML = SOCIAL_PLATFORMS.map(p => {
+    const isSelected = selectedIcon === p.icon;
+    return `
+      <button type="button"
+        onclick="setSocialPlatform('${p.platform}', '${p.icon}', '${p.url}')"
+        style="display:flex; flex-direction:column; align-items:center; gap:0.3rem; padding:0.6rem 0.4rem;
+               border-radius: var(--radius-md); border: 2px solid ${isSelected ? p.color : 'var(--color-border)'};
+               background: ${isSelected ? `${p.color}22` : 'var(--color-bg-surface)'};
+               cursor:pointer; transition: all 0.18s ease; color: ${isSelected ? p.color : 'var(--color-text-muted)'};"
+        title="${p.platform}">
+        <i class="${p.icon}" style="font-size:1.5rem;"></i>
+        <span style="font-size:0.68rem; font-weight:600;">${p.platform}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function setSocialPlatform(platform, icon, defaultUrl) {
+  document.getElementById('social-platform').value = platform;
+  document.getElementById('social-icon').value = icon;
+  const urlInput = document.getElementById('social-url');
+  // Only pre-fill URL if still at default empty value
+  if (!urlInput.value || urlInput.value === 'https://') urlInput.value = defaultUrl;
+  const preview = document.getElementById('social-icon-preview');
+  const previewName = document.getElementById('social-icon-preview-name');
+  if (preview) { preview.className = icon; }
+  if (previewName) previewName.textContent = icon;
+  renderSocialPlatformPicker(icon); // re-render to highlight selection
+}
+
 function openSocialModal(socialId = null) {
   const modal = document.getElementById('social-modal');
   const links = TutStonesStore.getSocialLinks();
+  let currentIcon = 'ri-share-line';
 
   if (socialId) {
     const link = links.find(l => l.id === socialId);
@@ -1906,6 +1951,7 @@ function openSocialModal(socialId = null) {
     document.getElementById('social-icon').value = link.icon;
     document.getElementById('social-url').value = link.url;
     document.getElementById('social-active').checked = link.active;
+    currentIcon = link.icon;
   } else {
     document.getElementById('social-id').value = '';
     document.getElementById('social-platform').value = '';
@@ -1913,6 +1959,14 @@ function openSocialModal(socialId = null) {
     document.getElementById('social-url').value = 'https://';
     document.getElementById('social-active').checked = true;
   }
+
+  // Update live preview
+  const preview = document.getElementById('social-icon-preview');
+  const previewName = document.getElementById('social-icon-preview-name');
+  if (preview) preview.className = currentIcon;
+  if (previewName) previewName.textContent = currentIcon;
+
+  renderSocialPlatformPicker(currentIcon);
   modal.classList.add('active');
 }
 

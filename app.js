@@ -59,9 +59,16 @@ window.addEventListener('tutstones:server-data-ready', () => {
     try { initAboutSlider(); } catch (e) {}
   } else if (page === 'contact') {
     try { renderContactPageContent(); } catch (e) {}
+  } else if (page === 'catalogue' || page === 'materials') {
+    // Re-render the filter pills and product grid when server data updates
+    // (e.g. a new category was added via admin — it should appear without clicking anything)
+    if (typeof window._refreshCatalogue === 'function') {
+      try { window._refreshCatalogue(); } catch (e) {}
+    }
   }
   try { renderFeaturedSections(); } catch (e) {}
 });
+
 
 function isFieldVisible(obj, fieldId) {
   if (!obj || !obj.fieldVisibility) return true;
@@ -1477,7 +1484,15 @@ function initCatalogue() {
   // Safety retries for slow or async image/script initialization
   setTimeout(() => filterAndRender(false), 200);
   setTimeout(() => filterAndRender(false), 600);
+
+  // Expose a global refresh hook so the server-data-ready event can
+  // re-render filter pills and grid when new categories arrive from the server
+  window._refreshCatalogue = function() {
+    renderFilterPills();
+    filterAndRender(false);
+  };
 }
+
 
 /* ==========================================================================
    6. Specification Modal & Inquiry Handler
