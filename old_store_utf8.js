@@ -1,7 +1,7 @@
-/**
+﻿/**
  * TUT STONES - Central Data Store with localStorage + Server-Side Persistence
- * Save flow: admin edits → localStorage + POST /api.php → data.json
- * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
+ * Save flow: admin edits ΓåÆ localStorage + POST /api.php ΓåÆ data.json
+ * Load flow: GET /api.php (data.json) ΓåÆ localStorage fallback ΓåÆ DEFAULT_DATA
  */
 
 const CURRENT_BUILD_VERSION = '2026.09.16.v65';
@@ -226,7 +226,7 @@ const DEFAULT_DATA = {
       image: 'assets/images/pharaonic_temple_bg.png',
       badge: 'Timeless Beauty',
       title: 'The Beauty of <span>Egyptian Stone:</span>',
-      slogan: 'Egypt is renowned for it’s rich natural stone resources and varieties with elegant colors, unique patterns and exceptional durability.',
+      slogan: 'Egypt is renowned for itΓÇÖs rich natural stone resources and varieties with elegant colors, unique patterns and exceptional durability.',
       btnText: 'Discover Our Factory',
       btnLink: 'factory.html'
     }
@@ -242,7 +242,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Acid Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/1 Acid Finish/Grey Teriesta ( A ).JPG",
@@ -261,7 +261,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Acid Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/1 Acid Finish/Melly Grey ( A ).JPG",
@@ -280,7 +280,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Acid Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/1 Acid Finish/Sunny ( A ).JPG",
@@ -299,7 +299,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Paving Tumbled Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/10 Paving Tumbled Finish/Teriesta.JPG",
@@ -318,7 +318,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Brushed Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/2 Brushed Finish/Gallala ( A ).JPG",
@@ -337,7 +337,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Brushed Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/2 Brushed Finish/Grey Teriesta ( A ).JPG",
@@ -356,7 +356,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Brushed Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/2 Brushed Finish/Teriesta ( A ).JPG",
@@ -375,7 +375,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Tumbled Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/3 Tumbled Finish/Black Teriesta ( A ).JPG",
@@ -394,7 +394,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Tumbled Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/3 Tumbled Finish/Crystal Bronze ( A ).jpg",
@@ -413,7 +413,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Tumbled Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/3 Tumbled Finish/Gallala ( A ).JPG",
@@ -432,7 +432,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Tumbled Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/3 Tumbled Finish/Sunny ( A ).JPG",
@@ -451,7 +451,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Split Face Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/4 Split Face Finish/Split Face ( A ).JPG",
@@ -470,7 +470,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Bush Hummered Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/5 Bush Hummered Finish/Teriesta ( A ).JPG",
@@ -489,7 +489,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Acid Brushed Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/6 Acid Brushed Finish/Sunny ( A ).JPG",
@@ -508,7 +508,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Acid Brushed Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/6 Acid Brushed Finish/Teriesta ( A ).JPG",
@@ -527,7 +527,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Acid Tumbled Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/7 Acid Tumbled Finish/Black Teriesta ( A ).JPG",
@@ -546,7 +546,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Acid Tumbled Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/7 Acid Tumbled Finish/Catrina ( A ).JPG",
@@ -565,7 +565,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Brushed Sand Blasted Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/8 Brushed Sand Blasted Finish/Sunny ( A ).JPG",
@@ -584,7 +584,7 @@ const DEFAULT_DATA = {
         "parentCategory": "marble",
         "origin": "Egypt",
         "finish": "Bush Hummered Brushed Finish",
-        "density": "2.71 g/cm³",
+        "density": "2.71 g/cm┬│",
         "waterAbs": "0.14%",
         "flexural": "15.2 MPa",
         "image": "assets/images/Materials - Marble/9 Bush Hummered Brushed Finish/Teriesta.jpeg",
@@ -602,7 +602,7 @@ const DEFAULT_DATA = {
     tag: 'ABOUT TUT STONES',
     title: 'Delivering The Timeless Beauty of <span>Egyptian Stone</span>',
     desc1: "Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.",
-    desc2: "At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
+    desc2: "At TUT Stones, we understand that natural stone is more than a building materialΓÇöit is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
     desc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.",
     craftImage: 'assets/images/about_craft.png',
     expNumber: '24+',
@@ -615,7 +615,7 @@ const DEFAULT_DATA = {
     emailVisible: true,
     emailSecondary: 'info@tutstones.com',
     emailSecondaryVisible: true,
-    address: 'D461 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
+    address: 'D461 ΓÇô Industrial Zone ΓÇô Shak El Thoaban ΓÇô Tura ΓÇô Maadi ΓÇô Cairo ΓÇô Egypt.',
     addressLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
     addressVisible: true,
     hours: 'Mon - Sat: 8:00 AM - 6:00 PM',
@@ -699,7 +699,7 @@ const DEFAULT_DATA = {
     aboutTag: 'ABOUT TUT STONES',
     aboutTitle: 'Delivering The Timeless Beauty of <span>Egyptian Stone</span>',
     aboutDesc1: "Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.",
-    aboutDesc2: "At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
+    aboutDesc2: "At TUT Stones, we understand that natural stone is more than a building materialΓÇöit is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
     aboutDesc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to packaging and logistics.",
     aboutSliderImages: [
       { id: 'h-about-1', url: 'assets/images/Factory/1.jpg' },
@@ -748,7 +748,7 @@ const DEFAULT_DATA = {
     mainTitle: 'Delivering The Timeless Beauty of <span>Egyptian Stone</span>',
     mainImage: 'assets/images/about_craft.png',
     desc1: "Founded in 2000, TUT Stones is a distinguished Egyptian exporter of premium marble and granite, delivering the timeless beauty of natural stone to clients around the world. Inspired by Egypt's rich geological heritage and renowned craftsmanship, we transform exceptional raw materials into refined products that elevate architectural and interior design projects.",
-    desc2: "At TUT Stones, we understand that natural stone is more than a building material—it is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
+    desc2: "At TUT Stones, we understand that natural stone is more than a building materialΓÇöit is a statement of luxury, character, and lasting value. Our extensive collection of Egyptian marble and granite is designed to meet the highest standards of architects, developers, contractors, wholesalers, and distributors across global markets.",
     desc3: "We believe in building long-term partnerships based on trust, transparency, and professionalism. From material selection to custom cutting, quality control, packaging, and logistics, our experienced team ensures a seamless export experience tailored to your exact specifications.",
     expNumber: '24+',
     expText: 'Years Exporting<br>Egyptian Natural Stone',
@@ -796,8 +796,8 @@ const DEFAULT_DATA = {
     expText: 'Calibrated Precision<br>& Quality Assurance',
     stats: [
       { id: 'fac-stat-1', count: '12+', label: 'Gangsaws & Cutters' },
-      { id: 'fac-stat-2', count: '50,000 m²', label: 'Monthly Capacity' },
-      { id: 'fac-stat-3', count: '± 0.5 mm', label: 'Thickness Accuracy' }
+      { id: 'fac-stat-2', count: '50,000 m┬▓', label: 'Monthly Capacity' },
+      { id: 'fac-stat-3', count: '┬▒ 0.5 mm', label: 'Thickness Accuracy' }
     ],
     workflowTag: 'PRODUCTION WORKFLOW',
     workflowTitle: 'Our Step-by-Step <span>Manufacturing Process</span>',
@@ -849,12 +849,12 @@ const DEFAULT_DATA = {
     bannerTitle: 'Contact <span>TUT Stones</span>',
     bannerDesc: 'Have questions about stone varieties, slab availability, cut-to-size specifications, or container pricing? Our team is ready to assist you.',
     mainTag: 'GLOBAL EXPORT HEADQUARTERS',
-    mainTitle: 'Let’s Build <span>Long-Term Partnerships</span>',
+    mainTitle: 'LetΓÇÖs Build <span>Long-Term Partnerships</span>',
     mainDesc: 'From material selection to packaging and ocean logistics, TUT Stones delivers professional service at every step. Reach out to request a price quotation or stone sample box.',
     formTitle: 'Request Export Quotation',
     formDesc: 'Fill out the form below and our export specialists will respond within 24 business hours.',
     addressTitle: 'Factory Address',
-    addressText: 'D461 – Industrial Zone – Shak El Thoaban – Tura – Maadi – Cairo – Egypt.',
+    addressText: 'D461 ΓÇô Industrial Zone ΓÇô Shak El Thoaban ΓÇô Tura ΓÇô Maadi ΓÇô Cairo ΓÇô Egypt.',
     addressMapLink: 'https://maps.app.goo.gl/aJqNQiZidc59BU3h7',
     emailTitle: 'Email Inquiries',
     emailPrimary: 'info@tutstones.com',
@@ -882,7 +882,7 @@ class Store {
     this.data = this.loadData();
     // Ensure default admin account has requested password tutstones123
     this.ensureDefaultPassword();
-    // Kick off async server load — pages re-render when server data arrives
+    // Kick off async server load ΓÇö pages re-render when server data arrives
     this._serverSaveInFlight = false;
     this.initFromServer();
   }
@@ -912,9 +912,14 @@ class Store {
         if (this.data.aboutPage && this.data.aboutPage.stats) {
           delete this.data.aboutPage.stats;
         }
-      window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
+        window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
+      } else if (localTime > serverTime) {
+        // Local data is newer than server data: sync server up with local data
+        this._pushToServer();
+      }
     } catch (e) {
-      // Server offline or network error — continue with localStorage data
+      // Server offline or network error ΓÇö continue with localStorage data
       console.info('[TutStones] Server API unreachable, using localStorage data.');
     }
   }
@@ -962,7 +967,7 @@ class Store {
         'Content-Type': 'application/json',
         'X-Api-Key': SERVER_API_KEY
       },
-      body: (() => { console.log('TUTSTONES DEBUG: Pushing data payload', this.data.homePage.aboutTitle); return JSON.stringify(this.data); })()
+      body: JSON.stringify(this.data)
     })
     .then(res => res.json())
     .then(json => {

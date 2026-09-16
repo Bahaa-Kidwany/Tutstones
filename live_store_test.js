@@ -962,7 +962,7 @@ class Store {
         'Content-Type': 'application/json',
         'X-Api-Key': SERVER_API_KEY
       },
-      body: (() => { console.log('TUTSTONES DEBUG: Pushing data payload', this.data.homePage.aboutTitle); return JSON.stringify(this.data); })()
+      body: JSON.stringify(this.data)
     })
     .then(res => res.json())
     .then(json => {
