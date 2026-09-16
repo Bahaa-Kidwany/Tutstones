@@ -1,3 +1,7 @@
 *.log
 *.zip
 node_modules/
+
+# Ignore user-uploaded images, but keep the folder structure
+assets/images/uploads/*
+!assets/images/uploads/.gitkeep
