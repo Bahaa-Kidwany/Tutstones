@@ -662,8 +662,6 @@ function renderHomePageForm() {
   if (document.getElementById('hp-about-desc1')) document.getElementById('hp-about-desc1').value = hp.aboutDesc1 || '';
   if (document.getElementById('hp-about-desc2')) document.getElementById('hp-about-desc2').value = hp.aboutDesc2 || '';
   if (document.getElementById('hp-about-desc3')) document.getElementById('hp-about-desc3').value = hp.aboutDesc3 || '';
-  if (document.getElementById('hp-about-exp-num')) document.getElementById('hp-about-exp-num').value = hp.aboutExpNumber || '';
-  if (document.getElementById('hp-about-exp-text')) document.getElementById('hp-about-exp-text').value = hp.aboutExpText || '';
   
   if (document.getElementById('hp-boxes-tag')) document.getElementById('hp-boxes-tag').value = hp.boxesTag || '';
   if (document.getElementById('hp-boxes-title')) document.getElementById('hp-boxes-title').value = hp.boxesTitle || '';
@@ -822,8 +820,6 @@ function saveHomePageForm(showToastMsg = true, shouldSave = true) {
     aboutDesc1: document.getElementById('hp-about-desc1')?.value ?? hp.aboutDesc1,
     aboutDesc2: document.getElementById('hp-about-desc2')?.value ?? hp.aboutDesc2,
     aboutDesc3: document.getElementById('hp-about-desc3')?.value ?? hp.aboutDesc3,
-    aboutExpNumber: document.getElementById('hp-about-exp-num')?.value ?? hp.aboutExpNumber,
-    aboutExpText: document.getElementById('hp-about-exp-text')?.value ?? hp.aboutExpText,
     aboutSliderImages: aboutSliderImages.length > 0 ? aboutSliderImages : hp.aboutSliderImages,
     boxesTag: document.getElementById('hp-boxes-tag')?.value ?? hp.boxesTag,
     boxesTitle: document.getElementById('hp-boxes-title')?.value ?? hp.boxesTitle,
