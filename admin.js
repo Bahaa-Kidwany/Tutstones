@@ -1739,15 +1739,6 @@ function openStoneModal(stoneId = null) {
     document.getElementById('stone-image-edge').value = edgeVal;
     document.getElementById('stone-img-edge-preview').src = edgeVal;
 
-    document.getElementById('stone-origin').value = stone.origin || '';
-    document.getElementById('stone-tag').value = stone.tag || '';
-    document.getElementById('stone-finish').value = stone.finish || '';
-    document.getElementById('stone-density').value = stone.density || '';
-    document.getElementById('stone-water').value = stone.waterAbs || '';
-    document.getElementById('stone-flexural').value = stone.flexural || '';
-    document.getElementById('stone-desc').value = stone.desc || '';
-    document.getElementById('stone-applications').value = stone.applications || '';
-
     initFieldVisibilityControls(modal ? modal.querySelector('.admin-modal-body') : null, stone.fieldVisibility);
   } else {
     title.innerText = "Add New Stone Item";
@@ -1757,15 +1748,6 @@ function openStoneModal(stoneId = null) {
     document.getElementById('stone-img-slab-preview').src = '';
     document.getElementById('stone-image-edge').value = '';
     document.getElementById('stone-img-edge-preview').src = '';
-
-    document.getElementById('stone-origin').value = '';
-    document.getElementById('stone-tag').value = '';
-    document.getElementById('stone-finish').value = 'Polished';
-    document.getElementById('stone-density').value = '2.70 g/cm³';
-    document.getElementById('stone-water').value = '0.15%';
-    document.getElementById('stone-flexural').value = '15.0 MPa';
-    document.getElementById('stone-desc').value = '';
-    document.getElementById('stone-applications').value = '';
 
     initFieldVisibilityControls(modal ? modal.querySelector('.admin-modal-body') : null, {});
   }
@@ -1791,14 +1773,6 @@ function saveStoneForm() {
     image: primaryImage,
     imageSlab: imageSlab,
     imageEdge: imageEdge,
-    origin: document.getElementById('stone-origin').value,
-    tag: document.getElementById('stone-tag').value,
-    finish: document.getElementById('stone-finish').value,
-    density: document.getElementById('stone-density').value,
-    waterAbs: document.getElementById('stone-water').value,
-    flexural: document.getElementById('stone-flexural').value,
-    desc: document.getElementById('stone-desc').value,
-    applications: document.getElementById('stone-applications').value,
     featured: true,
     fieldVisibility: fieldVisibility
   };
