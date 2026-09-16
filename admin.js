@@ -152,7 +152,7 @@ function collectAllPageFormsToStoreData() {
   if (document.getElementById('hp-about-tag')) {
     saveHomePageForm(false, false);
   }
-  if (document.getElementById('abp-banner-tag')) {
+  if (document.getElementById('about-page-form') || document.getElementById('abp-banner-tag')) {
     saveAboutPageForm(false, false);
   }
   if (document.getElementById('fac-banner-tag')) {
@@ -864,6 +864,21 @@ function renderAboutPageForm() {
 
   renderAbpCards();
   initFieldVisibilityControls(document.getElementById('about-page-form'), ab.fieldVisibility);
+
+  const abpForm = document.getElementById('about-page-form');
+  if (abpForm && !abpForm.dataset.listenersBound) {
+    abpForm.dataset.listenersBound = 'true';
+    abpForm.querySelectorAll('input, textarea, select').forEach(input => {
+      input.addEventListener('input', () => {
+        saveAboutPageForm(false, false);
+        setUnsavedChanges(true);
+      });
+      input.addEventListener('change', () => {
+        saveAboutPageForm(false, false);
+        setUnsavedChanges(true);
+      });
+    });
+  }
 }
 
 function renderAbpCards() {
