@@ -535,18 +535,7 @@ function renderStoneCards() {
         <div class="stone-admin-body">
           <div class="stone-admin-header">
             <h3 class="stone-admin-title">${stone.name}</h3>
-            ${isFieldVisible(stone, 'stone-tag') ? `<span class="badge-tag">${stone.tag || catName}</span>` : ''}
           </div>
-          ${isFieldVisible(stone, 'stone-desc') ? `<p class="stone-admin-desc">${stone.desc || 'No description provided.'}</p>` : ''}
-          
-          <table class="card-spec-table" style="margin: 0.5rem 0;">
-            ${isFieldVisible(stone, 'stone-origin') ? `<tr><td>Origin</td><td>${stone.origin || 'N/A'}</td></tr>` : ''}
-            ${isFieldVisible(stone, 'stone-finish') ? `<tr><td>Finishes</td><td>${stone.finish || 'Polished'}</td></tr>` : ''}
-            ${isFieldVisible(stone, 'stone-density') ? `<tr><td>Density</td><td>${stone.density || '2.70 g/cm³'}</td></tr>` : ''}
-            ${isFieldVisible(stone, 'stone-water') ? `<tr><td>Water Abs.</td><td>${stone.waterAbs || '0.15%'}</td></tr>` : ''}
-            ${isFieldVisible(stone, 'stone-flexural') ? `<tr><td>Flexural Str.</td><td>${stone.flexural || '14.8 MPa'}</td></tr>` : ''}
-            ${isFieldVisible(stone, 'stone-applications') ? `<tr><td>Uses</td><td>${stone.applications || 'Flooring, Countertops'}</td></tr>` : ''}
-          </table>
 
           <div class="stone-admin-footer">
             <span style="font-size: 0.75rem; color: var(--color-gold-primary); text-transform: uppercase;">${catName}</span>
