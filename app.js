@@ -640,12 +640,12 @@ function renderPackagingPageContent() {
     }
 
     if (tag) {
-      tag.style.display = isFieldVisible(pkg, 'pkg-main-tag') ? '' : 'none';
-      if (pkg.mainTag) tag.innerText = pkg.mainTag;
+      tag.style.display = isFieldVisible(pkg, 'pkg-specs-tag') ? '' : 'none';
+      if (pkg.specsTag) tag.innerText = pkg.specsTag;
     }
     if (title) {
-      title.style.display = isFieldVisible(pkg, 'pkg-main-title') ? '' : 'none';
-      if (pkg.mainTitle) title.innerHTML = pkg.mainTitle;
+      title.style.display = isFieldVisible(pkg, 'pkg-specs-title') ? '' : 'none';
+      if (pkg.specsTitle) title.innerHTML = pkg.specsTitle;
     }
 
     if (paragraphs && paragraphs.length >= 2) {
@@ -657,32 +657,6 @@ function renderPackagingPageContent() {
     }
   }
 
-  // Specifications Section
-  const specsSec = document.querySelector('body[data-page="packaging"] section.section-padding:nth-of-type(2)');
-  if (specsSec) {
-    const tag = specsSec.querySelector('.section-tag');
-    const title = specsSec.querySelector('.section-title');
-    const grid = specsSec.querySelector('.process-grid');
-
-    if (tag) {
-      tag.style.display = isFieldVisible(pkg, 'pkg-specs-tag') ? '' : 'none';
-      if (pkg.specsTag) tag.innerText = pkg.specsTag;
-    }
-    if (title) {
-      title.style.display = isFieldVisible(pkg, 'pkg-specs-title') ? '' : 'none';
-      if (pkg.specsTitle) title.innerHTML = pkg.specsTitle;
-    }
-
-    if (grid && pkg.cards) {
-      grid.innerHTML = pkg.cards.map(card => `
-        <div class="feature-card">
-          ${card.image ? `<div class="feature-image-wrapper"><img src="${card.image}" alt="${card.title}" style="width: 100%; height: 100%; object-fit: cover !important; object-position: ${card.imagePosition || '50% 10%'} !important;"><div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div></div>` : `<div class="feature-icon"><i class="${card.icon || 'ri-box-3-line'}"></i></div>`}
-          <h3>${card.title}</h3>
-          <p style="color: var(--color-text-muted); font-size: 0.9rem;">${card.desc}</p>
-        </div>
-      `).join('');
-    }
-  }
 }
 
 // --- 2f. Contact Page Dynamic Hydration ---
