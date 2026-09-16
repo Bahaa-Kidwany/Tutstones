@@ -138,32 +138,32 @@
             Fill out the form below and our export specialists will respond within 24 business hours.
           </p>
 
-          <form id="contact-form" class="inquiry-form" onsubmit="event.preventDefault(); alert('Thank you for contacting TUT Stones! Our team will get back to you shortly.');">
+          <form id="contact-form" class="inquiry-form" onsubmit="submitContactForm(event)">
             <div class="form-row-2col">
               <div class="form-group">
                 <label style="color: var(--color-text-muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Your Name *</label>
-                <input type="text" required placeholder="John Doe">
+                <input type="text" name="name" required placeholder="John Doe">
               </div>
               <div class="form-group">
                 <label style="color: var(--color-text-muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Email Address *</label>
-                <input type="email" required placeholder="john@example.com">
+                <input type="email" name="email" required placeholder="john@example.com">
               </div>
             </div>
 
             <div class="form-row-2col" style="margin-top: 0.5rem;">
               <div class="form-group">
                 <label style="color: var(--color-text-muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Phone Number / WhatsApp</label>
-                <input type="tel" placeholder="+1 (555) 000-0000">
+                <input type="tel" name="phone" placeholder="+1 (555) 000-0000">
               </div>
               <div class="form-group">
                 <label style="color: var(--color-text-muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Destination Country</label>
-                <input type="text" placeholder="e.g. USA, UK, Germany">
+                <input type="text" name="country" placeholder="e.g. USA, UK, Germany">
               </div>
             </div>
 
             <div class="form-group" style="margin-top: 0.5rem;">
               <label style="color: var(--color-text-muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Material Interest</label>
-              <select style="width: 100%; padding: 0.75rem 1rem; background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: #FFF; font-size: 0.85rem; outline: none;">
+              <select name="material" style="width: 100%; padding: 0.75rem 1rem; background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: #FFF; font-size: 0.85rem; outline: none;">
                 <option value="all">Egyptian Marble & Granite</option>
                 <option value="marble">Egyptian Marble (Galala, Sunny, Silvia, Sinai Pearl)</option>
                 <option value="granite">Egyptian Granite (Rosa Hudi, Gandolla, Aswan Black)</option>
@@ -173,7 +173,7 @@
 
             <div class="form-group" style="margin-top: 0.5rem;">
               <label style="color: var(--color-text-muted); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Message / Project Details *</label>
-              <textarea rows="4" required placeholder="Please describe required stone types, dimensions, thickness (e.g. 2cm / 3cm), finish, and estimated quantity..."></textarea>
+              <textarea name="message" rows="4" required placeholder="Please describe required stone types, dimensions, thickness (e.g. 2cm / 3cm), finish, and estimated quantity..."></textarea>
             </div>
 
             <button type="submit" class="btn btn-primary" style="margin-top: 1rem; padding: 0.85rem 2rem; font-size: 0.95rem; width: 100%; border: none;">
@@ -251,6 +251,44 @@
 
   <script src="store.js?v=20260914_v61"></script>
   <script src="app.js?v=20260914_v61"></script>
+  
+  <script>
+    async function submitContactForm(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Sending...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('send_mail.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.querySelector('[name="name"]').value,
+            email: form.querySelector('[name="email"]').value,
+            phone: form.querySelector('[name="phone"]').value,
+            country: form.querySelector('[name="country"]').value,
+            material: form.querySelector('[name="material"]').value,
+            message: form.querySelector('[name="message"]').value
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert('Thank you! Your inquiry has been sent successfully.');
+          form.reset();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to send message.'));
+        }
+      } catch (err) {
+        alert('An unexpected error occurred. Please try again later.');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+  </script>
 </body>
 
 </html>
