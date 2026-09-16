@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.14.v61';
-const STORAGE_KEY = 'tut_stones_data_v61';
+const CURRENT_BUILD_VERSION = '2026.09.16.v62';
+const STORAGE_KEY = 'tut_stones_data_v62';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
