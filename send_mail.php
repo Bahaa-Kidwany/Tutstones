@@ -25,7 +25,7 @@ if (!$name || !$email || !$message) {
     exit;
 }
 
-$to = 'sales@tutstones.com';
+$to = 'info@tutstones.com';
 $subject = 'New Export Inquiry from ' . $name;
 
 $emailBody = "You have received a new export inquiry from your website.\n\n";
@@ -39,9 +39,11 @@ $emailBody .= "Message / Project Details:\n$message\n";
 // Use a generic server email for From to avoid spam filters, and use the user's email for Reply-To
 $headers = "From: noreply@tutstones.com\r\n";
 $headers .= "Reply-To: $email\r\n";
+$headers .= "MIME-Version: 1.0\r\n";
+$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
 $headers .= "X-Mailer: PHP/" . phpversion();
 
-if (mail($to, $subject, $emailBody, $headers)) {
+if (mail($to, $subject, $emailBody, $headers, "-fnoreply@tutstones.com")) {
     echo json_encode(['success' => true]);
 } else {
     http_response_code(500);
