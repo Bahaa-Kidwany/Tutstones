@@ -912,12 +912,7 @@ class Store {
         if (this.data.aboutPage && this.data.aboutPage.stats) {
           delete this.data.aboutPage.stats;
         }
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); } catch(e) {}
-        window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
-      } else if (localTime > serverTime) {
-        // Local data is newer than server data: sync server up with local data
-        this._pushToServer();
-      }
+      window.dispatchEvent(new CustomEvent('tutstones:server-data-ready', { detail: this.data }));
     } catch (e) {
       // Server offline or network error — continue with localStorage data
       console.info('[TutStones] Server API unreachable, using localStorage data.');
