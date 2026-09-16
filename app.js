@@ -446,7 +446,8 @@ function renderAboutPageContent() {
   }
 
   // Bottom 3 Cards ("Our Commitments To Global Clients")
-  const bottomSec = document.querySelector('body[data-page="about"] section.section-padding:nth-of-type(2)');
+  const bottomSec = document.querySelector('body[data-page="about"] #about-commitments') || 
+                    document.querySelector('body[data-page="about"] .process-grid')?.closest('section');
   if (bottomSec) {
     const tag = bottomSec.querySelector('.section-tag');
     const title = bottomSec.querySelector('.section-title');
