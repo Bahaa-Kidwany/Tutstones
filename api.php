@@ -27,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // --- GET: Load stored data ---
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $TEMPLATE_FILE = __DIR__ . '/data.template.json';
+    if (!file_exists($DATA_FILE) && file_exists($TEMPLATE_FILE)) {
+        @copy($TEMPLATE_FILE, $DATA_FILE);
+    }
     if (file_exists($DATA_FILE)) {
         echo file_get_contents($DATA_FILE);
     } else {

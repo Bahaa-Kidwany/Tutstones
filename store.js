@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.16.v63';
-const STORAGE_KEY = 'tut_stones_data_v63';
+const CURRENT_BUILD_VERSION = '2026.09.16.v64';
+const STORAGE_KEY = 'tut_stones_data_v64';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
@@ -72,53 +72,23 @@ const DEFAULT_SOCIAL_LINKS = [
 
     const lastBuild = localStorage.getItem('tut_app_build_version');
     if (!lastBuild || lastBuild !== CURRENT_BUILD_VERSION) {
-      // Version changed - preserve existing customized keys
-      const oldKeys = Object.keys(localStorage).filter(k => k.startsWith('tut_stones_data_') && k !== STORAGE_KEY);
-      if (oldKeys.length > 0) {
-        // Copy latest user data to new storage key if not already populated
-        const latestDataRaw = localStorage.getItem(oldKeys[oldKeys.length - 1]);
-        if (latestDataRaw && !localStorage.getItem(STORAGE_KEY)) {
-          try {
-            const parsed = JSON.parse(latestDataRaw);
-            if (parsed.homePage && parsed.homePage.sections) {
-              parsed.homePage.sections.forEach(sec => {
-                if (sec.id === 'about' && sec.stats) {
-                  delete sec.stats;
-                }
-              });
-            }
-            if (parsed.homePage && parsed.homePage.aboutStats) {
-              delete parsed.homePage.aboutStats;
-            }
-            if (parsed.aboutPage && parsed.aboutPage.stats) {
-              delete parsed.aboutPage.stats;
-            }
-            if (!Array.isArray(parsed.socialLinks) || parsed.socialLinks.length === 0) {
-              parsed.socialLinks = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_LINKS));
-            } else {
-              parsed.socialLinks.forEach(l => {
-                if (l.active === undefined) l.active = true;
-              });
-            }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-          } catch(e) {
-            localStorage.setItem(STORAGE_KEY, latestDataRaw);
-          }
+      // Force wipe all old versions on upgrade. Do not migrate!
+      Object.keys(localStorage).forEach(k => {
+        if (k.startsWith('tut_stones_data_')) {
+          localStorage.removeItem(k);
         }
-      }
-
-      // Purge Service Worker / Cache Storage if active
-      if ('caches' in window) {
-        caches.keys().then(names => {
-          names.forEach(name => caches.delete(name));
-        });
-      }
+      });
       localStorage.setItem('tut_app_build_version', CURRENT_BUILD_VERSION);
     }
   } catch (e) {
     console.warn('Auto version enforcement:', e);
   }
 })();
+
+// Extreme Cache Busting: Run a find-and-replace on the document body to catch any cached HTML
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.innerHTML = document.body.innerHTML.replace(/sales@tutstones\.com/g, 'info@tutstones.com');
+});
 
 const DEFAULT_DATA = {
   // 1. Categories
