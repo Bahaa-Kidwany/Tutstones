@@ -985,8 +985,6 @@ function renderFactoryPageForm() {
   if (document.getElementById('fac-banner-title')) document.getElementById('fac-banner-title').value = fac.bannerTitle || '';
   if (document.getElementById('fac-banner-desc')) document.getElementById('fac-banner-desc').value = fac.bannerDesc || '';
 
-  if (document.getElementById('fac-main-tag')) document.getElementById('fac-main-tag').value = fac.mainTag || '';
-  if (document.getElementById('fac-main-title')) document.getElementById('fac-main-title').value = fac.mainTitle || '';
   if (document.getElementById('fac-desc1')) document.getElementById('fac-desc1').value = fac.desc1 || '';
   if (document.getElementById('fac-desc2')) document.getElementById('fac-desc2').value = fac.desc2 || '';
   if (document.getElementById('fac-exp-num')) document.getElementById('fac-exp-num').value = fac.expNumber || '';
@@ -998,6 +996,21 @@ function renderFactoryPageForm() {
   renderFacCards();
   renderFacSliderImages();
   initFieldVisibilityControls(document.getElementById('factory-page-form'), fac.fieldVisibility);
+
+  const facForm = document.getElementById('factory-page-form');
+  if (facForm && !facForm.dataset.listenersBound) {
+    facForm.dataset.listenersBound = 'true';
+    facForm.querySelectorAll('input, textarea, select').forEach(input => {
+      input.addEventListener('input', () => {
+        saveFactoryPageForm(false, false);
+        setUnsavedChanges(true);
+      });
+      input.addEventListener('change', () => {
+        saveFactoryPageForm(false, false);
+        setUnsavedChanges(true);
+      });
+    });
+  }
 }
 
 function renderFacSliderImages() {
@@ -1136,8 +1149,6 @@ function saveFactoryPageForm(showToastMsg = true, shouldSave = true) {
     bannerTag: document.getElementById('fac-banner-tag')?.value ?? fac.bannerTag,
     bannerTitle: document.getElementById('fac-banner-title')?.value ?? fac.bannerTitle,
     bannerDesc: document.getElementById('fac-banner-desc')?.value ?? fac.bannerDesc,
-    mainTag: document.getElementById('fac-main-tag')?.value ?? fac.mainTag,
-    mainTitle: document.getElementById('fac-main-title')?.value ?? fac.mainTitle,
     aboutSliderImages: facSliderImages.length > 0 ? facSliderImages : fac.aboutSliderImages,
     desc1: document.getElementById('fac-desc1')?.value ?? fac.desc1,
     desc2: document.getElementById('fac-desc2')?.value ?? fac.desc2,
