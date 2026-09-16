@@ -892,7 +892,7 @@ const DEFAULT_DATA = {
     emailTitle: 'Email Inquiries',
     emailPrimary: 'info@tutstones.com',
     emailSecondary: 'sales@tutstones.com',
-    phoneTitle: 'Phone & WhatsApp',
+    phoneTitle: 'Phone',
     phonePrimary: '+201104539397',
     whatsappNumber: '+201104539397'
   },
