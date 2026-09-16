@@ -893,19 +893,19 @@ class Store {
    */
   async initFromServer() {
     try {
-      const res = await fetch(SERVER_API_ENDPOINT, { cache: 'no-store' });
+      // Append a timestamp to the URL to aggressively bust iOS Safari caches
+      const cacheBuster = SERVER_API_ENDPOINT.includes('?') ? '&_=' : '?_=';
+      const fetchUrl = SERVER_API_ENDPOINT + cacheBuster + Date.now();
+      
+      const res = await fetch(fetchUrl, { cache: 'no-store' });
       if (!res.ok) return; // 404 = no data.json yet, use localStorage/defaults
       const serverData = await res.json();
       if (!serverData || typeof serverData !== 'object' || Object.keys(serverData).length === 0) return;
       // Reject error-only responses from the API
       if (serverData.error && Object.keys(serverData).length === 1) return;
 
-      const localTime = Number(this.data?.lastModified) || 0;
-      const serverTime = Number(serverData?.lastModified) || 0;
-
-      // Only overwrite local data if server data is strictly newer
-      if (serverTime > localTime) {
-        this.data = { ...this.data, ...serverData };
+      // Always overwrite local data with the live server data
+      this.data = { ...this.data, ...serverData };
         if (this.data.homePage && this.data.homePage.aboutStats) {
           delete this.data.homePage.aboutStats;
         }
@@ -935,89 +935,18 @@ class Store {
     }
   }
 
-  loadData() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return JSON.parse(JSON.stringify(DEFAULT_DATA));
-      const parsed = JSON.parse(raw);
-      if (parsed.homePage && parsed.homePage.aboutStats) {
-        delete parsed.homePage.aboutStats;
-      }
-      if (parsed.aboutPage && parsed.aboutPage.stats) {
-        delete parsed.aboutPage.stats;
-      }
-      
-      const hasSubCats = Array.isArray(parsed.categories) && parsed.categories.some(c => c.parent);
-      const hasValidStones = Array.isArray(parsed.stones) && parsed.stones.length >= 10;
-
-      if (!hasSubCats || !hasValidStones) {
-        parsed.categories = JSON.parse(JSON.stringify(DEFAULT_DATA.categories));
-        parsed.stones = JSON.parse(JSON.stringify(DEFAULT_DATA.stones));
-      } else {
-        // Self-Healing Image Path Reconciler:
-        DEFAULT_DATA.stones.forEach(defStone => {
-          const match = parsed.stones.find(s => s.id === defStone.id);
-          if (match) {
-            if (!match.image || match.image.includes('marble_calacatta')) {
-              match.image = defStone.image;
-            }
-            if (defStone.imageSlab && (!match.imageSlab || match.imageSlab.includes('marble_calacatta'))) {
-              match.imageSlab = defStone.imageSlab;
-            }
-            if (defStone.imageEdge && (!match.imageEdge || match.imageEdge.includes('marble_calacatta'))) {
-              match.imageEdge = defStone.imageEdge;
-            }
-          } else {
-            parsed.stones.push(JSON.parse(JSON.stringify(defStone)));
-          }
-        });
-      }
-
-      // Self-Healing Social Links Reconciler:
-      if (!Array.isArray(parsed.socialLinks) || parsed.socialLinks.length === 0) {
-        parsed.socialLinks = JSON.parse(JSON.stringify(DEFAULT_DATA.socialLinks));
-      } else {
-        DEFAULT_DATA.socialLinks.forEach(defLink => {
-          const match = parsed.socialLinks.find(l => l.id === defLink.id || (l.platform && l.platform.toLowerCase() === defLink.platform.toLowerCase()));
-          if (!match) {
-            parsed.socialLinks.push(JSON.parse(JSON.stringify(defLink)));
-          } else {
-            if (!match.icon) match.icon = defLink.icon;
-            if (!match.url) match.url = defLink.url;
-            if (match.active === undefined) match.active = true;
-          }
-        });
-      }
-
-      return { ...DEFAULT_DATA, ...parsed };
-    } catch (e) {
-      console.error('Failed to load store from localStorage', e);
-      return JSON.parse(JSON.stringify(DEFAULT_DATA));
-    }
-  }
-
-  load() {
+  loadData() { return JSON.parse(JSON.stringify(DEFAULT_DATA)); } load() {
     return this.loadData();
   }
 
   save() {
+    // Update modification timestamp so we know it's fresh
     this.data.lastModified = Date.now();
-    // 1. Save to localStorage immediately (fast, synchronous)
-    let localOk = false;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
-      localOk = true;
-    } catch (e) {
-      console.error('Failed to save to localStorage', e);
-      if (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014) {
-        alert('Warning: Local browser storage limit exceeded! Please use smaller image files or direct image URLs so your changes can be saved permanently.');
-      }
-    }
 
-    // 2. Push to server in the background (async, non-blocking)
+    // Push to server in the background (async, non-blocking)
     this._pushToServer();
 
-    return localOk;
+    return true;
   }
 
   /**
@@ -1057,7 +986,7 @@ class Store {
       if (this._serverSavePending) {
         this._pushToServer();
       }
-      console.info('[TutStones] Server save failed (API unreachable?). Data is in localStorage only.', err);
+      console.info('[TutStones] Server save failed (API unreachable?).', err);
       window.dispatchEvent(new CustomEvent('tutstones:server-save-fail', { detail: { error: err.message } }));
     });
   }
@@ -1567,3 +1496,4 @@ class Store {
 }
 
 window.TutStonesStore = new Store();
+
