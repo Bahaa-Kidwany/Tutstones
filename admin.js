@@ -1194,6 +1194,21 @@ function renderPackagingPageForm() {
   renderPkgCards();
   renderPkgSliderImages();
   initFieldVisibilityControls(document.getElementById('packaging-page-form'), pkg.fieldVisibility);
+
+  const pkgForm = document.getElementById('packaging-page-form');
+  if (pkgForm && !pkgForm.dataset.listenersBound) {
+    pkgForm.dataset.listenersBound = 'true';
+    pkgForm.querySelectorAll('input, textarea, select').forEach(input => {
+      input.addEventListener('input', () => {
+        savePackagingPageForm(false, false);
+        setUnsavedChanges(true);
+      });
+      input.addEventListener('change', () => {
+        savePackagingPageForm(false, false);
+        setUnsavedChanges(true);
+      });
+    });
+  }
 }
 
 function renderPkgSliderImages() {
