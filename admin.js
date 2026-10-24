@@ -481,22 +481,63 @@ function renderStoneCards() {
   const selectedCat = catFilter ? catFilter.value : 'all';
 
   let filtered = stones;
-  if (selectedCat !== 'all') {
-    filtered = filtered.filter(s => s.category === selectedCat);
+  if (selectedCat && selectedCat !== 'all') {
+    const safeSelectedCat = String(selectedCat).toLowerCase();
+
+    // Find target category object (e.g. Marble, Granite, or a specific subcategory)
+    const targetCatObj = categories.find(c => 
+      (c.id && String(c.id).toLowerCase() === safeSelectedCat) || 
+      (c.slug && String(c.slug).toLowerCase() === safeSelectedCat)
+    );
+
+    const validCatIds = new Set();
+    validCatIds.add(safeSelectedCat);
+
+    if (targetCatObj) {
+      if (targetCatObj.id) validCatIds.add(String(targetCatObj.id).toLowerCase());
+      if (targetCatObj.slug) validCatIds.add(String(targetCatObj.slug).toLowerCase());
+
+      // If filtering by a primary parent collection (e.g. 'marble' or 'granite'), include all sub-categories belonging to it
+      categories.filter(c => c.parent === targetCatObj.id || (targetCatObj.slug && c.parent === targetCatObj.slug)).forEach(sub => {
+        if (sub.id) validCatIds.add(String(sub.id).toLowerCase());
+        if (sub.slug) validCatIds.add(String(sub.slug).toLowerCase());
+      });
+    }
+
+    filtered = filtered.filter(s => {
+      const sCat = typeof s.category === 'string' ? s.category.toLowerCase() : (s.category && s.category.id ? String(s.category.id).toLowerCase() : '');
+      const sParent = typeof s.parentCategory === 'string' ? s.parentCategory.toLowerCase() : (s.parentCategory && s.parentCategory.id ? String(s.parentCategory.id).toLowerCase() : '');
+
+      // Also check category parent mapping from store categories
+      const catObj = categories.find(c => (c.id && String(c.id).toLowerCase() === sCat) || (c.slug && String(c.slug).toLowerCase() === sCat));
+      const catParentId = catObj && catObj.parent ? String(catObj.parent).toLowerCase() : '';
+
+      return validCatIds.has(sCat) || (sParent && validCatIds.has(sParent)) || (catParentId && validCatIds.has(catParentId));
+    });
   }
 
   if (query) {
     filtered = filtered.filter(s => 
-      s.name.toLowerCase().includes(query) || 
+      (s.name && s.name.toLowerCase().includes(query)) || 
+      (s.materialName && s.materialName.toLowerCase().includes(query)) ||
       (s.origin && s.origin.toLowerCase().includes(query)) ||
-      (s.tag && s.tag.toLowerCase().includes(query))
+      (s.tag && s.tag.toLowerCase().includes(query)) ||
+      (s.finish && s.finish.toLowerCase().includes(query)) ||
+      (s.desc && s.desc.toLowerCase().includes(query))
     );
+  }
+
+  const countElem = document.getElementById('stone-filter-count');
+  if (countElem) {
+    countElem.innerHTML = `<i class="ri-stack-line"></i> Showing <strong>${filtered.length}</strong> of <strong>${stones.length}</strong> stone items`;
   }
 
   if (filtered.length === 0) {
     cardsGrid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--color-text-muted);">
-        <p>No stones match the selected criteria.</p>
+        <i class="ri-folder-open-line" style="font-size: 2.5rem; color: var(--color-gold-primary); display: block; margin-bottom: 0.75rem;"></i>
+        <h4 style="color: var(--color-text-main); margin-bottom: 0.5rem;">No stones match the selected criteria</h4>
+        <p>Try selecting a different collection or resetting filters.</p>
       </div>
     `;
     return;
@@ -504,7 +545,18 @@ function renderStoneCards() {
 
   cardsGrid.innerHTML = filtered.map(stone => {
     const catObj = categories.find(c => c.id === stone.category || c.slug === stone.category);
-    const catName = catObj ? catObj.name : stone.category.toUpperCase();
+    const parentCatObj = (catObj && catObj.parent) 
+      ? categories.find(p => p.id === catObj.parent || p.slug === catObj.parent) 
+      : (stone.parentCategory ? categories.find(p => p.id === stone.parentCategory || p.slug === stone.parentCategory) : null);
+
+    let catDisplayName = stone.category ? stone.category.toUpperCase() : 'STONE';
+    if (catObj) {
+      if (parentCatObj && parentCatObj.id !== catObj.id) {
+        catDisplayName = `${catObj.name} · ${parentCatObj.name}`;
+      } else {
+        catDisplayName = catObj.name;
+      }
+    }
 
     const hasTwoImages = Boolean(stone.imageSlab && stone.imageEdge && stone.imageSlab !== stone.imageEdge);
     const slabUrl = safeImgSrc(stone.imageSlab || stone.image);
@@ -547,7 +599,7 @@ function renderStoneCards() {
           </div>
 
           <div class="stone-admin-footer">
-            <span style="font-size: 0.75rem; color: var(--color-gold-primary); text-transform: uppercase;">${catName}</span>
+            <span style="font-size: 0.75rem; color: var(--color-gold-primary); font-weight: 600; text-transform: uppercase;">${catDisplayName}</span>
             <div>
               <button class="btn btn-outline btn-sm" onclick="openStoneModal('${stone.id}')"><i class="ri-edit-line"></i> Edit Specs & Images</button>
               <button class="btn btn-danger btn-sm" onclick="deleteStoneConfirm('${stone.id}')"><i class="ri-delete-bin-line"></i></button>
@@ -1589,6 +1641,7 @@ function populateCategoryDropdowns() {
   }
 
   if (catFilter) {
+    const prevFilterVal = catFilter.value;
     let html = '<option value="all">All Categories & Finishes</option>';
     html += `<optgroup label="Primary Collections">`;
     primaryCats.forEach(c => {
@@ -1599,11 +1652,15 @@ function populateCategoryDropdowns() {
     if (subCats.length > 0) {
       html += `<optgroup label="Sub-Categories & Surface Finishes">`;
       subCats.forEach(c => {
-        html += `<option value="${c.id}">${c.name}</option>`;
+        const pObj = primaryCats.find(p => p.id === c.parent || p.slug === c.parent);
+        html += `<option value="${c.id}">${c.name} (${pObj ? pObj.name : 'Sub-Category'})</option>`;
       });
       html += `</optgroup>`;
     }
     catFilter.innerHTML = html;
+    if (prevFilterVal && Array.from(catFilter.options).some(o => o.value === prevFilterVal)) {
+      catFilter.value = prevFilterVal;
+    }
   }
 
   if (catParentSelect) {
@@ -1764,10 +1821,18 @@ function saveStoneForm() {
   const imageSlab = slabImg || null;
   const imageEdge = edgeImg || null;
 
+  const selectedCatId = document.getElementById('stone-category').value;
+  const categories = TutStonesStore.getCategories();
+  const catObj = categories.find(c => c.id === selectedCatId || c.slug === selectedCatId);
+  const parentCategory = (catObj && catObj.parent) 
+    ? catObj.parent 
+    : ((catObj && catObj.isParent) ? catObj.id : (selectedCatId === 'marble' || selectedCatId === 'granite' ? selectedCatId : 'marble'));
+
   const stone = {
     id: document.getElementById('stone-id').value,
     name: document.getElementById('stone-name').value,
-    category: document.getElementById('stone-category').value,
+    category: selectedCatId,
+    parentCategory: parentCategory,
     image: primaryImage,
     imageSlab: imageSlab,
     imageEdge: imageEdge,

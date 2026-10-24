@@ -8,3 +8,6 @@ assets/images/uploads/*
 
 # Ignore dynamic database
 data.json
+
+assets/Recordings/
+*.mp4

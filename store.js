@@ -4,8 +4,8 @@
  * Load flow: GET /api.php (data.json) → localStorage fallback → DEFAULT_DATA
  */
 
-const CURRENT_BUILD_VERSION = '2026.09.16.v65';
-const STORAGE_KEY = 'tut_stones_data_v65';
+const CURRENT_BUILD_VERSION = '2026.10.24.v66';
+const STORAGE_KEY = 'tut_stones_data_v66';
 
 // --- Server-Side API Config ---
 // /api.php works on both Hostinger (PHP) and local server.ps1 (handles the same path)
@@ -599,6 +599,44 @@ const DEFAULT_DATA = {
         "tag": "Bush Hummered Brushed Finish",
         "desc": "Egyptian Teriesta Marble crafted with a premium Bush Hummered Brushed Finish.",
         "applications": "Flooring, Wall Cladding, Paving, Architectural Facades"
+    },
+    {
+        "id": "granite-black-galaxy",
+        "name": "Black Galaxy",
+        "materialName": "Black Galaxy",
+        "category": "granite",
+        "parentCategory": "granite",
+        "origin": "Egypt",
+        "finish": "Polished",
+        "density": "2.95 g/cm³",
+        "waterAbs": "0.04%",
+        "flexural": "22.1 MPa",
+        "image": "assets/images/granite_black_galaxy.png",
+        "imageSlab": "assets/images/granite_black_galaxy.png",
+        "imageEdge": null,
+        "featured": true,
+        "tag": "High Durability",
+        "desc": "Deep obsidian black granite embedded with natural copper and metallic gold bronzite crystals that sparkle like a night sky.",
+        "applications": "Kitchen Countertops, High-Traffic Commercial Flooring"
+    },
+    {
+        "id": "granite-blue-pearl",
+        "name": "Blue Pearl",
+        "materialName": "Blue Pearl",
+        "category": "granite",
+        "parentCategory": "granite",
+        "origin": "Egypt",
+        "finish": "Polished / Leathered",
+        "density": "2.78 g/cm³",
+        "waterAbs": "0.08%",
+        "flexural": "19.4 MPa",
+        "image": "assets/images/granite_blue_pearl.png",
+        "imageSlab": "assets/images/granite_blue_pearl.png",
+        "imageEdge": null,
+        "featured": true,
+        "tag": "Rare Pearlescent",
+        "desc": "Exotic natural granite presenting mesmerizing silvery-blue feldspar reflections with ultra-high scratch resistance.",
+        "applications": "Exterior Facades, Bar Tops, Luxury Flooring"
     }
 ],
 

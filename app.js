@@ -1041,12 +1041,12 @@ function renderFeaturedSections() {
   const graniteContainer = document.getElementById('granite-showcase-grid');
 
   if (marbleContainer) {
-    const marbles = stones.filter(s => s.category === 'marble');
+    const marbles = stones.filter(s => s.category === 'marble' || s.parentCategory === 'marble');
     marbleContainer.innerHTML = marbles.map(createStoneCardHTML).join('');
   }
 
   if (graniteContainer) {
-    const granites = stones.filter(s => s.category === 'granite');
+    const granites = stones.filter(s => s.category === 'granite' || s.parentCategory === 'granite');
     graniteContainer.innerHTML = granites.map(createStoneCardHTML).join('');
   }
 }
