@@ -13,6 +13,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   try { initThemeSwitcher(); } catch (e) { console.error('Error initThemeSwitcher:', e); }
   try { initNavbar(); } catch (e) { console.error('Error initNavbar:', e); }
+  try { renderNavMaterialsDropdown(); } catch (e) { console.error('Error renderNavMaterialsDropdown:', e); }
   try { renderSocialLinks(); } catch (e) { console.error('Error renderSocialLinks:', e); }
   try { renderFooterContent(); } catch (e) { console.error('Error renderFooterContent:', e); }
 
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // This ensures admin edits persisted server-side appear on all pages without a full reload.
 window.addEventListener('tutstones:server-data-ready', () => {
   const page = document.body.dataset.page || 'home';
+  try { renderNavMaterialsDropdown(); } catch (e) {}
   try { renderSocialLinks(); } catch (e) {}
   try { renderFooterContent(); } catch (e) {}
   if (page === 'home') {
@@ -127,15 +129,112 @@ function initNavbar() {
       }
     });
 
-    navMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
+    navMenu.addEventListener('click', (e) => {
+      if (e.target.closest('a')) {
         navMenu.classList.remove('active');
         toggle.classList.remove('active');
         if (toggleIcon) toggleIcon.className = 'ri-menu-line';
-      });
+      }
     });
   }
+  renderNavMaterialsDropdown();
 }
+
+/**
+ * Dynamically populates the "Materials" header dropdown menu across all pages
+ * based on current categories in TutStonesStore.
+ */
+function renderNavMaterialsDropdown() {
+  if (typeof TutStonesStore === 'undefined') return;
+  const dropdownMenus = document.querySelectorAll('.nav-dropdown-menu');
+  if (!dropdownMenus || dropdownMenus.length === 0) return;
+
+  const categories = TutStonesStore.getCategories();
+  if (!Array.isArray(categories) || categories.length === 0) return;
+
+  // Split into Primary collections vs Sub-categories
+  const primaryCats = categories.filter(c => !c.parent || c.isParent);
+  const subCats = categories.filter(c => c.parent);
+
+  // If no primary categories, treat all as top-level
+  let topCats = primaryCats.length > 0 ? [...primaryCats] : [...categories];
+
+  // Include orphan sub-categories whose parent doesn't exist
+  const knownParentIds = new Set(topCats.map(c => (c.id || '').toLowerCase()).concat(topCats.map(c => (c.slug || '').toLowerCase()).filter(Boolean)));
+  subCats.forEach(s => {
+    if (s.parent && !knownParentIds.has(String(s.parent).toLowerCase())) {
+      topCats.push(s);
+    }
+  });
+
+  const html = topCats.map(cat => {
+    const rawName = cat.name || cat.id || 'Category';
+    const cleanName = rawName.replace(/\s+Collection$/i, '');
+    const iconClass = cat.icon || 'ri-vip-diamond-line';
+    const catId = cat.id || cat.slug;
+
+    // Sub-categories belonging to this primary category
+    const children = subCats.filter(s => 
+      (s.parent && String(s.parent).toLowerCase() === String(cat.id).toLowerCase()) || 
+      (cat.slug && s.parent && String(s.parent).toLowerCase() === String(cat.slug).toLowerCase())
+    );
+    const hasSub = children.length > 0;
+
+    if (hasSub) {
+      return `
+        <li class="dropdown-has-submenu">
+          <a href="materials.html?type=${encodeURIComponent(catId)}" class="dropdown-item-parent">
+            <span><i class="${iconClass}"></i> ${cleanName}</span>
+            <i class="ri-arrow-right-s-line submenu-arrow"></i>
+          </a>
+          <ul class="nav-sub-dropdown-menu">
+            <li><a href="materials.html?type=${encodeURIComponent(catId)}"><strong><i class="${iconClass}"></i> All ${cleanName} Materials</strong></a></li>
+            ${children.map(sub => `
+              <li><a href="materials.html?type=${encodeURIComponent(sub.id || sub.slug)}"><i class="${sub.icon || 'ri-contrast-drop-line'}"></i> ${sub.name}</a></li>
+            `).join('')}
+          </ul>
+        </li>
+      `;
+    }
+
+    return `
+      <li>
+        <a href="materials.html?type=${encodeURIComponent(catId)}">
+          <i class="${iconClass}"></i> ${cleanName}
+        </a>
+      </li>
+    `;
+  }).join('');
+
+  dropdownMenus.forEach(menu => {
+    menu.innerHTML = html;
+  });
+
+  // Boundary check on hover for desktop submenus to prevent horizontal overflow
+  document.querySelectorAll('.dropdown-has-submenu').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const sub = item.querySelector('.nav-sub-dropdown-menu');
+      if (!sub) return;
+      sub.style.left = '';
+      sub.style.right = '';
+      sub.style.transform = '';
+      const rect = sub.getBoundingClientRect();
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+      if (rect.right > viewportWidth) {
+        sub.style.left = 'auto';
+        sub.style.right = '100%';
+        sub.style.transform = 'translateX(-8px)';
+      }
+    });
+  });
+}
+
+// Real-time synchronization across browser tabs when categories change in admin
+window.addEventListener('storage', (e) => {
+  if (e.key && e.key.startsWith('tut_stones_data_')) {
+    try { renderNavMaterialsDropdown(); } catch (e) {}
+  }
+});
 
 function getSocialSvg(platform, sz) {
   const size = sz || 20;

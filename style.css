@@ -327,6 +327,134 @@ button {
   padding-left: 1.5rem;
 }
 
+/* Submenu flyout styling for Materials Dropdown */
+.dropdown-has-submenu {
+  position: relative;
+}
+
+.dropdown-has-submenu > a {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.dropdown-has-submenu > a .submenu-arrow {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-has-submenu:hover > a .submenu-arrow {
+  transform: translateX(3px);
+  color: var(--color-gold-primary);
+}
+
+.nav-sub-dropdown-menu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  min-width: 220px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-gold);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0;
+  box-shadow: var(--shadow-heavy);
+  opacity: 0;
+  visibility: hidden;
+  display: none;
+  transform: translateX(10px);
+  transition: all 0.25s ease;
+  list-style: none !important;
+  list-style-type: none !important;
+  z-index: 1110;
+}
+
+.dropdown-has-submenu:hover > .nav-sub-dropdown-menu,
+.dropdown-has-submenu:focus-within > .nav-sub-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  display: block;
+  transform: translateX(0);
+}
+
+.nav-sub-dropdown-menu li {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+.nav-sub-dropdown-menu li a {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nav-sub-dropdown-menu li a:hover,
+.nav-sub-dropdown-menu li a.active {
+  color: var(--color-gold-primary);
+  background: var(--color-gold-muted);
+  padding-left: 1.5rem;
+}
+
+[data-theme="pharaonic"] .nav-sub-dropdown-menu {
+  background: #2D3E55 !important;
+  backdrop-filter: blur(16px) !important;
+  border: 2px solid #DFB77D !important;
+  box-shadow: 0 14px 40px rgba(36, 28, 24, 0.4) !important;
+}
+
+[data-theme="pharaonic"] .nav-sub-dropdown-menu li a {
+  color: #F5E9D8 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="pharaonic"] .nav-sub-dropdown-menu li a:hover {
+  color: #FFFFFF !important;
+  background: #8D4F4E !important;
+}
+
+[data-theme="eastern-light"] .nav-sub-dropdown-menu {
+  background: #323659 !important;
+  border: 2px solid #E7BA80 !important;
+  box-shadow: 0 10px 30px rgba(50, 54, 89, 0.4) !important;
+}
+
+[data-theme="eastern-light"] .nav-sub-dropdown-menu li a {
+  color: #F3F4F6 !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-theme="eastern-light"] .nav-sub-dropdown-menu li a:hover {
+  color: #FFFFFF !important;
+  background: #B36633 !important;
+}
+
+@media (max-width: 991px) {
+  .nav-menu.active .dropdown-has-submenu > .nav-sub-dropdown-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    display: block;
+    transform: none;
+    border: none !important;
+    box-shadow: none !important;
+    padding-left: 1.25rem;
+    background: transparent !important;
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
 /* Page Header Banner styling */
 .page-header-banner {
   background: linear-gradient(180deg, rgba(11,12,14,0.95) 0%, var(--color-bg-card) 100%), url('assets/images/eastern_mosaic_hero_bg.png') center/cover;
